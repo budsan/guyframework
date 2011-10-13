@@ -67,7 +67,7 @@ bool SpriteStatic::SelectFrame(std::string name)
 bool SpriteStatic::SelectFrame(int frameID)
 {
 	if (data == NULL) return false;
-	if (data->frames.size() == 0) return false;
+	if (data->Empty()) return false;
 	frameSelected  = frameID;
 	return true;
 }
@@ -231,4 +231,9 @@ bool SpriteLibrary::ReadFRAME(int currentSpritesheet, std::string &line, int lin
 		}
 
 		return true;
+}
+
+bool SpriteLibrary::Empty()
+{
+	return frames.size() == 0;
 }

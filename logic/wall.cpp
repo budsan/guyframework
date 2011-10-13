@@ -22,7 +22,7 @@ Wall::~Wall(){
 
 void Wall::Draw()
 {
-	if (m_skin == NULL)
+	if (m_skin == NULL || m_skin->Empty())
 	{
 		DrawNoSkin();
 		return;

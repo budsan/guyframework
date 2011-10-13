@@ -23,6 +23,7 @@ public:
 
 	bool Load(const char* filename);
 	bool Save(const char* filename);
+	bool Empty();
 
 	std::set<std::string> getContentFilename();
 	void getContentFilename(std::set<std::string> &contentFilename);

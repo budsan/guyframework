@@ -52,6 +52,12 @@ void SpriteAnim::NextFrame()
 
 bool SpriteAnim::setAnimData(SpriteAnimData* _data)
 {
+	if (_data == NULL)
+	{
+		data = NULL;
+		return true;
+	}
+
 	if (_data->animations.size() == 0) return false;
 
 	data = _data;
