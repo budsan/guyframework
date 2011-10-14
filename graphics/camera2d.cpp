@@ -1,7 +1,7 @@
 #include "camera2d.h"
 #include "graphics.h"
 #include "screen.h"
-#include "base/log.h"
+#include "log.h"
 
 #ifdef _WINDOWS
 #undef min

@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-#include "base/log.h"
+#include "log.h"
 
 SpriteAnim::SpriteAnim() : Sprite() 
 {

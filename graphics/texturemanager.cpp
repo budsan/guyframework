@@ -7,9 +7,9 @@
 #include <string>
 
 #include "graphics.h"
-#include "base/defines.h"
-#include "base/settings.h"
-#include "base/log.h"
+#include "defines.h"
+#include "settings.h"
+#include "log.h"
 
 #define NULL_TEXTURE ""
 

@@ -1,5 +1,5 @@
 #include "font.h"
-#include "base/log.h"
+#include "log.h"
 
 #define CHARSET_SIZE 128
 

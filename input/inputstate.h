@@ -1,7 +1,7 @@
 #ifndef INPUTSTATE_H
 #define INPUTSTATE_H
 
-#include "base/settings.h"
+#include "settings.h"
 
 class InputState
 {

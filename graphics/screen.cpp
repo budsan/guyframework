@@ -17,9 +17,9 @@
 #include <vector>
 #include <string>
 
-#include "base/log.h"
-#include "base/defines.h"
-#include "base/settings.h"
+#include "log.h"
+#include "defines.h"
+#include "settings.h"
 
 
 //---------------------------------------------------------------------------//

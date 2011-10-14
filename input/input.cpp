@@ -10,7 +10,7 @@
 */
 
 #include "input.h"
-#include "base/settings.h"
+#include "settings.h"
 
 //---------------------------------------------------------------------------//
 
