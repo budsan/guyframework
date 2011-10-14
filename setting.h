@@ -6,17 +6,20 @@
 class Setting
 {
 public:
-	Setting(std::string name, bool dval);
-	Setting(std::string name, int dval);
-	Setting(std::string name, double dval);
-	Setting(std::string name, char dval);
-	Setting(std::string name, std::string dval);
+	Setting(std::string myName, bool dval);
+	Setting(std::string myName, int dval);
+	Setting(std::string myName, double dval);
+	Setting(std::string myName, char dval);
+	Setting(std::string myName, std::string dval);
+
+	~Setting();
 
 	void set(bool val);
 	void set(int val);
 	void set(double val);
 	void set(char val);
 	void set(std::string val);
+	void setDefault();
 
 	bool        toBool();
 	int         toInt();
@@ -36,17 +39,17 @@ private:
 
 	union Value
 	{
-		bool   bool_value;
-		int    int_value;
-		double double_value;
-		char   char_value;
-		char*  string_value;
+		bool   asBool;
+		int    asInt;
+		double asDouble;
+		char   asChar;
+		char*  asString;
 	};
 
-	std::string name;
-	Type type;
-	Value default_value;
-	Value current_value;
+	std::string myName;
+	Type myType;
+	Value myDefVal;
+	Value myCurVal;
 };
 
 #endif // SETTING_H
