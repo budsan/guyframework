@@ -45,15 +45,13 @@ Game::~Game()
 		delete myState;
 	}
 
-	mySettings->bSave("data/game.cfg");
+	mySettings->Save("data/game.cfg");
 
 	SDL_Quit();
 }	
 
 bool Game::Init()
 {
-	mySettings->bLoad("data/game.cfg");
-
 	if (!myScreen->Init())
 	{
 		LOG << "ERROR: Couldn't init screen." << std::endl;
@@ -65,6 +63,9 @@ bool Game::Init()
 	}
 
 	Configure();
+	mySettings->Load("data/game.cfg");
+	myInput->getKeyFromSettings();
+
 	return true;
 }
 

@@ -176,12 +176,17 @@ bool Screen::setVideoMode()
 {
 	Settings *config = Settings::pInstance();
 
+	int ScreenWidth  = config->get("ScreenWidth")->toInt();
+	int ScreenHeight = config->get("ScreenHeight")->toInt();
+	int ScreenBpp    = config->get("ScreenBpp")->toInt();
+	bool Fullscreen  = config->get("Fullscreen")->toBool();
+
 	if (myScreen != NULL)
 	{
-		if (mySelectedMode.w  == config->ScreenWidth &&
-		    mySelectedMode.h  == config->ScreenHeight)
+		if (mySelectedMode.w  == ScreenWidth &&
+		    mySelectedMode.h  == ScreenHeight)
 		{
-			if (config->Fullscreen != myIsFullscreen)
+			if (Fullscreen != myIsFullscreen)
 				SDL_WM_ToggleFullScreen(myScreen);
 
 			return true;
@@ -189,9 +194,9 @@ bool Screen::setVideoMode()
 		else UnloadContent();
 	}
 
-	mySelectedMode.w   = config->ScreenWidth;
-	mySelectedMode.h   = config->ScreenHeight;
-	mySelectedMode.bpp = config->ScreenBpp;
+	mySelectedMode.w   = ScreenWidth;
+	mySelectedMode.h   = ScreenHeight;
+	mySelectedMode.bpp = ScreenBpp;
 
 	unsigned int flags =
 		SDL_OPENGL |
@@ -200,7 +205,7 @@ bool Screen::setVideoMode()
 		SDL_HWSURFACE |
 		SDL_HWACCEL;
 
-	if (config->Fullscreen) flags |= SDL_FULLSCREEN; 
+	if (Fullscreen) flags |= SDL_FULLSCREEN;
 
 	SDL_Surface* screen = NULL;
 
@@ -217,7 +222,7 @@ bool Screen::setVideoMode()
 	{
 		myVideoModes[nModes].w = modes_available[nModes]->w;
 		myVideoModes[nModes].h = modes_available[nModes]->h;
-		myVideoModes[nModes].bpp = config->ScreenBpp;
+		myVideoModes[nModes].bpp = ScreenBpp;
 	}
 	qsort( myVideoModes, nModes, sizeof(vmode), CompareModes);
 	
@@ -258,10 +263,10 @@ bool Screen::setVideoMode()
 
 	if (screen == NULL) return false;
 
-	config->ScreenWidth  = mySelectedMode.w;
-	config->ScreenHeight = mySelectedMode.h;
-	config->ScreenBpp    = mySelectedMode.bpp;
-	myIsFullscreen = config->Fullscreen;
+	ScreenWidth  = mySelectedMode.w;
+	ScreenHeight = mySelectedMode.h;
+	ScreenBpp    = mySelectedMode.bpp;
+	myIsFullscreen = Fullscreen;
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);

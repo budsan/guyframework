@@ -2,6 +2,7 @@
 #define VARIABLE_H
 
 #include <string>
+#include <iostream>
 
 class Variable
 {
@@ -60,5 +61,8 @@ private:
 	Value myDefVal;
 	Value myCurVal;
 };
+
+std::ostream &operator <<(std::ostream &out, const Variable &var);
+std::istream &operator >>(std::istream &in, Variable &var);
 
 #endif // VARIABLE_H

@@ -21,9 +21,13 @@ Input::Input()
 	myDoExit = false;
 	mySettings = Settings::pInstance();
 	myGlobalTime = 0;
+	state.clear();
 }
 
-Input::~Input() { myInstance = NULL; }
+Input::~Input()
+{
+	myInstance = NULL;
+}
 
 Input& Input::Instance()
 {
@@ -40,7 +44,7 @@ Input* Input::pInstance()
 
 void Input::Update()
 {
-	for (unsigned int j = 0; j < NUMPLAYERS; j++)
+	for (unsigned int j = 0; j < state.size(); j++)
 	{
 		state[j].ResetEvents();
 	}
@@ -51,12 +55,14 @@ void Input::Update()
 		switch (event.type)
 		{
 		  case SDL_KEYDOWN:
-			for (int i = 0; i < K_SIZE; i++)
+			for (int i = 0; i < state.size(); i++)
 			{
-				for (unsigned int j = 0; j < NUMPLAYERS; j++)
+				const std::vector<Keybinds::Keybind> &keybinds
+					= mySettings->getKeybinds()[i];
+
+				for (unsigned int j = 0; j < keybinds.size(); j++)
 				{
-					if( event.key.keysym.sym ==
-					    mySettings->Keyboard[j][i] )
+					if( event.key.keysym.sym == keybinds[j].getKey())
 					{
 						state[j].myKeyDown [i] = true;
 						state[j].myKeyState[i] = true;
@@ -71,12 +77,14 @@ void Input::Update()
 			}
 			break;
 		  case SDL_KEYUP:
-			for (int i = 0; i < K_SIZE; i++)
+			for (int i = 0; i < state.size(); i++)
 			{
-				for (unsigned int j = 0; j < NUMPLAYERS; j++)
+				const std::vector<Keybinds::Keybind> &keybinds
+					= mySettings->getKeybinds()[i];
+
+				for (unsigned int j = 0; j < keybinds.size(); j++)
 				{
-					if( event.key.keysym.sym ==
-					    mySettings->Keyboard[j][i])
+					if( event.key.keysym.sym == keybinds[j].getKey())
 					{
 						state[j].myKeyUp   [i] = true;
 						state[j].myKeyState[i] = false;
@@ -99,4 +107,11 @@ void Input::Update()
 float Input::getGlobalTime()    { return myGlobalTime;}
 float Input::getGlobalTimeRaw() { return ((float)SDL_GetTicks())/float(TICKS_PER_SECOND);}
 bool  Input::Exit()             { return myDoExit; }
+
+void Input::getKeyFromSettings()
+{
+	const Keybinds &kb = mySettings->getKeybinds();
+	state.clear();
+	state.resize(kb.getPlayerCount());
+}
 

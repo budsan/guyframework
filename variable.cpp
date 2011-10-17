@@ -322,3 +322,32 @@ std::string Variable::toString()
 	std::string ret(c_ret); delete c_ret;
 	return ret;
 }
+
+std::ostream &operator <<(std::ostream &out, const Variable &var)
+{
+	/*
+	Variable::Type type = var.type();
+	out.write((const char*)&type, sizeof(Variable::Type));
+	if(var.type() == Variable::Invalid) return out;
+
+	out.write(var.name().c_str(), var.name().length()+1);
+	switch (var.type())
+	{
+	case Variable::Invalid: break;
+	case Variable::Bool: out.write(&var.toBool(),sizeof(bool)); break;
+	case Variable::Int: out.write(&var.toInt(),sizeof(int)); break;
+	case Variable::Double: out.write(&var.toDouble(),sizeof(double)); break;
+	case Variable::Char: out.write(&var.toChar(),sizeof(char)); break;
+	case Variable::String: {
+			std::string s = var.toString();
+			out.write(s.c_str(),s.length()+1);
+		} break;
+	}
+	*/
+	return out;
+}
+
+std::istream &operator >>(std::istream &in, Variable &var)
+{
+	return in;
+}

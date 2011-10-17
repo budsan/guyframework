@@ -1,6 +1,8 @@
 #pragma once
 
 #include "inputstate.h"
+#include <vector>
+
 #define TICKS_PER_SECOND 1000
 
 class Input
@@ -15,6 +17,7 @@ public:
 
 	float getGlobalTime();
 	float getGlobalTimeRaw();
+	void getKeyFromSettings();
 
 	const InputState &getInputState(int player = 0) const {return state[player];}
 	
@@ -26,6 +29,6 @@ private:
 	float myGlobalTime;
 	bool  myDoExit;
 
-	InputState state[NUMPLAYERS];
+	std::vector<InputState> state;
 };
 

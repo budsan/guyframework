@@ -2,6 +2,7 @@
 #define INPUTSTATE_H
 
 #include "settings.h"
+#include <vector>
 
 class InputState
 {
@@ -20,9 +21,11 @@ public:
 	void ResetEvents();
 	void Reset();
 private:
-	bool myKeyState[K_SIZE];
-	bool myKeyUp   [K_SIZE];
-	bool myKeyDown [K_SIZE];
+	unsigned int actions;
+
+	std::vector<bool> myKeyState;
+	std::vector<bool> myKeyUp;
+	std::vector<bool> myKeyDown;
 	friend class Input;
 };
 

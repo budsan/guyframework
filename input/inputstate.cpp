@@ -1,7 +1,10 @@
 #include "inputstate.h"
 #include <string.h>
 
+#include "settings.h"
+
 InputState::InputState()
+	: actions(Settings::pInstance()->getKeybinds().getAccionCount())
 {
 	Reset();
 }
@@ -13,22 +16,22 @@ InputState::InputState(const InputState &in)
 
 const InputState &InputState::operator=(const InputState &in)
 {
-	memcpy(myKeyState, in.myKeyState, sizeof(myKeyState));
-	memcpy(myKeyDown , in.myKeyDown , sizeof(myKeyDown));
-	memcpy(myKeyUp   , in.myKeyUp   , sizeof(myKeyUp));
+	myKeyState = in.myKeyState;
+	myKeyDown  = in.myKeyDown;
+	myKeyUp    = in.myKeyUp;
 
 	return *this;
 }
 
 void InputState::operator+=(const InputState &in)
 {
-	for (unsigned int i = 0; i < K_SIZE; i++)
+	for (unsigned int i = 0; i < actions; i++)
 		myKeyState[i] = myKeyState[i] || in.myKeyState[i];
 
-	for (unsigned int i = 0; i < K_SIZE; i++)
+	for (unsigned int i = 0; i < actions; i++)
 		myKeyDown[i] = myKeyDown[i] || in.myKeyDown[i];
 
-	for (unsigned int i = 0; i < K_SIZE; i++)
+	for (unsigned int i = 0; i < actions; i++)
 		myKeyUp[i] = myKeyState[i] || in.myKeyUp[i];
 }
 
@@ -41,15 +44,15 @@ InputState InputState::operator+(const InputState &in) const
 
 void InputState::ResetEvents()
 {
-	memset(myKeyDown , 0, sizeof(myKeyDown));
-	memset(myKeyUp   , 0, sizeof(myKeyUp));
+	myKeyDown.assign(actions, false);
+	myKeyUp  .assign(actions, false);
 }
 
 void InputState::Reset()
 {
-	memset(myKeyState, 0, sizeof(myKeyState));
-	memset(myKeyDown , 0, sizeof(myKeyDown));
-	memset(myKeyUp   , 0, sizeof(myKeyUp));
+	myKeyState.assign(actions, false);
+	myKeyDown.assign(actions, false);
+	myKeyUp  .assign(actions, false);
 }
 
 bool InputState::getKeyState(unsigned char key) const
