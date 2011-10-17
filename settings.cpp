@@ -24,7 +24,7 @@ Keybinds::Keybinds(unsigned int players, unsigned int actions)
 	myPlayerKeybinds.resize(players);
 	for (unsigned int i = 0 ; i < players; i ++)
 	{
-		std::vector<Keybind> keybinds = myPlayerKeybinds.at(i);
+		std::vector<Keybind> &keybinds = myPlayerKeybinds.at(i);
 		keybinds.clear();
 		keybinds.resize(actions);
 	}
@@ -96,10 +96,10 @@ Settings* Settings::m_pInstance = NULL;
 Settings::Settings()
 {
 	//Video Configurations
-	add(Variable("ScreenWidth",(int) 800));
-	add(Variable("ScreenHeight",(int) 600));
+	add(Variable("ScreenWidth",(int) 0));
+	add(Variable("ScreenHeight",(int) 0));
 	add(Variable("ScreenBpp",(int) 32));
-	add(Variable("Fullscreen",(bool) false));
+	add(Variable("Fullscreen",(bool) true));
 
 /*
 	Keyboard[0][K_UP    ] = SDLK_q;
@@ -139,7 +139,8 @@ Variable *Settings::get(std::string name)
 {
 	std::map<std::string, Variable>::iterator it = settings.find(name);
 	if (it == settings.end()) return NULL;
-	return &(it->second);
+	Variable *v = &(it->second);
+	return v;
 }
 
 void Settings::setKeybinds(const Keybinds &keys)

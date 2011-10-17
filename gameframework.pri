@@ -33,7 +33,6 @@ SOURCES += \
 
     
 HEADERS += \
-    $$PWD/defines.h \
     $$PWD/game.h \
     $$PWD/gamestate.h \
     $$PWD/settings.h \
@@ -69,3 +68,5 @@ HEADERS += \
     $$PWD/variable.h
 
 QMAKE_CXXFLAGS += -std=c++0x
+
+

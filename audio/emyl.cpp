@@ -21,6 +21,10 @@
 
 namespace emyl {
 
+void default_error_callback (const std::string &s) {}
+error_callback _error_callback = default_error_callback;
+void setErrorCallback(error_callback cb) {_error_callback = cb;}
+
 /*---------------------------------------------------------------------------*/
 /*-libvorbis-inits-----------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -326,6 +330,7 @@ void manager::SetError(std::string _sErr)
 	m_sLastError = new char[_sErr.size() + 1];
 
 	strcpy(m_sLastError, _sErr.c_str());
+	_error_callback(_sErr);
 
 #ifdef _DEBUG
 	fprintf(stderr, "%s.\n", _sErr.c_str());
@@ -685,6 +690,7 @@ void stream::SetError(std::string _sErr)
 	m_sLastError = new char[_sErr.size() + 1];
 
 	strcpy(m_sLastError, _sErr.c_str());
+	_error_callback(_sErr);
 
 #ifdef _DEBUG
 	fprintf(stderr, "%s.\n", _sErr.c_str());
@@ -867,6 +873,7 @@ void sound::SetError(std::string _sErr)
 	m_sLastError = new char[_sErr.size() + 1];
 
 	strcpy(m_sLastError, _sErr.c_str());
+	_error_callback(_sErr);
 
 #ifdef _DEBUG
 	fprintf(stderr, "%s.\n", _sErr.c_str());

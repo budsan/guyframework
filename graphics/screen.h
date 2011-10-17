@@ -27,6 +27,7 @@ public:
 	
 	bool setVideoMode();
 	void UnloadContent();
+	void setCaption(const char* GameName);
 
 	//TOOLS
 	float        getRatio();

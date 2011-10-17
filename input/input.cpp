@@ -64,8 +64,8 @@ void Input::Update()
 				{
 					if( event.key.keysym.sym == keybinds[j].getKey())
 					{
-						state[j].myKeyDown [i] = true;
-						state[j].myKeyState[i] = true;
+						state[i].myKeyDown [j] = true;
+						state[i].myKeyState[j] = true;
 					}
 				}
 			}
@@ -86,8 +86,8 @@ void Input::Update()
 				{
 					if( event.key.keysym.sym == keybinds[j].getKey())
 					{
-						state[j].myKeyUp   [i] = true;
-						state[j].myKeyState[i] = false;
+						state[i].myKeyUp   [j] = true;
+						state[i].myKeyState[j] = false;
 					}
 				}
 			}

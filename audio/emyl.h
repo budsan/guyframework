@@ -166,5 +166,8 @@ private:
 	char*                         m_sLastError;
 };
 
+typedef void(*error_callback)(const std::string &_sErr);
+void setErrorCallback(error_callback callback);
+
 } //namespace emyl;
 

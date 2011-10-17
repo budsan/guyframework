@@ -265,6 +265,8 @@ bool Variable::toBool()
 	case Variable::Char: return ::toBool(myCurVal.asChar);
 	case Variable::String: return ::toBool(myCurVal.asString);
 	}
+
+	return false;
 }
 
 int Variable::toInt()
@@ -278,6 +280,8 @@ int Variable::toInt()
 	case Variable::Char: return ::toInt(myCurVal.asChar);
 	case Variable::String: return ::toInt(myCurVal.asString);
 	}
+
+	return 0;
 }
 
 double Variable::toDouble()
@@ -291,6 +295,8 @@ double Variable::toDouble()
 	case Variable::Char: return ::toDouble(myCurVal.asChar);
 	case Variable::String: return ::toDouble(myCurVal.asString);
 	}
+
+	return 0;
 }
 
 char Variable::toChar()
@@ -304,6 +310,8 @@ char Variable::toChar()
 	case Variable::Char: return ::toBool(myCurVal.asChar);
 	case Variable::String: return ::toBool(myCurVal.asString);
 	}
+
+	return 0;
 }
 
 std::string Variable::toString()
@@ -317,6 +325,7 @@ std::string Variable::toString()
 	case Variable::Double: c_ret = ::toString(myCurVal.asDouble); break;
 	case Variable::Char: c_ret = ::toString(myCurVal.asChar); break;
 	case Variable::String: c_ret = ::toString(myCurVal.asString); break;
+	default: c_ret = ::toString("");
 	}
 
 	std::string ret(c_ret); delete c_ret;

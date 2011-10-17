@@ -14,6 +14,7 @@
 #include "audio/emyl.h"
 #include "gamestate.h"
 
+void emylErrorCallback(const std::string &error);
 
 Game::Game() : myState(NULL), myNextState(NULL), myFramesPerSecond(0), myGameLoop(NULL)
 {
@@ -24,7 +25,7 @@ Game::Game() : myState(NULL), myNextState(NULL), myFramesPerSecond(0), myGameLoo
 	myInput    = Input::pInstance();
 	mySettings = Settings::pInstance();
 
-        setFramesPerSecond(0);
+	setFramesPerSecond(0);
 	setStableGameTime(false, false);
 
 #ifndef _WINDOWS
@@ -37,6 +38,8 @@ Game::Game() : myState(NULL), myNextState(NULL), myFramesPerSecond(0), myGameLoo
 
 Game::~Game()
 {
+	Unload();
+
 	delete myScreen;
 	delete myAudio;
 
@@ -52,20 +55,37 @@ Game::~Game()
 
 bool Game::Init()
 {
-	if (!myScreen->Init())
-	{
-		LOG << "ERROR: Couldn't init screen." << std::endl;
-		return false;
-	}
-	if (!myAudio-> init())
-	{
-		LOG << "ERROR: Couldn't run sound." << std::endl;
-	}
+	Log() << "--------------------------------------------------------------------------------" << std::endl;
+	Log() << getName() << " - " << getVersion() << std::endl;
+	Log() << "--------------------------------------------------------------------------------" << std::endl;
 
 	Configure();
 	mySettings->Load("data/game.cfg");
 	myInput->getKeyFromSettings();
 
+	if (!myScreen->Init())
+	{
+		LOG << "ERROR: Couldn't init screen." << std::endl;
+		return false;
+	}
+	myScreen->setCaption(getName());
+
+	if (!myAudio-> init())
+	{
+		LOG << "ERROR: Couldn't run sound." << std::endl;
+	}
+	emyl::setErrorCallback(emylErrorCallback);
+
+	if (myNextState != NULL)
+	{
+		myState = myNextState;
+		myNextState = NULL;
+
+		myState->setGame(this);
+		myState->Load();
+	}
+
+	Load();
 	return true;
 }
 
@@ -119,20 +139,16 @@ void Game::setStableGameTime(bool enable, bool autoframeskip)
 	else ChangeGameLoop<VariableLoop>();
 }
 
+void Game::Update(float GameTime) {}
+void Game::Draw() {}
+void Game::Load() {}
+void Game::Unload() {}
+
 void Game::ChangeState(GameState* next)
 {
-	if(myState != NULL)
-	{
-		if (myNextState != NULL) delete myNextState;
-		myNextState = next;
-		myNextState->setGame(this);
-	}
-	else
-	{
-		myState = next;
-		myState->setGame(this);
-		myState->Load();
-	}
+	if (myNextState != NULL) delete myNextState;
+	myNextState = next;
+	myNextState->setGame(this);
 }
 
 void Game::Exit()
@@ -276,3 +292,8 @@ void Game::StableLoop::LoopIteration() {parent->LoopStable(myNow, myAccumTime);}
 
 Game::StableSkipLoop::StableSkipLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
 void Game::StableSkipLoop::LoopIteration() {parent->LoopStableSkip(myNow, myAccumTime);}
+
+void emylErrorCallback(const std::string &error)
+{
+	Log() << "emyl error: " << error << std::endl;
+}

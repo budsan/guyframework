@@ -34,8 +34,15 @@ protected:
 	void setStableGameTime(bool enable, bool autoframeskip = false); //Default false
 
 	virtual void Configure() = 0;
-	virtual void Update(float GameTime) = 0;
-	virtual void Draw() = 0;
+
+	virtual void   Load();
+	virtual void Unload();
+
+	virtual void Update(float GameTime);
+	virtual void Draw();
+
+        virtual const char *getName() {return "Game";}
+        virtual const char *getVersion() {return "Undefined";}
 
 private:
 	GameState* myState;

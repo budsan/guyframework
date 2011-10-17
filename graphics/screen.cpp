@@ -176,9 +176,9 @@ bool Screen::setVideoMode()
 {
 	Settings *config = Settings::pInstance();
 
-	int ScreenWidth  = config->get("ScreenWidth")->toInt();
-	int ScreenHeight = config->get("ScreenHeight")->toInt();
-	int ScreenBpp    = config->get("ScreenBpp")->toInt();
+	unsigned int ScreenWidth  = config->get("ScreenWidth")->toInt();
+	unsigned int ScreenHeight = config->get("ScreenHeight")->toInt();
+	unsigned int ScreenBpp    = config->get("ScreenBpp")->toInt();
 	bool Fullscreen  = config->get("Fullscreen")->toBool();
 
 	if (myScreen != NULL)
@@ -277,7 +277,7 @@ bool Screen::setVideoMode()
 	initGL();
 
 	myScreen = screen;
-	SDL_WM_SetCaption(GAME_NAME, GAME_NAME);
+
 
 	return true;
 }
@@ -287,6 +287,13 @@ void Screen::UnloadContent()
 {
 	//Añade los unloads de todos los gestores aqui
 	TextureManager::Instance().UnloadTextures();
+}
+
+//---------------------------------------------------------------------------//
+
+void Screen::setCaption(const char* GameName)
+{
+	SDL_WM_SetCaption(GameName, GameName);
 }
 
 //---------------------------------------------------------------------------//
