@@ -1,4 +1,5 @@
 #include "settings.h"
+#include "log.h"
 
 #ifdef _WINDOWS
 #include <windows.h>
@@ -19,11 +20,13 @@ Settings* Settings::m_pInstance = NULL;
 
 Settings::Settings()
 {
-	//Default Settin-gs
-	ScreenWidth  = 800;
-	ScreenHeight = 600;
-	ScreenBpp    = 32;
-	Fullscreen   = false;
+	//Video Configurations
+	add(Variable("ScreenWidth",(int) 800));
+	add(Variable("ScreenHeight",(int) 600));
+	add(Variable("ScreenBpp",(int) 32));
+	add(Variable("Fullscreen",(bool) false));
+
+
 	Keyboard[0][K_UP    ] = SDLK_q;
 	Keyboard[0][K_DOWN  ] = SDLK_a;
 	Keyboard[0][K_WORKER] = SDLK_r;
@@ -42,6 +45,27 @@ Settings::Settings()
 }
 
 Settings::~Settings() { m_pInstance = NULL; }
+
+void Settings::add(const Variable &set)
+{
+	if (set.type() == Variable::Invalid) return;
+	std::map<std::string, Variable>::iterator it = settings.find(set.name());
+	if (it != settings.end())
+	{
+		LOG << "Setting " << set.name() << " already exists.";
+		return;
+	}
+
+	settings[set.name()] = set;
+}
+
+Variable *Settings::get(std::string name)
+{
+	std::map<std::string, Variable>::iterator it = settings.find(name);
+	if (it == settings.end()) return NULL;
+	return &(it->second);
+}
+
 Settings* Settings::pInstance()
 {
 	if(m_pInstance == NULL){

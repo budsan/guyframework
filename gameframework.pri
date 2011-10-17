@@ -29,7 +29,7 @@ SOURCES += \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
     $$PWD/graphics/spritestatic.cpp \
-    $$PWD/setting.cpp
+    $$PWD/variable.cpp
 
     
 HEADERS += \
@@ -66,6 +66,6 @@ HEADERS += \
     $$PWD/tools/particleemitter.h \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
-    $$PWD/setting.h
+    $$PWD/variable.h
 
 QMAKE_CXXFLAGS += -std=c++0x
