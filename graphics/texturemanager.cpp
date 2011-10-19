@@ -7,7 +7,6 @@
 #include <string>
 
 #include "graphics.h"
-#include "defines.h"
 #include "settings.h"
 #include "log.h"
 

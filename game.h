@@ -4,7 +4,6 @@
 #include <windows.h>
 #endif
 
-#include "defines.h"
 #include "settings.h"
 #include "input/input.h"
 #include "graphics/screen.h"

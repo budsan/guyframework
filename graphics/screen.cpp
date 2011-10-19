@@ -18,7 +18,6 @@
 #include <string>
 
 #include "log.h"
-#include "defines.h"
 #include "settings.h"
 
 

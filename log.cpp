@@ -1,5 +1,5 @@
 #include "log.h"
-#include "defines.h"
+
 #include <fstream>
 #include <cstdlib>
 

@@ -7,7 +7,6 @@
 #include <time.h>
 #endif
 
-#include "defines.h"
 #include "log.h"
 #include "input/input.h"
 #include "graphics/screen.h"
