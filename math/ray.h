@@ -40,7 +40,6 @@ typedef ray<vec3<unsigned long> >  ray3ul;
 typedef ray<vec3<float> >          ray3f;
 typedef ray<vec3<double> >         ray3d;
 
-
 //Based on: Fast Voxel Traversal Algorithm for Ray Tracing
 //By: John Amanatides at al.
 template<typename Real>
@@ -50,39 +49,39 @@ public:
 	grid2_traversal(const vec2<Real> &gridsize,
 			const vec2<Real> &orig,
 			const vec2<Real> &dest)
-		: abort(false), gridsize(gridsize) {
-		ray2.p = orig;
-		ray2.v = dest - orig;
-		tmax = ray2.v.module();
-		ray2.v.normalize();
+		: abort(false), gs(gridsize) {
+		r.p = orig;
+		r.v = dest - orig;
+		tmax = r.v.module();
+		r.v.normalize();
 	}
 
 	grid2_traversal(const vec2<Real> &gridsize,
 			const ray<vec2<Real> > &_r2,
 			Real tmax)
-		: abort(false), tmax(tmax), gridsize(gridsize) {
-		ray2 = _r2;
-		ray2.v.normalize();
+		: abort(false), tmax(tmax), gs(gridsize) {
+		r = _r2;
+		r.v.normalize();
 	}
 
 	void run()
 	{
-		vec2<Real> invgs(1.0/gridsize.x, 1.0/gridsize.y);
-		vec2i vox(floor(ray2.p.x*invgs.x), floor(ray2.p.y*invgs.y));
-		vec2i step(((ray2.v.x*invgs.x >= 0)<<1)-1, //(r2.v.x >= 0)?+1:-1;
-			   ((ray2.v.y*invgs.y >= 0)<<1)-1);//(r2.v.x >= 0)?+1:-1;
+		vec2<Real> invgs(1.0/gs.x, 1.0/gs.y);
+		vec2i vox(floor(r.p.x*invgs.x), floor(r.p.y*invgs.y));
+		vec2i step(((r.v.x*invgs.x >= 0)<<1)-1, //(r2.v.x >= 0)?+1:-1;
+			   ((r.v.y*invgs.y >= 0)<<1)-1);//(r2.v.x >= 0)?+1:-1;
 
 		vec2<Real> tmaxc(tmax,tmax), tdelta;
-		if (ray2.v.x != 0)
+		if (r.v.x != 0)
 		{
-			tdelta.x = tmax/ray2.v.x;
-			tmaxc.x = (vox.x - ray2.p.x) * tdelta.x;
+			tdelta.x = gs.x/r.v.x;
+			tmaxc.x = (vox.x*gs.x - r.p.x)/r.v.x;
 		}
 
-		if (ray2.v.y != 0)
+		if (r.v.y != 0)
 		{
-			tdelta.y = tmax/ray2.v.y;
-			tmaxc.y = (vox.y - ray2.p.y) * tdelta.y;
+			tdelta.y = gs.y/r.v.y;
+			tmaxc.y = (vox.y*gs.y - r.p.y)/r.v.y;
 		}
 
 		Real tcurr = 0;
@@ -109,14 +108,14 @@ protected:
 
 	void exit() { abort = true; }
 	virtual void next(const vec2i &voxel, Real tcurr) = 0;
-	const ray<vec2<Real> > &ray() {return ray2;}
+	const ray<vec2<Real> > &ray2() {return r;}
 
 private:
 
 	bool abort;
 	Real tmax;
-	vec2<Real> gridsize;
-	ray<vec2<Real> > ray2;
+	vec2<Real> gs;
+	ray<vec2<Real> > r;
 };
 
 } //namespace math
