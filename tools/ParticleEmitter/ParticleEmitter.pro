@@ -15,7 +15,7 @@ SOURCES += main.cpp\
     ../editorcamera2d.cpp \
     ../../graphics/texturemanager.cpp \
     ../../graphics/texture.cpp \
-    ../../base/log.cpp \
+    ../../log.cpp \
     ../particleemitter.cpp \
     ../particle.cpp \
     particleparameters.cpp
@@ -32,7 +32,8 @@ HEADERS += particleeditor.h \
     particleparameters.h \
     ../../math/vec3.h \
     ../../math/vec2.h \
-    ../../math/bbox.h
+    ../../math/bbox.h \
+    ../../math/mat4.h
 
 FORMS += particleeditor.ui \
     particleparameters.ui
@@ -42,3 +43,4 @@ DEFINES += INCLUDED_FROM_QT
 QMAKE_CXXFLAGS += -std=c++0x
 
 INCLUDEPATH += ../../ ../../tools
+

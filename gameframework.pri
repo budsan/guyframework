@@ -65,8 +65,10 @@ HEADERS += \
     $$PWD/tools/particleemitter.h \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
-    $$PWD/variable.h
+    $$PWD/variable.h \
+    gameframework/math/mat4.h
 
 QMAKE_CXXFLAGS += -std=c++0x
+
 
 

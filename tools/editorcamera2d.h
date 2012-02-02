@@ -3,10 +3,12 @@
 
 #include "math/vec2.h"
 #include "math/bbox.h"
+#include "math/mat4.h"
 
 using math::vec2f;
 using math::vec2i;
 using math::bbox2f;
+using math::mat4f;
 
 class Camera2D
 {
@@ -18,6 +20,7 @@ public:
 
 	void resizeScreen(int width, int height);
 
+	mat4f getMatrix();
 	void setCamera();
 	void reset();
 

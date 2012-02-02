@@ -10,7 +10,7 @@ class ParticleEmitter;
 class Particle
 {
 public:
-	Particle(const vec2f &_pos, const vec2f &_vel, float live);
+	Particle(const vec2f &_pos, const vec2f &_vel, float m_live);
 	bool Update(float GameTime, ParticleEmitter &parent);
 	void Draw(ParticleEmitter &parent);
 
@@ -19,8 +19,8 @@ public:
 		std::vector<vec2f> &texcoords,
 		std::vector<rgba>  &vertcolor);
 protected:
-	vec2f m_pos, m_vel;
-	float live, live0;
+	vec2f m_pos0, m_pos, m_vel0;
+	float m_live, m_time;
 };
 
 #endif // PARTICLE_H

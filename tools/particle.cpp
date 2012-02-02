@@ -5,26 +5,25 @@
 #include "graphics/graphics.h"
 
 Particle::Particle(const vec2f &_pos, const vec2f &_vel, float live):
-	m_pos(_pos), m_vel(_vel), live(live), live0(live)
+	m_pos0(_pos), m_pos (_pos), m_vel0(_vel), m_live(live), m_time(0)
 {
 
 }
 
 bool Particle::Update(float GameTime, ParticleEmitter &parent)
 {
-	if(live < 0) return false;
-	vec2f acc = parent.m_grav;
+	if(m_live <= m_time) return false;
+	m_time += GameTime;
 
-	m_pos = m_pos + m_vel*GameTime + acc*GameTime*GameTime*0.5f;
-	m_vel += acc*GameTime;
-	live -= GameTime;
+	vec2f acc = parent.m_grav;
+	m_pos = m_pos0 + m_vel0*m_time + acc*m_time*m_time*0.5f;
 
 	return true;
 }
 
 void Particle::Draw(ParticleEmitter &parent)
 {
-	float weight = live/live0;
+	float weight = m_live/m_live;
 	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
 	float size = ((parent.m_z0*weight) + (parent.m_z1*(1.0f-weight)))*0.5f;
 
@@ -54,7 +53,7 @@ void Particle::FillDrawArray(ParticleEmitter &parent,
 	std::vector<vec2f> &texcoords,
 	std::vector<rgba>  &vertcolor)
 {
-	float weight = live/live0;
+	float weight = m_live/m_live;
 	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
 	float size = ((parent.m_z0*weight) + (parent.m_z1*(1.0f-weight)))*0.5f;
 

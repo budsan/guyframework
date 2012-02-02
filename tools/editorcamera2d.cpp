@@ -80,23 +80,33 @@ bbox2f Camera2D::getBounding()
 	return bbox2f(min,max);
 }
 
+mat4f Camera2D::getMatrix()
+{
+	if (aspect > 1.0)
+	{
+		float zoomAux = zoom*aspect;
+		return math::mat4<float>::
+		ortho(pos.x-zoomAux,pos.x+zoomAux,
+		      pos.y-zoom   ,pos.y+zoom   , -1, 1);
+	}
+	else
+	{
+		float zoomAux = zoom/aspect;
+		return math::mat4<float>::
+		ortho(pos.x-zoom   ,pos.x+zoom,
+		      pos.y-zoomAux,pos.y+zoomAux, -1, 1);
+	}
+}
+
 void Camera2D::setCamera()
 {
 	if (!init) return;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	if (aspect > 1.0)
-	{
-		float zoomAux = zoom*aspect;
-		glOrtho(pos.x-zoomAux,pos.x+zoomAux,
-			pos.y-zoom   ,pos.y+zoom   , -1, 1);
-	}
-	else
-	{
-		float zoomAux = zoom/aspect;
-		glOrtho(pos.x-zoom   ,pos.x+zoom,
-			pos.y-zoomAux,pos.y+zoomAux, -1, 1);
-	}
+
+	mat4f mat = getMatrix();
+	glLoadMatrixf(mat.val);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
