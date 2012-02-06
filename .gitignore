@@ -1,0 +1,7 @@
+*.o
+*.user
+*~
+moc_*
+ui_*
+log.txt
+Makefile

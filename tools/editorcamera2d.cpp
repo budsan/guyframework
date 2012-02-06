@@ -85,15 +85,13 @@ mat4f Camera2D::getMatrix()
 	if (aspect > 1.0)
 	{
 		float zoomAux = zoom*aspect;
-		return math::mat4<float>::
-		ortho(pos.x-zoomAux,pos.x+zoomAux,
+		return mat4f::ortho(pos.x-zoomAux,pos.x+zoomAux,
 		      pos.y-zoom   ,pos.y+zoom   , -1, 1);
 	}
 	else
 	{
 		float zoomAux = zoom/aspect;
-		return math::mat4<float>::
-		ortho(pos.x-zoom   ,pos.x+zoom,
+		return mat4f::ortho(pos.x-zoom   ,pos.x+zoom,
 		      pos.y-zoomAux,pos.y+zoomAux, -1, 1);
 	}
 }

@@ -18,6 +18,11 @@ struct mat4
 
 	}
 
+	mat4(T val[16])
+	{
+		*this = val;
+	}
+
 	mat4(const mat4 &mat)
 	{
 		*this = mat;
@@ -170,6 +175,8 @@ struct mat4
 		res[3][0] = (r + l) / (l - r);
 		res[3][1] = (t + b) / (b - t);
 		res[3][2] = (f + n) / (n - f);
+
+		return res;
 	}
 
 	void inverse(void)
@@ -336,9 +343,14 @@ struct mat4
 		return &val[4*i];
 	}
 
-	inline mat4<T> &operator=(mat4<T> const &m)
+	inline mat4<T> &operator=(const mat4<T>  &m)
 	{
-		memcpy(this->val, m.val, 16 * sizeof(T));
+		return *this = m.val;
+	}
+
+	inline mat4<T> &operator=(const T val[16])
+	{
+		memcpy(this->val, val, 16 * sizeof(T));
 		return *this;
 	}
 };
