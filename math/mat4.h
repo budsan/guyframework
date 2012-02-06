@@ -33,7 +33,7 @@ struct mat4
 		return val[4*x + y];
 	}
 
-	void zero(void)
+	void zero()
 	{
 		val[0] = 0; val[1] = 0; val[2] = 0; val[3] = 0;
 		val[4] = 0; val[5] = 0; val[6] = 0; val[7] = 0;
@@ -41,12 +41,56 @@ struct mat4
 		val[12]= 0; val[13]= 0; val[14]= 0; val[15]= 0;
 	}
 
-	void identity(void)
+	static mat4<T> from_zero()
+	{
+		mat4<T> res;
+		res.zero();
+		return res;
+	}
+
+	void identity()
 	{
 		val[0] = 1; val[1] = 0; val[2] = 0; val[3] = 0;
 		val[4] = 0; val[5] = 1; val[6] = 0; val[7] = 0;
 		val[8] = 0; val[9] = 0; val[10]= 1; val[11]= 0;
 		val[12]= 0; val[13]= 0; val[14]= 0; val[15]= 1;
+	}
+
+	T det()
+	{
+		return
+			((*this)[0][3]*(*this)[1][2]*(*this)[2][1]*(*this)[3][0]) -
+			((*this)[0][2]*(*this)[1][3]*(*this)[2][1]*(*this)[3][0]) -
+			((*this)[0][3]*(*this)[1][1]*(*this)[2][2]*(*this)[3][0]) +
+			((*this)[0][1]*(*this)[1][3]*(*this)[2][2]*(*this)[3][0]) +
+			((*this)[0][2]*(*this)[1][1]*(*this)[2][3]*(*this)[3][0]) -
+			((*this)[0][1]*(*this)[1][2]*(*this)[2][3]*(*this)[3][0]) -
+			((*this)[0][3]*(*this)[1][2]*(*this)[2][0]*(*this)[3][1]) +
+			((*this)[0][2]*(*this)[1][3]*(*this)[2][0]*(*this)[3][1]) +
+			((*this)[0][3]*(*this)[1][0]*(*this)[2][2]*(*this)[3][1]) -
+			((*this)[0][0]*(*this)[1][3]*(*this)[2][2]*(*this)[3][1]) -
+			((*this)[0][2]*(*this)[1][0]*(*this)[2][3]*(*this)[3][1]) +
+			((*this)[0][0]*(*this)[1][2]*(*this)[2][3]*(*this)[3][1]) +
+			((*this)[0][3]*(*this)[1][1]*(*this)[2][0]*(*this)[3][2]) -
+			((*this)[0][1]*(*this)[1][3]*(*this)[2][0]*(*this)[3][2]) -
+			((*this)[0][3]*(*this)[1][0]*(*this)[2][1]*(*this)[3][2]) +
+			((*this)[0][0]*(*this)[1][3]*(*this)[2][1]*(*this)[3][2]) +
+			((*this)[0][1]*(*this)[1][0]*(*this)[2][3]*(*this)[3][2]) -
+			((*this)[0][0]*(*this)[1][1]*(*this)[2][3]*(*this)[3][2]) -
+			((*this)[0][2]*(*this)[1][1]*(*this)[2][0]*(*this)[3][3]) +
+			((*this)[0][1]*(*this)[1][2]*(*this)[2][0]*(*this)[3][3]) +
+			((*this)[0][2]*(*this)[1][0]*(*this)[2][1]*(*this)[3][3]) -
+			((*this)[0][0]*(*this)[1][2]*(*this)[2][1]*(*this)[3][3]) -
+			((*this)[0][1]*(*this)[1][0]*(*this)[2][2]*(*this)[3][3]) +
+			((*this)[0][0]*(*this)[1][1]*(*this)[2][2]*(*this)[3][3]);
+	}
+
+	static mat4<T> from_identity()
+	{
+
+		mat4<T> res;
+		res.identity();
+		return res;
 	}
 
 	mat4<T> operator*(const mat4<T> &mat)
@@ -73,12 +117,7 @@ struct mat4
 		return res;
 	}
 
-	void operator*=(const mat4<T> &mat)
-	{
-		*this = *this * mat;
-	}
-
-	static mat4<T> rotate(T angle, T x, T y, T z)
+	static mat4<T> from_rotate(T angle, T x, T y, T z)
 	{
 		double rad = angle * (M_PI/180);
 		double s = sin(rad), c = cos(rad);
@@ -117,7 +156,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> translate(T x, T y, T z)
+	static mat4<T> from_translate(T x, T y, T z)
 	{
 		mat4<T> res;
 		res.identity();
@@ -129,7 +168,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> scale(T x, T y, T z)
+	static mat4<T> from_scale(T x, T y, T z)
 	{
 		mat4<T> res;
 		res.identity();
@@ -141,7 +180,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> frustum(T l, T r, T b, T t, T n, T f)
+	static mat4<T> from_frustum(T l, T r, T b, T t, T n, T f)
 	{
 		mat4<T> res;
 		res.identity();
@@ -161,7 +200,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> ortho(T l, T r, T b, T t, T n, T f)
+	static mat4<T> from_ortho(T l, T r, T b, T t, T n, T f)
 	{
 		mat4<T> res;
 		res.identity();
@@ -179,41 +218,33 @@ struct mat4
 		return res;
 	}
 
-	void inverse(void)
+	void operator*=(const mat4<T> &mat)
+	{
+		*this = *this * mat;
+	}
+
+	void rotate(T angle, T x, T y, T z)
+	{
+		*this *= from_rotate(angle, x, y, z);
+	}
+
+	void translate(T x, T y, T z)
+	{
+		*this *= from_translate(x, y, z);
+	}
+
+	void scale(T x, T y, T z)
+	{
+		*this *= from_scale(x, y, z);
+	}
+
+	mat4<T> inverse()
 	{
 		mat4<T> res;
-		T det, invDet;
+		T det = this->det();
 
-		det =	((*this)[0][3]*(*this)[1][2]*(*this)[2][1]*(*this)[3][0]) -
-			((*this)[0][2]*(*this)[1][3]*(*this)[2][1]*(*this)[3][0]) -
-			((*this)[0][3]*(*this)[1][1]*(*this)[2][2]*(*this)[3][0]) +
-			((*this)[0][1]*(*this)[1][3]*(*this)[2][2]*(*this)[3][0]) +
-			((*this)[0][2]*(*this)[1][1]*(*this)[2][3]*(*this)[3][0]) -
-			((*this)[0][1]*(*this)[1][2]*(*this)[2][3]*(*this)[3][0]) -
-			((*this)[0][3]*(*this)[1][2]*(*this)[2][0]*(*this)[3][1]) +
-			((*this)[0][2]*(*this)[1][3]*(*this)[2][0]*(*this)[3][1]) +
-			((*this)[0][3]*(*this)[1][0]*(*this)[2][2]*(*this)[3][1]) -
-			((*this)[0][0]*(*this)[1][3]*(*this)[2][2]*(*this)[3][1]) -
-			((*this)[0][2]*(*this)[1][0]*(*this)[2][3]*(*this)[3][1]) +
-			((*this)[0][0]*(*this)[1][2]*(*this)[2][3]*(*this)[3][1]) +
-			((*this)[0][3]*(*this)[1][1]*(*this)[2][0]*(*this)[3][2]) -
-			((*this)[0][1]*(*this)[1][3]*(*this)[2][0]*(*this)[3][2]) -
-			((*this)[0][3]*(*this)[1][0]*(*this)[2][1]*(*this)[3][2]) +
-			((*this)[0][0]*(*this)[1][3]*(*this)[2][1]*(*this)[3][2]) +
-			((*this)[0][1]*(*this)[1][0]*(*this)[2][3]*(*this)[3][2]) -
-			((*this)[0][0]*(*this)[1][1]*(*this)[2][3]*(*this)[3][2]) -
-			((*this)[0][2]*(*this)[1][1]*(*this)[2][0]*(*this)[3][3]) +
-			((*this)[0][1]*(*this)[1][2]*(*this)[2][0]*(*this)[3][3]) +
-			((*this)[0][2]*(*this)[1][0]*(*this)[2][1]*(*this)[3][3]) -
-			((*this)[0][0]*(*this)[1][2]*(*this)[2][1]*(*this)[3][3]) -
-			((*this)[0][1]*(*this)[1][0]*(*this)[2][2]*(*this)[3][3]) +
-			((*this)[0][0]*(*this)[1][1]*(*this)[2][2]*(*this)[3][3]);
-
-		if(det == 0)
-			// Singular matrix
-			return;
-
-		invDet = 1/det;
+		if(det == 0) return; // Singular matrix
+		T invDet = 1/det;
 
 		res[0][0] = invDet *	((-(*this)[1][3]*(*this)[2][2]*(*this)[3][1]) +
 					((*this)[1][2]*(*this)[2][3]*(*this)[3][1]) +
@@ -315,7 +346,7 @@ struct mat4
 					((*this)[0][1]*(*this)[1][0]*(*this)[2][2]) +
 					((*this)[0][0]*(*this)[1][1]*(*this)[2][2]));
 
-		*this = res;
+		return res;
 	}
 
 	void transpose(void)
