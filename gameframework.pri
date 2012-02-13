@@ -66,9 +66,7 @@ HEADERS += \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
-    gameframework/math/mat4.h
+    gameframework/math/mat4.h \
+    gameframework/math/algebra3.h
 
 QMAKE_CXXFLAGS += -std=c++0x
-
-
-

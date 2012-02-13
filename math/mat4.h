@@ -112,7 +112,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> rotation_rad(T angle, T x, T y, T z)
+	static mat4<T> from_rotate_rad(T angle, T x, T y, T z)
 	{
 		double s = sin(angle), c = cos(angle);
 		double ci = 1.0f - c;
@@ -150,13 +150,13 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> rotation(T angle, T x, T y, T z)
+	static mat4<T> from_rotate(T angle, T x, T y, T z)
 	{
 		double rad = angle * (M_PI/180);
-		return rotation_rad(rad, x, y, z);
+		return from_rotate_rad(rad, x, y, z);
 	}
 
-	static mat4<T> translation(T x, T y, T z)
+	static mat4<T> from_translate(T x, T y, T z)
 	{
 		mat4<T> res;
 		res.reset();
@@ -168,7 +168,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> scaling(T x, T y, T z)
+	static mat4<T> from_scale(T x, T y, T z)
 	{
 		mat4<T> res;
 		res.reset();
@@ -180,7 +180,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> frustum(T l, T r, T b, T t, T n, T f)
+	static mat4<T> from_frustrum(T l, T r, T b, T t, T n, T f)
 	{
 		mat4<T> res;
 		res.reset();
@@ -200,7 +200,7 @@ struct mat4
 		return res;
 	}
 
-	static mat4<T> ortho(T l, T r, T b, T t, T n, T f)
+	static mat4<T> from_ortho(T l, T r, T b, T t, T n, T f)
 	{
 		mat4<T> res;
 		res.reset();
@@ -225,17 +225,17 @@ struct mat4
 
 	void rotate(T angle, T x, T y, T z)
 	{
-		*this *= rotation(angle, x, y, z);
+		*this *= from_rotate(angle, x, y, z);
 	}
 
 	void rotate_rad(T angle, T x, T y, T z)
 	{
-		*this *= rotation_rad(angle, x, y, z);
+		*this *= from_rotate_rad(angle, x, y, z);
 	}
 
 	void translate(T x, T y, T z)
 	{
-		*this *= translation(x, y, z);
+		*this *= from_translate(x, y, z);
 	}
 
 	void scale(T x, T y, T z)
@@ -362,10 +362,10 @@ struct mat4
 
 	bool inverse()
 	{
-		bool invertible;
-		mat4f inv = this->inverted(&invertible);
-		if (inversible) *this = inv;
-		return invertible;
+                bool invertible;
+                mat4<T> inv = this->inverted(&invertible);
+                if (invertible) *this = inv;
+                return invertible;
 	}
 
 	mat4<T> transposed()
