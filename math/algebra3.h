@@ -366,6 +366,20 @@ struct mat4
 		return *this;
 	}
 
+	mat4<T> operator - ()
+	{
+		mat4<T> res;
+		res.v[0] = -v[0]; res.v[1] = -v[1]; res.v[2] = -v[2]; res.v[3] = -v[3];
+		res.v[4] = -v[4]; res.v[5] = -v[5]; res.v[6] = -v[6]; res.v[7] = -v[7];
+		res.v[8] = -v[8]; res.v[9] = -v[9]; res.v[10]= -v[10];res.v[11]= -v[11];
+		res.v[12]= -v[12];res.v[13]= -v[13];res.v[14]= -v[14];res.v[15]= -v[15];
+		return res;
+	}
+
+	template <typename U> mat4<T> &operator*=(const mat4<U> &mat) {
+		return *this = *this * mat;
+	}
+
 	mat4<T> &identity() {
 		v[0] = 1; v[1] = 0; v[2] = 0; v[3] = 0;
 		v[4] = 0; v[5] = 1; v[6] = 0; v[7] = 0;
@@ -439,10 +453,6 @@ struct mat4
 			0, 2/(t - b),         0, (t + b)/(b - t),
 			0,         0, 2/(n - f), (f + n)/(n - f),
 			0,         0,         0,               1);
-	}
-
-	template <typename U> mat4<T> &operator*=(const mat4<U> &mat) {
-		return *this = *this * mat;
 	}
 
 	mat4<T> &rotate(T angle, T x, T y, T z) {
@@ -686,15 +696,13 @@ auto operator ^ (const vec2<T> &a, const vec2<U> &b) -> vec3<decltype(a.x*b.x)> 
 //float specialization
 template <typename T>
 auto operator / (const vec2<T> &a, float num) -> vec2<decltype(a.x/num)> {
-	float inv = 1.0f/num;
-	return vec2<decltype(a.x/num)>(a.x*inv, a.y*inv);
+	return a*(1.0f/num);
 }
 
 //double specialization
 template <typename T>
 auto operator / (const vec2<T> &a, double num) -> vec2<decltype(a.x/num)> {
-	double inv = 1.0/num;
-	return vec2<decltype(a.x/num)>(a.x*inv, a.y*inv);
+	return a*(1.0/num);
 }
 
 //general case
@@ -771,15 +779,13 @@ auto operator ^ (const vec3<T> &a, const vec3<U> &b) -> vec3<decltype(a.x*b.x)> 
 //float specialization
 template <typename T>
 auto operator / (const vec3<T> &a, float num) -> vec3<decltype(a.x/num)>{
-	float inv = 1.0f/num;
-	return vec3<decltype(a.x/num)>(a.x*inv, a.y*inv, a.z*inv);
+	return a*(1.0f/num);
 }
 
 //double specialization
 template <typename T>
 auto operator / (const vec3<T> &a, double num) -> vec3<decltype(a.x/num)>{
-	double inv = 1.0/num;
-	return vec3<decltype(a.x/num)>(a.x*inv, a.y*inv, a.z*inv);
+	return a*(1.0/num);
 }
 
 //general case
@@ -857,15 +863,13 @@ auto operator * (const vec4<T> &a, const vec4<U> &b) -> decltype(a.x*b.x) {
 //float specialization
 template <typename T>
 auto operator / (const vec4<T> &a, float num) -> vec4<decltype(a.x/num)>{
-	float inv = 1.0f/num;
-	return vec4<decltype(a.x/num)>(a.x*inv, a.y*inv, a.z*inv);
+	return a*(1.0f/num);
 }
 
 //double specialization
 template <typename T>
 auto operator / (const vec4<T> &a, double num) -> vec4<decltype(a.x/num)>{
-	double inv = 1.0/num;
-	return vec4<decltype(a.x/num)>(a.x*inv, a.y*inv, a.z*inv);
+	return a*(1.0/num);
 }
 
 //general case
@@ -899,6 +903,152 @@ auto operator * (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]*b.v
 	res(3,3) = a(0,3)*b(3,0) + a(1,3)*b(3,1) + a(2,3)*b(3,2) + a(3,3)*b(3,3);
 
 	return res;
+}
+
+template <typename T, typename U>
+auto operator + (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]+b.v[0])> {
+	mat4<decltype(a.v[0]+b.v[0])> res;
+	res.v[0] = a.v[0] + b.v[0];
+	res.v[1] = a.v[1] + b.v[1];
+	res.v[2] = a.v[2] + b.v[2];
+	res.v[3] = a.v[3] + b.v[3];
+	res.v[4] = a.v[4] + b.v[4];
+	res.v[5] = a.v[5] + b.v[5];
+	res.v[6] = a.v[6] + b.v[6];
+	res.v[7] = a.v[7] + b.v[7];
+	res.v[8] = a.v[8] + b.v[8];
+	res.v[9] = a.v[9] + b.v[9];
+	res.v[10]= a.v[10]+ b.v[10];
+	res.v[11]= a.v[11]+ b.v[11];
+	res.v[12]= a.v[12]+ b.v[12];
+	res.v[13]= a.v[13]+ b.v[13];
+	res.v[14]= a.v[14]+ b.v[14];
+	res.v[15]= a.v[15]+ b.v[15];
+	return res;
+}
+
+template <typename T, typename U>
+auto operator - (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]-b.v[0])> {
+	mat4<decltype(a.v[0]-b.v[0])> res;
+	res.v[0] = a.v[0] - b.v[0];
+	res.v[1] = a.v[1] - b.v[1];
+	res.v[2] = a.v[2] - b.v[2];
+	res.v[3] = a.v[3] - b.v[3];
+	res.v[4] = a.v[4] - b.v[4];
+	res.v[5] = a.v[5] - b.v[5];
+	res.v[6] = a.v[6] - b.v[6];
+	res.v[7] = a.v[7] - b.v[7];
+	res.v[8] = a.v[8] - b.v[8];
+	res.v[9] = a.v[9] - b.v[9];
+	res.v[10]= a.v[10]- b.v[10];
+	res.v[11]= a.v[11]- b.v[11];
+	res.v[12]= a.v[12]- b.v[12];
+	res.v[13]= a.v[13]- b.v[13];
+	res.v[14]= a.v[14]- b.v[14];
+	res.v[15]= a.v[15]- b.v[15];
+	return res;
+}
+
+template <typename T, typename U>
+auto operator * (const mat4<T> &a, U num) -> mat4<decltype(a.v[0]*num)> {
+	mat4<decltype(a.v[0]*num)> res;
+	res.v[0] = a.v[0] * num;
+	res.v[1] = a.v[1] * num;
+	res.v[2] = a.v[2] * num;
+	res.v[3] = a.v[3] * num;
+	res.v[4] = a.v[4] * num;
+	res.v[5] = a.v[5] * num;
+	res.v[6] = a.v[6] * num;
+	res.v[7] = a.v[7] * num;
+	res.v[8] = a.v[8] * num;
+	res.v[9] = a.v[9] * num;
+	res.v[10]= a.v[10]* num;
+	res.v[11]= a.v[11]* num;
+	res.v[12]= a.v[12]* num;
+	res.v[13]= a.v[13]* num;
+	res.v[14]= a.v[14]* num;
+	res.v[15]= a.v[15]* num;
+	return res;
+}
+
+template <typename T, typename U>
+auto operator * (U num, const mat4<T> &a) -> mat4<decltype(a.v[0]*num)> {
+	return a*num;
+}
+
+template <typename T>
+auto operator / (const mat4<T> &a, float num) -> mat4<decltype(a.v[0]/num)> {
+	return a*(1.0f/num);
+
+}
+
+template <typename T>
+auto operator / (const mat4<T> &a, double num) -> mat4<decltype(a.v[0]/num)> {
+	return a*(1.0/num);
+}
+
+template <typename T, typename U>
+auto operator / (const mat4<T> &a, U num) -> mat4<decltype(a.v[0]/num)> {
+	mat4<decltype(a.v[0]/num)> res;
+	res.v[0] = a.v[0] / num;
+	res.v[1] = a.v[1] / num;
+	res.v[2] = a.v[2] / num;
+	res.v[3] = a.v[3] / num;
+	res.v[4] = a.v[4] / num;
+	res.v[5] = a.v[5] / num;
+	res.v[6] = a.v[6] / num;
+	res.v[7] = a.v[7] / num;
+	res.v[8] = a.v[8] / num;
+	res.v[9] = a.v[9] / num;
+	res.v[10]= a.v[10]/ num;
+	res.v[11]= a.v[11]/ num;
+	res.v[12]= a.v[12]/ num;
+	res.v[13]= a.v[13]/ num;
+	res.v[14]= a.v[14]/ num;
+	res.v[15]= a.v[15]/ num;
+	return res;
+}
+
+template <typename T, typename U>
+bool operator == (const mat4<T> &a, const mat4<U> &b) {
+	return
+	a.v[0] == b.v[0] &&
+	a.v[1] == b.v[1] &&
+	a.v[2] == b.v[2] &&
+	a.v[3] == b.v[3] &&
+	a.v[4] == b.v[4] &&
+	a.v[5] == b.v[5] &&
+	a.v[6] == b.v[6] &&
+	a.v[7] == b.v[7] &&
+	a.v[8] == b.v[8] &&
+	a.v[9] == b.v[9] &&
+	a.v[10]== b.v[10]&&
+	a.v[11]== b.v[11]&&
+	a.v[12]== b.v[12]&&
+	a.v[13]== b.v[13]&&
+	a.v[14]== b.v[14]&&
+	a.v[15]== b.v[15];
+}
+
+template <typename T, typename U>
+bool operator != (const mat4<T> &a, const mat4<U> &b) {
+	return
+	a.v[0] != b.v[0] ||
+	a.v[1] != b.v[1] ||
+	a.v[2] != b.v[2] ||
+	a.v[3] != b.v[3] ||
+	a.v[4] != b.v[4] ||
+	a.v[5] != b.v[5] ||
+	a.v[6] != b.v[6] ||
+	a.v[7] != b.v[7] ||
+	a.v[8] != b.v[8] ||
+	a.v[9] != b.v[9] ||
+	a.v[10]!= b.v[10]||
+	a.v[11]!= b.v[11]||
+	a.v[12]!= b.v[12]||
+	a.v[13]!= b.v[13]||
+	a.v[14]!= b.v[14]||
+	a.v[15]!= b.v[15];
 }
 
 //---------------------------------------------------------------------------//
