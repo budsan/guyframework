@@ -33,7 +33,8 @@ HEADERS += particleeditor.h \
     ../../math/vec3.h \
     ../../math/vec2.h \
     ../../math/bbox.h \
-    ../../math/mat4.h
+    ../../math/mat4.h \
+    ../../math/algebra3.h
 
 FORMS += particleeditor.ui \
     particleparameters.ui
@@ -43,4 +44,5 @@ DEFINES += INCLUDED_FROM_QT
 QMAKE_CXXFLAGS += -std=c++0x
 
 INCLUDEPATH += ../../ ../../tools
+
 

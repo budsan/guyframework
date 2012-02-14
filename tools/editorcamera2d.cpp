@@ -85,13 +85,13 @@ mat4f Camera2D::getMatrix()
 	if (aspect > 1.0)
 	{
 		float zoomAux = zoom*aspect;
-		return mat4f::from_ortho(pos.x-zoomAux,pos.x+zoomAux,
+		return mat4f::fromOrtho(pos.x-zoomAux,pos.x+zoomAux,
 		      pos.y-zoom   ,pos.y+zoom   , -1, 1);
 	}
 	else
 	{
 		float zoomAux = zoom/aspect;
-		return mat4f::from_ortho(pos.x-zoom   ,pos.x+zoom,
+		return mat4f::fromOrtho(pos.x-zoom   ,pos.x+zoom,
 		      pos.y-zoomAux,pos.y+zoomAux, -1, 1);
 	}
 }
@@ -103,7 +103,7 @@ void Camera2D::setCamera()
 	glLoadIdentity();
 
 	mat4f mat = getMatrix();
-	glLoadMatrixf(mat.val);
+	glLoadMatrixf(mat.v);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

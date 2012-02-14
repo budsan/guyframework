@@ -313,8 +313,327 @@ typedef vec4<unsigned long>  vec4ul;
 typedef vec4<float>          vec4f;
 typedef vec4<double>         vec4d;
 
-//-VEC2----------------------------------------------------------------------//
+//-MAT3----------------------------------------------------------------------//
 
+
+//-MAT4----------------------------------------------------------------------//
+template <typename T>
+struct mat4
+{
+	T v[16]; // column-major
+
+	mat4() {}
+	mat4(const T val[16]) {*this = val;}
+	mat4(const mat4 &mat) {*this = mat;}
+	mat4(T a00, T a01, T a02, T a03,
+	     T a10, T a11, T a12, T a13,
+	     T a20, T a21, T a22, T a23,
+	     T a30, T a31, T a32, T a33 ) //row-major constructor
+	{
+		v[0] = a00; v[1] = a10; v[2] = a20; v[3] = a30;
+		v[4] = a01; v[5] = a11; v[6] = a21; v[7] = a31;
+		v[8] = a02; v[9] = a12; v[10]= a22; v[11]= a32;
+		v[12]= a03; v[13]= a13; v[14]= a23; v[15]= a33;
+	}
+
+	T &operator()(unsigned int x, unsigned int y) {
+		return v[4*x + y];
+	}
+
+	T *operator[](unsigned int i) {
+		return &v[4*i];
+	}
+
+	const T *operator[](unsigned int i) const {
+		return &v[4*i];
+	}
+
+	template <typename U>
+	mat4<T> &operator=(const mat4<U> &m) {
+		return *this = m.v;
+	}
+
+	mat4<T> &operator=(const T val[16]) {
+		memcpy(this->v, val, 16 * sizeof(T));
+		return *this;
+	}
+
+	template <typename U> mat4<T> &operator=(const U val[16]) {
+		v[0] = val[0]; v[1] = val[1]; v[2] = val[2]; v[3] = val[3];
+		v[4] = val[4]; v[5] = val[5]; v[6] = val[6]; v[7] = val[7];
+		v[8] = val[8]; v[9] = val[9]; v[10]= val[10];v[11]= val[11];
+		v[12]= val[12];v[13]= val[13];v[14]= val[14];v[15]= val[15];
+		return *this;
+	}
+
+	mat4<T> &identity() {
+		v[0] = 1; v[1] = 0; v[2] = 0; v[3] = 0;
+		v[4] = 0; v[5] = 1; v[6] = 0; v[7] = 0;
+		v[8] = 0; v[9] = 0; v[10]= 1; v[11]= 0;
+		v[12]= 0; v[13]= 0; v[14]= 0; v[15]= 1;
+		return *this;
+	}
+
+	static mat4<T> fromIdentity() {
+		return mat4<T>().identity();
+	}
+
+	static mat4<T> fromRotateRad(T angle, T x, T y, T z) {
+		double s = sin(angle), c = cos(angle);
+		double ci = 1.0f - c;
+		double mod = sqrt(x*x + y*y + z*z);
+		double invmod = 1.0f / mod;
+
+		T x1, y1, z1;
+		T xs, ys, zs;
+		T x2, y2, z2;
+		T xy, yz, xz;
+
+		x1 = x * invmod;
+		y1 = y * invmod;
+		z1 = z * invmod;
+
+		xs = x1 * s;  ys = y1 * s;  zs = z1 * s;
+		x2 = x1 * x1; y2 = y1 * y1; z2 = z1 * z1;
+		xy = x1 * y1; yz = y1 * z1; xz = x1 * z1;
+
+		return mat4<T>(
+		x2 * ci + c , xy * ci - zs, xz * ci + ys, 0,
+		xy * ci + zs, y2 * ci + c , yz * ci - xs, 0,
+		xz * ci - ys, yz * ci + xs, z2 * ci + c , 0,
+			   0,            0,            0, 1 );
+	}
+
+	static mat4<T> fromRotate(T angle, T x, T y, T z) {
+		double rad = angle * (M_PI/180);
+		return fromRotateRad(rad, x, y, z);
+	}
+
+	static mat4<T> fromTranslate(T x, T y, T z) {
+		return mat4<T>(
+		1, 0, 0, x,
+		0, 1, 0, y,
+		0, 0, 1, z,
+		0, 0, 0, 1 );
+	}
+
+	static mat4<T> fromScale(T x, T y, T z) {
+		return mat4<T>(
+		x, 0, 0, 0,
+		0, y, 0, 0,
+		0, 0, z, 0,
+		0, 0, 0, 1 );
+	}
+
+	static mat4<T> fromFrustrum(T l, T r, T b, T t, T n, T f) {
+		return mat4<T>(
+		(2 * n)/(r - l),               0,      (r + l) / (r - l),                    0,
+			      0, (2 * n)/(t - b),      (t + b) / (t - b),                    0,
+			      0,               0, -1 * (f + n) / (f - n), (-2 * f * n)/(f - n),
+			      0,               0,                     -1,                    0);
+	}
+
+	static mat4<T> fromOrtho(T l, T r, T b, T t, T n, T f) {
+		return mat4<T>(
+		2/(r - l),         0,         0, (r + l)/(l - r),
+			0, 2/(t - b),         0, (t + b)/(b - t),
+			0,         0, 2/(n - f), (f + n)/(n - f),
+			0,         0,         0,               1);
+	}
+
+	template <typename U> mat4<T> &operator*=(const mat4<U> &mat) {
+		return *this = *this * mat;
+	}
+
+	mat4<T> &rotate(T angle, T x, T y, T z) {
+		return *this *= fromRotate(angle, x, y, z);
+	}
+
+	mat4<T> &rotateRad(T angle, T x, T y, T z) {
+		return *this *= fromRotateRad(angle, x, y, z);
+	}
+
+	mat4<T> &translate(T x, T y, T z) {
+		return *this *= fromTranslate(x, y, z);
+	}
+
+	mat4<T> &scale(T x, T y, T z) {
+		return *this *= fromScale(x, y, z);
+	}
+
+	T det() {
+		return
+			((*this)[0][3]*(*this)[1][2]*(*this)[2][1]*(*this)[3][0]) -
+			((*this)[0][2]*(*this)[1][3]*(*this)[2][1]*(*this)[3][0]) -
+			((*this)[0][3]*(*this)[1][1]*(*this)[2][2]*(*this)[3][0]) +
+			((*this)[0][1]*(*this)[1][3]*(*this)[2][2]*(*this)[3][0]) +
+			((*this)[0][2]*(*this)[1][1]*(*this)[2][3]*(*this)[3][0]) -
+			((*this)[0][1]*(*this)[1][2]*(*this)[2][3]*(*this)[3][0]) -
+			((*this)[0][3]*(*this)[1][2]*(*this)[2][0]*(*this)[3][1]) +
+			((*this)[0][2]*(*this)[1][3]*(*this)[2][0]*(*this)[3][1]) +
+			((*this)[0][3]*(*this)[1][0]*(*this)[2][2]*(*this)[3][1]) -
+			((*this)[0][0]*(*this)[1][3]*(*this)[2][2]*(*this)[3][1]) -
+			((*this)[0][2]*(*this)[1][0]*(*this)[2][3]*(*this)[3][1]) +
+			((*this)[0][0]*(*this)[1][2]*(*this)[2][3]*(*this)[3][1]) +
+			((*this)[0][3]*(*this)[1][1]*(*this)[2][0]*(*this)[3][2]) -
+			((*this)[0][1]*(*this)[1][3]*(*this)[2][0]*(*this)[3][2]) -
+			((*this)[0][3]*(*this)[1][0]*(*this)[2][1]*(*this)[3][2]) +
+			((*this)[0][0]*(*this)[1][3]*(*this)[2][1]*(*this)[3][2]) +
+			((*this)[0][1]*(*this)[1][0]*(*this)[2][3]*(*this)[3][2]) -
+			((*this)[0][0]*(*this)[1][1]*(*this)[2][3]*(*this)[3][2]) -
+			((*this)[0][2]*(*this)[1][1]*(*this)[2][0]*(*this)[3][3]) +
+			((*this)[0][1]*(*this)[1][2]*(*this)[2][0]*(*this)[3][3]) +
+			((*this)[0][2]*(*this)[1][0]*(*this)[2][1]*(*this)[3][3]) -
+			((*this)[0][0]*(*this)[1][2]*(*this)[2][1]*(*this)[3][3]) -
+			((*this)[0][1]*(*this)[1][0]*(*this)[2][2]*(*this)[3][3]) +
+			((*this)[0][0]*(*this)[1][1]*(*this)[2][2]*(*this)[3][3]);
+	}
+
+	mat4<T> inverted(bool * invertible = 0) {
+		mat4<T> res;
+		T det = this->det();
+
+		if(det == 0) { // Singular matrix
+			if (invertible) *invertible = false;
+			return fromIdentity();
+		}
+
+		if (invertible) *invertible = true;
+		T invDet = 1/det;
+
+		res[0][0] = invDet *  ((-(*this)[1][3]*(*this)[2][2]*(*this)[3][1]) +
+					((*this)[1][2]*(*this)[2][3]*(*this)[3][1]) +
+					((*this)[1][3]*(*this)[2][1]*(*this)[3][2]) -
+					((*this)[1][1]*(*this)[2][3]*(*this)[3][2]) -
+					((*this)[1][2]*(*this)[2][1]*(*this)[3][3]) +
+					((*this)[1][1]*(*this)[2][2]*(*this)[3][3]));
+		res[0][1] = invDet *   (((*this)[0][3]*(*this)[2][2]*(*this)[3][1]) -
+					((*this)[0][2]*(*this)[2][3]*(*this)[3][1]) -
+					((*this)[0][3]*(*this)[2][1]*(*this)[3][2]) +
+					((*this)[0][1]*(*this)[2][3]*(*this)[3][2]) +
+					((*this)[0][2]*(*this)[2][1]*(*this)[3][3]) -
+					((*this)[0][1]*(*this)[2][2]*(*this)[3][3]));
+		res[0][2] = invDet *  ((-(*this)[0][3]*(*this)[1][2]*(*this)[3][1]) +
+					((*this)[0][2]*(*this)[1][3]*(*this)[3][1]) +
+					((*this)[0][3]*(*this)[1][1]*(*this)[3][2]) -
+					((*this)[0][1]*(*this)[1][3]*(*this)[3][2]) -
+					((*this)[0][2]*(*this)[1][1]*(*this)[3][3]) +
+					((*this)[0][1]*(*this)[1][2]*(*this)[3][3]));
+		res[0][3] = invDet *   (((*this)[0][3]*(*this)[1][2]*(*this)[2][1]) -
+					((*this)[0][2]*(*this)[1][3]*(*this)[2][1]) -
+					((*this)[0][3]*(*this)[1][1]*(*this)[2][2]) +
+					((*this)[0][1]*(*this)[1][3]*(*this)[2][2]) +
+					((*this)[0][2]*(*this)[1][1]*(*this)[2][3]) -
+					((*this)[0][1]*(*this)[1][2]*(*this)[2][3]));
+
+		res[1][0] = invDet *   (((*this)[1][3]*(*this)[2][2]*(*this)[3][0]) -
+					((*this)[1][2]*(*this)[2][3]*(*this)[3][0]) -
+					((*this)[1][3]*(*this)[2][0]*(*this)[3][2]) +
+					((*this)[1][0]*(*this)[2][3]*(*this)[3][2]) +
+					((*this)[1][2]*(*this)[2][0]*(*this)[3][3]) -
+					((*this)[1][0]*(*this)[2][2]*(*this)[3][3]));
+		res[1][1] = invDet *  ((-(*this)[0][3]*(*this)[2][2]*(*this)[3][0]) +
+					((*this)[0][2]*(*this)[2][3]*(*this)[3][0]) +
+					((*this)[0][3]*(*this)[2][0]*(*this)[3][2]) -
+					((*this)[0][0]*(*this)[2][3]*(*this)[3][2]) -
+					((*this)[0][2]*(*this)[2][0]*(*this)[3][3]) +
+					((*this)[0][0]*(*this)[2][2]*(*this)[3][3]));
+		res[1][2] = invDet *   (((*this)[0][3]*(*this)[1][2]*(*this)[3][0]) -
+					((*this)[0][2]*(*this)[1][3]*(*this)[3][0]) -
+					((*this)[0][3]*(*this)[1][0]*(*this)[3][2]) +
+					((*this)[0][0]*(*this)[1][3]*(*this)[3][2]) +
+					((*this)[0][2]*(*this)[1][0]*(*this)[3][3]) -
+					((*this)[0][0]*(*this)[1][2]*(*this)[3][3]));
+		res[1][3] = invDet *  ((-(*this)[0][3]*(*this)[1][2]*(*this)[2][0]) +
+					((*this)[0][2]*(*this)[1][3]*(*this)[2][0]) +
+					((*this)[0][3]*(*this)[1][0]*(*this)[2][2]) -
+					((*this)[0][0]*(*this)[1][3]*(*this)[2][2]) -
+					((*this)[0][2]*(*this)[1][0]*(*this)[2][3]) +
+					((*this)[0][0]*(*this)[1][2]*(*this)[2][3]));
+
+		res[2][0] = invDet *  ((-(*this)[1][3]*(*this)[2][1]*(*this)[3][0]) +
+					((*this)[1][1]*(*this)[2][3]*(*this)[3][0]) +
+					((*this)[1][3]*(*this)[2][0]*(*this)[3][1]) -
+					((*this)[1][0]*(*this)[2][3]*(*this)[3][1]) -
+					((*this)[1][1]*(*this)[2][0]*(*this)[3][3]) +
+					((*this)[1][0]*(*this)[2][1]*(*this)[3][3]));
+		res[2][1] = invDet *   (((*this)[0][3]*(*this)[2][1]*(*this)[3][0]) -
+					((*this)[0][1]*(*this)[2][3]*(*this)[3][0]) -
+					((*this)[0][3]*(*this)[2][0]*(*this)[3][1]) +
+					((*this)[0][0]*(*this)[2][3]*(*this)[3][1]) +
+					((*this)[0][1]*(*this)[2][0]*(*this)[3][3]) -
+					((*this)[0][0]*(*this)[2][1]*(*this)[3][3]));
+		res[2][2] = invDet *  ((-(*this)[0][3]*(*this)[1][1]*(*this)[3][0]) +
+					((*this)[0][1]*(*this)[1][3]*(*this)[3][0]) +
+					((*this)[0][3]*(*this)[1][0]*(*this)[3][1]) -
+					((*this)[0][0]*(*this)[1][3]*(*this)[3][1]) -
+					((*this)[0][1]*(*this)[1][0]*(*this)[3][3]) +
+					((*this)[0][0]*(*this)[1][1]*(*this)[3][3]));
+		res[2][3] = invDet *   (((*this)[0][3]*(*this)[1][1]*(*this)[2][0]) -
+					((*this)[0][1]*(*this)[1][3]*(*this)[2][0]) -
+					((*this)[0][3]*(*this)[1][0]*(*this)[2][1]) +
+					((*this)[0][0]*(*this)[1][3]*(*this)[2][1]) +
+					((*this)[0][1]*(*this)[1][0]*(*this)[2][3]) -
+					((*this)[0][0]*(*this)[1][1]*(*this)[2][3]));
+
+		res[3][0] = invDet *   (((*this)[1][2]*(*this)[2][1]*(*this)[3][0]) -
+					((*this)[1][1]*(*this)[2][2]*(*this)[3][0]) -
+					((*this)[1][2]*(*this)[2][0]*(*this)[3][1]) +
+					((*this)[1][0]*(*this)[2][2]*(*this)[3][1]) +
+					((*this)[1][1]*(*this)[2][0]*(*this)[3][2]) -
+					((*this)[1][0]*(*this)[2][1]*(*this)[3][2]));
+		res[3][1] = invDet *  ((-(*this)[0][2]*(*this)[2][1]*(*this)[3][0]) +
+					((*this)[0][1]*(*this)[2][2]*(*this)[3][0]) +
+					((*this)[0][2]*(*this)[2][0]*(*this)[3][1]) -
+					((*this)[0][0]*(*this)[2][2]*(*this)[3][1]) -
+					((*this)[0][1]*(*this)[2][0]*(*this)[3][2]) +
+					((*this)[0][0]*(*this)[2][1]*(*this)[3][2]));
+		res[3][2] = invDet *   (((*this)[0][2]*(*this)[1][1]*(*this)[3][0]) -
+					((*this)[0][1]*(*this)[1][2]*(*this)[3][0]) -
+					((*this)[0][2]*(*this)[1][0]*(*this)[3][1]) +
+					((*this)[0][0]*(*this)[1][2]*(*this)[3][1]) +
+					((*this)[0][1]*(*this)[1][0]*(*this)[3][2]) -
+					((*this)[0][0]*(*this)[1][1]*(*this)[3][2]));
+		res[3][3] = invDet *  ((-(*this)[0][2]*(*this)[1][1]*(*this)[2][0]) +
+					((*this)[0][1]*(*this)[1][2]*(*this)[2][0]) +
+					((*this)[0][2]*(*this)[1][0]*(*this)[2][1]) -
+					((*this)[0][0]*(*this)[1][2]*(*this)[2][1]) -
+					((*this)[0][1]*(*this)[1][0]*(*this)[2][2]) +
+					((*this)[0][0]*(*this)[1][1]*(*this)[2][2]));
+
+		return res;
+	}
+
+	bool inverse() {
+		bool invertible;
+		mat4<T> inv = this->inverted(&invertible);
+		if (invertible) *this = inv;
+		return invertible;
+	}
+
+	mat4<T> transposed() {
+		mat4<T> mat;
+
+		for(int i = 0; i < 4; i++)
+		{
+			mat[0][i] = (*this)[i][0];
+			mat[1][i] = (*this)[i][1];
+			mat[2][i] = (*this)[i][2];
+			mat[3][i] = (*this)[i][3];
+		}
+
+		return mat;
+	}
+
+	void transpose(void) {
+		*this = this->transposed();
+	}
+};
+
+typedef mat4<float>   mat4f;
+typedef mat4<double>  mat4d;
+
+//-VEC2----------------------------------------------------------------------//
 template <typename T, typename U>
 bool operator == (const vec2<T> &a, const vec2<U> &b) {
 	return a.x == b.x && a.y == b.y;
@@ -553,6 +872,33 @@ auto operator / (const vec4<T> &a, double num) -> vec4<decltype(a.x/num)>{
 template <typename T, typename U>
 auto operator / (const vec4<T> &a, U num) -> vec4<decltype(a.x/num)>{
 	return vec4<decltype(a.x/num)>(a.x/num, a.y/num, a.z/num);
+}
+
+//-MAT4----------------------------------------------------------------------//
+
+template <typename T, typename U>
+auto operator * (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]*b.v[0])>
+{
+	mat4<decltype(a.v[0]*b.v[0])> res;
+
+	res(0,0) = a(0,0)*b(0,0) + a(1,0)*b(0,1) + a(2,0)*b(0,2) + a(3,0)*b(0,3);
+	res(0,1) = a(0,1)*b(0,0) + a(1,1)*b(0,1) + a(2,1)*b(0,2) + a(3,1)*b(0,3);
+	res(0,2) = a(0,2)*b(0,0) + a(1,2)*b(0,1) + a(2,2)*b(0,2) + a(3,2)*b(0,3);
+	res(0,3) = a(0,3)*b(0,0) + a(1,3)*b(0,1) + a(2,3)*b(0,2) + a(3,3)*b(0,3);
+	res(1,0) = a(0,0)*b(1,0) + a(1,0)*b(1,1) + a(2,0)*b(1,2) + a(3,0)*b(1,3);
+	res(1,1) = a(0,1)*b(1,0) + a(1,1)*b(1,1) + a(2,1)*b(1,2) + a(3,1)*b(1,3);
+	res(1,2) = a(0,2)*b(1,0) + a(1,2)*b(1,1) + a(2,2)*b(1,2) + a(3,2)*b(1,3);
+	res(1,3) = a(0,3)*b(1,0) + a(1,3)*b(1,1) + a(2,3)*b(1,2) + a(3,3)*b(1,3);
+	res(2,0) = a(0,0)*b(2,0) + a(1,0)*b(2,1) + a(2,0)*b(2,2) + a(3,0)*b(2,3);
+	res(2,1) = a(0,1)*b(2,0) + a(1,1)*b(2,1) + a(2,1)*b(2,2) + a(3,1)*b(2,3);
+	res(2,2) = a(0,2)*b(2,0) + a(1,2)*b(2,1) + a(2,2)*b(2,2) + a(3,2)*b(2,3);
+	res(2,3) = a(0,3)*b(2,0) + a(1,3)*b(2,1) + a(2,3)*b(2,2) + a(3,3)*b(2,3);
+	res(3,0) = a(0,0)*b(3,0) + a(1,0)*b(3,1) + a(2,0)*b(3,2) + a(3,0)*b(3,3);
+	res(3,1) = a(0,1)*b(3,0) + a(1,1)*b(3,1) + a(2,1)*b(3,2) + a(3,1)*b(3,3);
+	res(3,2) = a(0,2)*b(3,0) + a(1,2)*b(3,1) + a(2,2)*b(3,2) + a(3,2)*b(3,3);
+	res(3,3) = a(0,3)*b(3,0) + a(1,3)*b(3,1) + a(2,3)*b(3,2) + a(3,3)*b(3,3);
+
+	return res;
 }
 
 //---------------------------------------------------------------------------//
