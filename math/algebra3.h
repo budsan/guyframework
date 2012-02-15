@@ -314,7 +314,96 @@ typedef vec4<float>          vec4f;
 typedef vec4<double>         vec4d;
 
 //-MAT3----------------------------------------------------------------------//
+template <typename T>
+struct mat3
+{
+	T v[9]; // column-major
 
+	mat3() {}
+	mat3(const T val[16]) {*this = val;}
+	mat3(const mat3 &mat) {*this = mat;}
+	mat3(T a00, T a01, T a02,
+	     T a10, T a11, T a12,
+	     T a20, T a21, T a22) //row-major constructor
+	{
+		v[0] = a00; v[1] = a10; v[2] = a20;
+		v[3] = a01; v[4] = a11; v[5] = a21;
+		v[6] = a02; v[7] = a12; v[8] = a22;
+	}
+
+	T &operator()(unsigned int x, unsigned int y) {
+		return v[3*x + y];
+	}
+
+	T *operator[](unsigned int i) {
+		return &v[3*i];
+	}
+
+	const T *operator[](unsigned int i) const {
+		return &v[3*i];
+	}
+
+	template <typename U>
+	mat3<T> &operator=(const mat3<U> &m) {
+		return *this = m.v;
+	}
+
+	mat3<T> &operator=(const T val[16]) {
+		memcpy(this->v, val, 16 * sizeof(T));
+		return *this;
+	}
+
+	template <typename U> mat3<T> &operator=(const U val[16]) {
+		v[0] = val[0]; v[1] = val[1]; v[2] = val[2];
+		v[3] = val[3]; v[4] = val[4]; v[5] = val[5];
+		v[6] = val[6]; v[7] = val[7]; v[8] = val[8];
+		return *this;
+	}
+
+	mat3<T> operator - ()
+	{
+		mat3<T> res;
+		res.v[0] = -v[0]; res.v[1] = -v[1]; res.v[2] = -v[2];
+		res.v[3] = -v[3]; res.v[4] = -v[4]; res.v[5] = -v[5];
+		res.v[6] = -v[6]; res.v[7] = -v[7]; res.v[8] = -v[8];
+		return res;
+	}
+
+	template <typename U> mat3<T> &operator*=(const mat3<U> &mat) {
+		return *this = *this * mat;
+	}
+
+	mat3<T> &identity() {
+		v[0] = 1; v[1] = 0; v[2] = 0;
+		v[3] = 0; v[4] = 1; v[5] = 0;
+		v[6] = 0; v[7] = 0; v[8] = 1;
+		return *this;
+	}
+
+	static mat3<T> fromIdentity() {
+		return mat3<T>().identity();
+	}
+
+	mat3<T> transposed() {
+		mat3<T> mat;
+
+		for(int i = 0; i < 3; i++)
+		{
+			mat[0][i] = (*this)[i][0];
+			mat[1][i] = (*this)[i][1];
+			mat[2][i] = (*this)[i][2];
+		}
+
+		return mat;
+	}
+
+	void transpose(void) {
+		*this = this->transposed();
+	}
+};
+
+typedef mat3<float>   mat3f;
+typedef mat3<double>  mat3d;
 
 //-MAT4----------------------------------------------------------------------//
 template <typename T>
@@ -392,35 +481,29 @@ struct mat4
 		return mat4<T>().identity();
 	}
 
+	static mat4<T> fromRotateRad(T angle, const vec3<T> &axis) {
+		double c = cos(angle);
+		double s = sin(angle);
+		double t = 1.0f - c;
+
+		vec3<T> a = axis.normalized();
+		return mat4(
+		    t * a.x * a.x + c, t * a.x * a.y - s * a.z, t * a.x * a.z + s * a.y, 0,
+		    t * a.x * a.y + s * a.z, t * a.y * a.y + c, t * a.y * a.z - s * a.x, 0,
+		    t * a.x * a.z - s * a.y, t * a.y * a.z + s * a.x, t * a.z * a.z + c, 0,
+		    0, 0, 0, 1);
+	}
+
 	static mat4<T> fromRotateRad(T angle, T x, T y, T z) {
-		double s = sin(angle), c = cos(angle);
-		double ci = 1.0f - c;
-		double mod = sqrt(x*x + y*y + z*z);
-		double invmod = 1.0f / mod;
+		return fromRotateRad(angle, vec3<T>(x,y,z));
+	}
 
-		T x1, y1, z1;
-		T xs, ys, zs;
-		T x2, y2, z2;
-		T xy, yz, xz;
-
-		x1 = x * invmod;
-		y1 = y * invmod;
-		z1 = z * invmod;
-
-		xs = x1 * s;  ys = y1 * s;  zs = z1 * s;
-		x2 = x1 * x1; y2 = y1 * y1; z2 = z1 * z1;
-		xy = x1 * y1; yz = y1 * z1; xz = x1 * z1;
-
-		return mat4<T>(
-		x2 * ci + c , xy * ci - zs, xz * ci + ys, 0,
-		xy * ci + zs, y2 * ci + c , yz * ci - xs, 0,
-		xz * ci - ys, yz * ci + xs, z2 * ci + c , 0,
-			   0,            0,            0, 1 );
+	static mat4<T> fromRotate(T angle, const vec3<T> &axis) {
+		return fromRotateRad(angle * (M_PI/180), axis);
 	}
 
 	static mat4<T> fromRotate(T angle, T x, T y, T z) {
-		double rad = angle * (M_PI/180);
-		return fromRotateRad(rad, x, y, z);
+		return fromRotateRad(angle * (M_PI/180), vec3<T>(x,y,z));
 	}
 
 	static mat4<T> fromTranslate(T x, T y, T z) {
@@ -431,12 +514,20 @@ struct mat4
 		0, 0, 0, 1 );
 	}
 
+	static mat4<T> fromTranslate(const vec3<T> &v) {
+		return fromTranslate(v.x, v.y, v.z);
+	}
+
 	static mat4<T> fromScale(T x, T y, T z) {
 		return mat4<T>(
 		x, 0, 0, 0,
 		0, y, 0, 0,
 		0, 0, z, 0,
 		0, 0, 0, 1 );
+	}
+
+	static mat4<T> fromScale(const vec3<T> &v) {
+		return fromScale(v.x, v.y, v.z);
 	}
 
 	static mat4<T> fromFrustrum(T l, T r, T b, T t, T n, T f) {
@@ -459,16 +550,32 @@ struct mat4
 		return *this *= fromRotate(angle, x, y, z);
 	}
 
+	mat4<T> &rotate(T angle, const vec3<T> &axis) {
+		return *this *= fromRotate(angle, axis);
+	}
+
 	mat4<T> &rotateRad(T angle, T x, T y, T z) {
 		return *this *= fromRotateRad(angle, x, y, z);
+	}
+
+	mat4<T> &rotateRad(T angle, const vec3<T> &axis) {
+		return *this *= fromRotateRad(angle, axis);
 	}
 
 	mat4<T> &translate(T x, T y, T z) {
 		return *this *= fromTranslate(x, y, z);
 	}
 
+	mat4<T> &translate(const vec3<T> &v) {
+		return *this *= fromTranslate(v);
+	}
+
 	mat4<T> &scale(T x, T y, T z) {
 		return *this *= fromScale(x, y, z);
+	}
+
+	mat4<T> &scale(const vec3<T> &v) {
+		return *this *= fromScale(v);
 	}
 
 	T det() {
@@ -686,6 +793,24 @@ auto operator * (U num, const vec2<T> &a) -> vec2<decltype(a.x*num)> {
 	return a*num;
 }
 
+template <typename T, typename U>
+auto operator * (const mat3<T> &a, const vec3<U> &v) -> vec3<decltype(v.x*a.v[0])>
+{
+    vec3<decltype(v.x*a.v[0])> res;
+
+    res.x = a.v[0]*v.x + a.v[3]*v.y + a.v[6]*v.z;
+    res.y = a.v[1]*v.x + a.v[4]*v.y + a.v[7]*v.z;
+    res.z = a.v[2]*v.x + a.v[5]*v.y + a.v[8]*v.z;
+
+    return res;
+}
+
+template <typename T, typename U>
+auto operator * (const vec3<T> &v, const mat3<U> &a)  -> vec3<decltype(v.x*a.v[0])>
+{
+    return a.transpose() * v;
+}
+
 //cross product
 template <typename T, typename U>
 auto operator ^ (const vec2<T> &a, const vec2<U> &b) -> vec3<decltype(a.x*b.x)> {
@@ -852,6 +977,24 @@ auto operator * (const vec4<T> &a, U num) -> vec4<decltype(a.x*num)> {
 template <typename T, typename U>
 auto operator * (U num, const vec4<T> &a) -> vec4<decltype(a.x*num)> {
 	return a*num;
+}
+
+template <typename T, typename U>
+auto operator*(const mat4<T> &a, const vec4<U> &v) -> vec4<decltype(a.x*a.v[0])> {
+
+	vec4<decltype(a.x*a.v[0])> res;
+
+	res.x = a.v[0] * v.x + a.v[4] * v.y + a.v[8] * v.z + a.v[12] * v.w;
+	res.y = a.v[1] * v.x + a.v[5] * v.y + a.v[9] * v.z + a.v[13] * v.w;
+	res.z = a.v[2] * v.x + a.v[6] * v.y + a.v[10]* v.z + a.v[14] * v.w;
+	res.w = a.v[3] * v.x + a.v[7] * v.y + a.v[11]* v.z + a.v[15] * v.w;
+
+	return res;
+}
+
+template <typename T, typename U>
+auto operator*(const vec4<T> &v, const mat4<U> &a) -> vec4<decltype(a.x*a.v[0])> {
+    return a.transpose()*v;
 }
 
 //dot product
