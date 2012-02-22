@@ -30,25 +30,28 @@ math::bbox2f Camera2D::getBounding()
 	return math::bbox2f(min,max);
 }
 
-void Camera2D::setOpenGLMatrices()
+math::mat4f Camera2D::getModelviewMatrix()
 {
-	if (!init)
-	{
-		LOG << "Warning: Must be call Init or resizeScreen" << std::endl;
-		return;
-	}
+	return math::mat4f::fromIdentity();
+}
 
-	Screen &screen = Screen::Instance();
-	screen.resetViewport();
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+math::mat4f Camera2D::getProjectionMatrix()
+{
 	float zoominv = (1.0f/zoom);
 	float zoomw = zoominv*w*0.5f;
 	float zoomh = zoominv*h*0.5f;
-	glOrtho(pos.x-zoomw,pos.x+zoomw,
-			pos.y-zoomh,pos.y+zoomh , -1, 1);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	return math::mat4f::fromOrtho(pos.x-zoomw,pos.x+zoomw,
+				      pos.y-zoomh,pos.y+zoomh , -1, 1);
+}
+
+void Camera2D::updateOpenGLMatrices()
+{
+	if (!init) Init();
+
+	Screen &screen = Screen::Instance();
+	screen.resetViewport();
+
+	Camera::updateOpenGLMatrices();
 }
 
 void Camera2D::reset()

@@ -1,10 +1,12 @@
 #ifndef CAMERA2D_H
 #define CAMERA2D_H
 
-#include "math/vec2.h"
+#include "camera.h"
+
+#include "math/algebra3.h"
 #include "math/bbox.h"
 
-class Camera2D
+class Camera2D : public Camera
 {
 public:
 	Camera2D();
@@ -13,7 +15,10 @@ public:
 	void Init();
 	void resizeScreen(int width, int height);
 	void resizeScreen(int height); //Get width from screen's aspect ratio.
-	void setOpenGLMatrices();
+
+	math::mat4f getModelviewMatrix();
+	math::mat4f getProjectionMatrix();
+	void updateOpenGLMatrices();
 	void reset();
 
 	void  setPos(math::vec2f pos);
@@ -26,8 +31,6 @@ public:
 	int height() const {return h;}
 
 private:
-	void DrawGrid(float size);
-
 	bool init;
 	math::vec2f pos;
 	float zoom;

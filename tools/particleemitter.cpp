@@ -42,14 +42,28 @@ ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : random(time(0))
 	Restart();
 }
 
+bool ParticleEmitter::Load(std::string path)
+{
+	std::ifstream file(path.c_str(),std::ifstream::in|std::ifstream::binary);
+	if (file.is_open())
+	{
+		read(file);
+		file.close();
+
+		Load();
+		return true;
+	}
+
+	return false;
+}
+
 void ParticleEmitter::Load()
 {
 	if (!m_material.empty())
 	{
 		TextureManager& texman = TextureManager::Instance();
 		texman.getTexture(m_material);
-	}
-}
+	}}
 
 void ParticleEmitter::Unload()
 {

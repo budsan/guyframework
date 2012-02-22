@@ -29,7 +29,8 @@ SOURCES += \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
     $$PWD/graphics/spritestatic.cpp \
-    $$PWD/variable.cpp
+    $$PWD/variable.cpp \
+    gameframework/graphics/camera.cpp
 
     
 HEADERS += \
@@ -57,6 +58,8 @@ HEADERS += \
     $$PWD/math/tri.h \
     $$PWD/math/vec2.h \
     $$PWD/math/vec3.h \
+    $$PWD/math/mat4.h \
+    $$PWD/math/algebra3.h \
     $$PWD/graphics/camera2d.h \
     $$PWD/graphics/primitives.h \
     $$PWD/audio/emyl.h \
@@ -66,7 +69,8 @@ HEADERS += \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
-    gameframework/math/mat4.h \
-    gameframework/math/algebra3.h
+    $$PWD/graphics/camera.h
 
 QMAKE_CXXFLAGS += -std=c++0x
+
+

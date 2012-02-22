@@ -19,6 +19,7 @@ public:
 	void Draw();
 	void Restart();
 
+	bool Load(std::string path);
 	void Load();
 	void Unload();
 
