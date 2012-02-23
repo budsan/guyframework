@@ -14,39 +14,39 @@
 
 //---------------------------------------------------------------------------//
 
-Input* Input::myInstance = NULL;
+Input* Input::m_instance = nullptr;
 
 Input::Input()
 {
-	myDoExit = false;
-	mySettings = Settings::pInstance();
-	myGlobalTime = 0;
-	state.clear();
+	m_doExit = false;
+	m_settings = Settings::pInstance();
+	m_time = 0;
+	m_state.clear();
 }
 
 Input::~Input()
 {
-	myInstance = NULL;
+	m_instance = nullptr;
 }
 
 Input& Input::Instance()
 {
-	return *pInstance();
+	return *ptrInstance();
 }
 
-Input* Input::pInstance()
+Input* Input::ptrInstance()
 {
-	if(myInstance == NULL)
-		myInstance = new Input();
+	if(m_instance == nullptr)
+		m_instance = new Input();
 
-	return myInstance;
+	return m_instance;
 }
 
-void Input::Update()
+void Input::update()
 {
-	for (unsigned int j = 0; j < state.size(); j++)
+	for (unsigned int j = 0; j < m_state.size(); j++)
 	{
-		state[j].ResetEvents();
+		m_state[j].resetEvents();
 	}
 
 	SDL_Event event;
@@ -55,17 +55,17 @@ void Input::Update()
 		switch (event.type)
 		{
 		  case SDL_KEYDOWN:
-			for (int i = 0; i < state.size(); i++)
+			for (int i = 0; i < m_state.size(); i++)
 			{
 				const std::vector<Keybinds::Keybind> &keybinds
-					= mySettings->getKeybinds()[i];
+					= m_settings->getKeybinds()[i];
 
 				for (unsigned int j = 0; j < keybinds.size(); j++)
 				{
 					if( event.key.keysym.sym == keybinds[j].getKey())
 					{
-						state[i].myKeyDown [j] = true;
-						state[i].myKeyState[j] = true;
+						m_state[i].m_keyDown [j] = true;
+						m_state[i].m_keyState[j] = true;
 					}
 				}
 			}
@@ -73,45 +73,45 @@ void Input::Update()
 			// ALT-F4 exit method :D
 			if ( event.key.keysym.sym == SDLK_F4 &&
 				 event.key.keysym.mod & KMOD_ALT)  {
-				myDoExit = true;
+				m_doExit = true;
 			}
 			break;
 		  case SDL_KEYUP:
-			for (int i = 0; i < state.size(); i++)
+			for (int i = 0; i < m_state.size(); i++)
 			{
 				const std::vector<Keybinds::Keybind> &keybinds
-					= mySettings->getKeybinds()[i];
+					= m_settings->getKeybinds()[i];
 
 				for (unsigned int j = 0; j < keybinds.size(); j++)
 				{
 					if( event.key.keysym.sym == keybinds[j].getKey())
 					{
-						state[i].myKeyUp   [j] = true;
-						state[i].myKeyState[j] = false;
+						m_state[i].m_keyUp   [j] = true;
+						m_state[i].m_keyState[j] = false;
 					}
 				}
 			}
 			break;
 		  case SDL_QUIT:
-			myDoExit = true;
+			m_doExit = true;
 			break;
 		  default:
 			break;
 		}
    	}
 
-	myGlobalTime = ((float)SDL_GetTicks())/float(TICKS_PER_SECOND);
+	m_time = ((float)SDL_GetTicks())/float(TICKS_PER_SECOND);
 	
 }
 
-float Input::getGlobalTime()    { return myGlobalTime;}
-float Input::getGlobalTimeRaw() { return ((float)SDL_GetTicks())/float(TICKS_PER_SECOND);}
-bool  Input::Exit()             { return myDoExit; }
+float Input::getTime()    { return m_time;}
+float Input::getTimeRaw() { return ((float)SDL_GetTicks())/float(TICKS_PER_SECOND);}
+bool  Input::exit()             { return m_doExit; }
 
 void Input::getKeyFromSettings()
 {
-	const Keybinds &kb = mySettings->getKeybinds();
-	state.clear();
-	state.resize(kb.getPlayerCount());
+	const Keybinds &kb = m_settings->getKeybinds();
+	m_state.clear();
+	m_state.resize(kb.getPlayerCount());
 }
 

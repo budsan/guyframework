@@ -10,25 +10,25 @@
 class TextureManager
 {
 public:
-	static TextureManager& Instance();
-	static TextureManager* pInstance();
+	static TextureManager& instance();
+	static TextureManager* ptrInstance();
 	~TextureManager(void);
 
-	void           UseTexture (std::string _sFilename);
+	void           useTexture (std::string _sFilename);
 	const Texture& getTexture(std::string _sFilename);
-	void           DeleteTexture(std::string _sFilename);
-	unsigned int   NumOfTextures();
-	void           UnloadTextures();
+	void           deleteTexture(std::string _sFilename);
+	unsigned int   numOfTextures();
+	void           unloadTextures();
 	void           setDataPath(std::string path);
 
 protected:
 
 	TextureManager();
-	static void DeleteInstance();
-	static TextureManager* myInstance;
-	static bool myIsInstanced;
+	static void deleteInstance();
+	static TextureManager* m_instance;
+	static bool m_isInstanced;
 
 	std::vector<std::string> getPosibleDataPath(std::string filename);
-	std::map<std::string, Texture> myTextures;
-	std::string myDataPath;
+	std::map<std::string, Texture> m_textures;
+	std::string m_dataPath;
 };

@@ -23,8 +23,8 @@ public:
 		const Keybind &operator=(const Keybind& other);
 	private:
 
-		unsigned short def;
-		unsigned short key;
+		unsigned short m_def;
+		unsigned short m_key;
 	};
 
 	Keybinds();
@@ -38,7 +38,7 @@ public:
 	unsigned int getPlayerCount() const;
 	unsigned int getAccionCount() const;
 private:
-	std::vector< std::vector <Keybind> > myPlayerKeybinds;
+	std::vector< std::vector <Keybind> > m_playerKeybinds;
 };
 
 class Settings
@@ -47,7 +47,7 @@ public:
 	~Settings();
 	static Settings* pInstance();
 
-	bool Load(const char *filename);
+	bool load(const char *filename);
 	bool Save(const char *filename);
 
 	void add(const Variable &set);
@@ -56,9 +56,9 @@ public:
 	void setKeybinds(const Keybinds &keys);
 	const Keybinds &getKeybinds() const;
 private:
-	std::map<std::string, Variable> settings;
-	Keybinds keybinds;
+	std::map<std::string, Variable> m_settings;
+	Keybinds m_keybinds;
 
 	Settings();
-	static Settings *m_pInstance;
+	static Settings *m_instance;
 };

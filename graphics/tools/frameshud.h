@@ -7,20 +7,20 @@ class FramesHUD
 {
  public:
         FramesHUD();
-        bool LoadFont(const char *filename);
+	bool loadFont(const char *filename);
 	void setColor(const rgba &color);
 	void setDisplayTime(float time);
 
-        void Update(float GameTime);
-	void Draw();
-	void Reset();
+	void update(float deltaTime);
+	void draw();
+	void reset();
 
 protected:
-	Font myFont;
-	rgba myColor;
-	float myDisplayTime, myDisplayTimeInv;
-	float myTimeCount;
-	float myFramesToDisplay;
-	unsigned short myNumOfFrames;
-	bool myIsFontLoaded;
+	Font m_font;
+	rgba m_color;
+	float m_displayTime, m_displayTimeInv;
+	float m_timeCount;
+	float m_framesToDisplay;
+	unsigned short m_framesCount;
+	bool m_isFontLoaded;
 };

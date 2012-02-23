@@ -9,23 +9,23 @@
 
 Shader::Shader(GLenum type)
 {
-	_id = glCreateShader(type);
+	m_id = glCreateShader(type);
 }
 
 
 Shader::~Shader()
 {
-	glDeleteShader(_id);
+	glDeleteShader(m_id);
 }
 
 
-void Shader::Compile() const
+void Shader::compile() const
 {
-	glCompileShader(_id);
+	glCompileShader(m_id);
 }
 
 
-bool Shader::Load(const char *filename)
+bool Shader::load(const char *filename)
 {
 	int length;
 	char *buffer;
@@ -51,7 +51,7 @@ bool Shader::Load(const char *filename)
 
 	buffer[length] = '\0';
 	const char *source = buffer;
-	glShaderSource(_id, 1, &source, NULL);
+	glShaderSource(m_id, 1, &source, nullptr);
 
 	delete[] buffer;
 
@@ -59,21 +59,21 @@ bool Shader::Load(const char *filename)
 }
 
 
-void Shader::Attach(GLuint program) const
+void Shader::attach(GLuint program) const
 {
-	glAttachShader(program, _id);
+	glAttachShader(program, m_id);
 }
 
 
-void Shader::PrintInfoLog() const
+void Shader::printInfoLog() const
 {
 	int length = 0;
 	char *infoLog;
 
-	glGetShaderiv(_id, GL_INFO_LOG_LENGTH, &length);
+	glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &length);
 	if (length > 1) {
 		infoLog = new char[length];
-		glGetShaderInfoLog(_id, length, NULL, infoLog);
+		glGetShaderInfoLog(m_id, length, nullptr, infoLog);
 		std::cout << infoLog;
 		delete[] infoLog;
 	}

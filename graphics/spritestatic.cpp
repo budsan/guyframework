@@ -9,38 +9,44 @@
 
 SpriteStatic::SpriteStatic() : Sprite()
 {
-	data = NULL;
-	frameSelected  = 0;
+	m_data = nullptr;
+	m_frameSelected  = 0;
 }
 
-SpriteStatic::SpriteStatic(SpriteLibrary *_data) : Sprite()
+SpriteStatic::SpriteStatic(std::shared_ptr<SpriteLibrary> _data) : Sprite()
 {
 	setLibrary(_data);
 }
 
-void SpriteStatic::Update(float GameTime)
+void SpriteStatic::update(float deltaTime)
 {
 
 }
 
 
-bool SpriteStatic::setLibrary(SpriteLibrary* _data)
+bool SpriteStatic::setLibrary(std::shared_ptr<SpriteLibrary> _data)
 {
+	if(_data == nullptr)
+	{
+		m_data = nullptr;
+		return true;
+	}
+
 	if (_data->frames.size() == 0) return false;
-	data = _data;
-	frameSelected = 0;
+	m_data = _data;
+	m_frameSelected = 0;
 
 	return true;
 }
 
 void SpriteStatic::getParamsToDraw(Sprite::drawParams &params)
 {
-	if (data == NULL) {
-		params.filename = NULL;
+	if (m_data == nullptr) {
+		params.filename = nullptr;
 		return;
 	}
-	const SpriteFrame& fram = data->frames[frameSelected];
-	params.filename = data->spritesheetFilenames[fram.filename].c_str();
+	const SpriteFrame& fram = m_data->frames[m_frameSelected];
+	params.filename = m_data->spritesheetFilenames[fram.filename].c_str();
 	params.x  = fram.x;
 	params.y  = fram.y;
 	params.w  = fram.w;
@@ -51,28 +57,28 @@ void SpriteStatic::getParamsToDraw(Sprite::drawParams &params)
 
 int SpriteStatic::getFrameID(std::string name)
 {
-	if (data == NULL) return -1;
-	std::map<std::string, int>::iterator it = data->frameNames.find(name);
-	if (it == data->frameNames.end()) return -1;
+	if (m_data == nullptr) return -1;
+	std::map<std::string, int>::iterator it = m_data->frameNames.find(name);
+	if (it == m_data->frameNames.end()) return -1;
 	return (int)it->second;
 }
 
-bool SpriteStatic::SelectFrame(std::string name)
+bool SpriteStatic::selectFrame(std::string name)
 {
 	int id = getFrameID(name);
 	if (id < 0) return false;
-	return SelectFrame(id);
+	return selectFrame(id);
 }
 
-bool SpriteStatic::SelectFrame(int frameID)
+bool SpriteStatic::selectFrame(int frameID)
 {
-	if (data == NULL) return false;
-	if (data->Empty()) return false;
-	frameSelected  = frameID;
+	if (m_data == nullptr) return false;
+	if (m_data->Empty()) return false;
+	m_frameSelected  = frameID;
 	return true;
 }
 
-bool SpriteLibrary::Load(const char* filename)
+bool SpriteLibrary::load(const char* filename)
 {
 	std::ifstream in(filename);
 

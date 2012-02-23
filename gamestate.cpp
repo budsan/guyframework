@@ -1,17 +1,17 @@
 #include "gamestate.h"
 
-GameState::GameState() : myParent(0)
+GameState::GameState() : m_parent(0)
 {
 
 }
 
-void GameState::setGame(Game* parent)
+void GameState::setGame(Game *parent)
 {
-	myParent = parent;
+	m_parent = parent;
 }
 
 Game* GameState::getGame()
 {
-	return myParent;
+	return m_parent;
 }
 

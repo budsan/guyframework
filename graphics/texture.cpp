@@ -12,18 +12,18 @@
 #include <png.h>
 #endif
 
-Texture::Texture() : id(0), width(0), height(0)
+Texture::Texture() : m_id(0), m_width(0), m_height(0)
 {
 	//glGenTextures(1, &id);
 }
 
 Texture::~Texture()
 {
-	if (id != 0) glDeleteTextures(1, &id);
+	if (m_id != 0) glDeleteTextures(1, &m_id);
 }
 
 
-bool Texture::Load(std::string filename)
+bool Texture::load(std::string filename)
 {
 #ifdef INCLUDED_FROM_QT
 	return TextureQTLoader::LoadQT(filename.c_str(), *this);
@@ -35,7 +35,7 @@ bool Texture::Load(std::string filename)
 // El operador igualdad para hacer copias esta PROHIBIDO.
 const ::Texture& Texture::operator=(const Texture& other)
 {
-	if (other.id != 0)
+	if (other.m_id != 0)
 	{
 		throw std::runtime_error("TEXTURE EQUAL OPERATOR FOR COPY IS FORBIDDEN");
 	}
@@ -44,10 +44,10 @@ const ::Texture& Texture::operator=(const Texture& other)
 }
 
 #ifndef INCLUDED_FROM_QT
-bool Texture::Load(GLenum iformat, int width, int height, GLfloat *pixels)
+bool Texture::load(GLenum iformat, int width, int height, GLfloat *pixels)
 {
-	glGenTextures(1, &id);
-	Bind();
+	glGenTextures(1, &m_id);
+	bind();
 
 	GLenum format;
 
@@ -81,18 +81,18 @@ bool Texture::Load(GLenum iformat, int width, int height, GLfloat *pixels)
 	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, iformat, width, height, 0, format, GL_FLOAT, pixels);
-	this->width  = width;
-	this->height = height;
+	this->m_width  = width;
+	this->m_height = height;
 
 	return true;
 }
 #endif
 
 
-bool Texture::Load(GLenum iformat, int width, int height, GLubyte *pixels)
+bool Texture::load(GLenum iformat, int width, int height, GLubyte *pixels)
 {
-	glGenTextures(1, &id);
-	Bind();
+	glGenTextures(1, &m_id);
+	bind();
 
 	GLenum format;
 
@@ -112,7 +112,7 @@ bool Texture::Load(GLenum iformat, int width, int height, GLubyte *pixels)
 	return true;
 }
 
-bool Texture::Load(const Texture &other)
+bool Texture::load(const Texture &other)
 {
 	return false;
 }
@@ -120,33 +120,33 @@ bool Texture::Load(const Texture &other)
 
 void Texture::setFiltering(GLenum filter) const
 {
-	Bind();
+	bind();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 }
 
 void Texture::setWrap(GLenum wrap) const
 {
-	Bind();
+	bind();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
 }
 
-void Texture::Bind() const
+void Texture::bind() const
 {
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D, m_id);
 };
 
-void Texture::Unbind()
+void Texture::unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 };
 
 //---------------------------------------------------------------------------//
 
-bool Texture::LoadNullTexture()
+bool Texture::loadNullTexture()
 {
-	id = 0;
+	m_id = 0;
 	const unsigned int h = 64, w = 64;
 	unsigned char *texels = new unsigned char[4*h*w];
 	unsigned char *p = texels;
@@ -173,13 +173,13 @@ bool Texture::LoadNullTexture()
 		}
 	}
 
-	glGenTextures (1, &id);
-	if (id == 0) return false;
-	glBindTexture (GL_TEXTURE_2D, id);
+	glGenTextures (1, &m_id);
+	if (m_id == 0) return false;
+	glBindTexture (GL_TEXTURE_2D, m_id);
 	gluBuild2DMipmaps (GL_TEXTURE_2D, GL_RGBA, w, h, GL_RGBA, GL_UNSIGNED_BYTE, texels);
 
-	width  = w;
-	height = h;
+	m_width  = w;
+	m_height = h;
 	delete texels;
 	return true;
 }
@@ -275,15 +275,15 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     png_structp png_ptr;
     png_infop info_ptr;
     int bit_depth, color_type;
-    FILE *fp = NULL;
-    png_bytep *row_pointers = NULL;
+    FILE *fp = nullptr;
+    png_bytep *row_pointers = nullptr;
     int i;
 
     /* open image file */
     fp = fopen (fname, "rb");
     if (!fp)
     {
-	return NULL;
+	return nullptr;
     }
 
     /* read magic number */
@@ -293,15 +293,15 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     if (!png_check_sig (magic, sizeof(magic)))
     {
 	fclose (fp);
-	return NULL;
+	return nullptr;
     }
 
     /* create a png read struct */
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     if (!png_ptr)
     {
 	fclose (fp);
-	return NULL;
+	return nullptr;
     }
 
     /* create a png info struct */
@@ -309,8 +309,8 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     if (!info_ptr)
     {
 	fclose (fp);
-	png_destroy_read_struct (&png_ptr, NULL, NULL);
-	return NULL;
+	png_destroy_read_struct (&png_ptr, nullptr, nullptr);
+	return nullptr;
     }
 
     /* create our OpenGL texture object */
@@ -320,7 +320,7 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     if (setjmp (png_jmpbuf (png_ptr)))
     {
 	fclose (fp);
-	png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
+	png_destroy_read_struct (&png_ptr, &info_ptr, nullptr);
 
 	if(row_pointers)
 	       free(row_pointers);
@@ -330,7 +330,7 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
 	    if (texinfo->texels) free(texinfo->texels);
 	    free (texinfo);
 	}
-	return NULL;
+	return nullptr;
     }
 
     /* setup libpng for using standard C fread() function with our FILE pointer */
@@ -361,7 +361,7 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     png_read_update_info (png_ptr, info_ptr);
 
     /* retrieve updated information */
-    png_get_IHDR (png_ptr, info_ptr, (png_uint_32*)(&texinfo->width), (png_uint_32*)(&texinfo->height), &bit_depth, &color_type, NULL, NULL, NULL);
+    png_get_IHDR (png_ptr, info_ptr, (png_uint_32*)(&texinfo->width), (png_uint_32*)(&texinfo->height), &bit_depth, &color_type, nullptr, nullptr, nullptr);
 
     /* get image format and components per pixel */
     getPNGTextureInfo (color_type, texinfo);
@@ -381,8 +381,8 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     png_read_image (png_ptr, row_pointers);
 
     /* finish decompression and release memory */
-    png_read_end (png_ptr, NULL);
-    png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
+    png_read_end (png_ptr, nullptr);
+    png_destroy_read_struct (&png_ptr, &info_ptr, nullptr);
 
     /* we don't need row pointers anymore */
     free(row_pointers);
@@ -395,8 +395,8 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
 
 bool TexturePNGLoader::LoadPNG(const char *fname, Texture &t)
 {
-	gl_texture_t *png_tex = NULL;
-	t.id = 0;
+	gl_texture_t *png_tex = nullptr;
+	t.m_id = 0;
 
 	png_tex = ReadPNGFromFile(fname);
 
@@ -417,9 +417,9 @@ bool TexturePNGLoader::LoadPNG(const char *fname, Texture &t)
 				   png_tex->width, png_tex->height,
 				   png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
 
-		t.id     = png_tex->id;
-		t.width  = png_tex->width;
-		t.height = png_tex->height;
+		t.m_id     = png_tex->id;
+		t.m_width  = png_tex->width;
+		t.m_height = png_tex->height;
 
 		/* OpenGL has its own copy of texture data */
 		free (png_tex->texels);

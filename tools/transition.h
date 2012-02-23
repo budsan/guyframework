@@ -10,7 +10,7 @@ public:
 	virtual void  setPos(float _fPos) {m_fPos = m_fPosToGo = _fPos;}
 	virtual void   goPos(float _fPos) {m_fPosToGo = _fPos;}
 
-	virtual void update(float _GameTime) = 0;
+	virtual void update(float _deltaTime) = 0;
 
 	virtual float getPos() {return m_fPos;}
 	virtual bool reached() {return m_fPosToGo == m_fPos;}
@@ -27,7 +27,7 @@ public:
 	 TransitionVelConst() : m_fVel(1.0f) {}
 	~TransitionVelConst() {}
 
-	void update(float _GameTime);
+	void update(float _deltaTime);
 
 	void setVel(float _fSecsTotal) {m_fVel = _fSecsTotal;}
 
@@ -44,7 +44,7 @@ public:
 
 	void setPos(float _fPos);
 	void  goPos(float _fPos);
-	void update(float _GameTime);
+	void update(float _deltaTime);
 
 	void setTime(float _fTimeToReach) { m_fTime = _fTimeToReach;}
 
@@ -63,7 +63,7 @@ public:
 
 	void setPos(float _fPos);
 	void  goPos(float _fPos);
-	void update(float _GameTime);
+	void update(float _deltaTime);
 
 	void setTime(float _fSecsTotal) { m_fVel = _fSecsTotal;}
 
@@ -83,7 +83,7 @@ public:
 
 	void setPos(float _fPos);
 	void  goPos(float _fPos);
-	void update(float _GameTime);
+	void update(float _deltaTime);
 
 	void setTime(float _fSecsTotal) { m_fVel = _fSecsTotal;}
 
@@ -102,7 +102,7 @@ public:
 
 	void setPos(float _fPos);
 	void  goPos(float _fPos);
-	void update(float _GameTime);
+	void update(float _deltaTime);
 
 	void setTime(float _fSecsTotal) { m_fVel = _fSecsTotal;}
 
@@ -119,7 +119,7 @@ public:
 	 TransitionBounce() : m_fVel(0), m_fAcc(5), m_fVelLostPercent(0.4f) {}
 	~TransitionBounce();
 
-	void update(float _GameTime);
+	void update(float _deltaTime);
 	bool reached() {return (m_fPosToGo == m_fPos) && m_fVel == 0;}
 
 	void setAcc(float _fUnitsPerSec) {m_fAcc = _fUnitsPerSec;}
@@ -138,8 +138,8 @@ public:
 	 TransitionInertial() : m_fVel(0), m_fAcc(1.f), m_fVelMax(3.0f) {}
 	~TransitionInertial();
 
-	void update(float _GameTime);
-	void update(int   _GameTime) {update(float(_GameTime)/1000.f);}
+	void update(float _deltaTime);
+	void update(int   _deltaTime) {update(float(_deltaTime)/1000.f);}
 	bool reached() {return (m_fPosToGo == m_fPos) && m_fVel == 0;}
 
 	void setAcc(float _fUnitsPerSec) {m_fAcc = _fUnitsPerSec;}

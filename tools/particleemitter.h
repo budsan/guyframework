@@ -15,13 +15,13 @@ public:
 	ParticleEmitter();
 	ParticleEmitter(const ParticleEmitter &oth);
 
-        void Update(float GameTime);
-	void Draw();
-	void Restart();
+	void update(float deltaTime);
+	void draw();
+	void restart();
 
-	bool Load(std::string path);
-	void Load();
-	void Unload();
+	bool load(std::string path);
+	void load();
+	void unload();
 
 	// SETTERS
 
@@ -66,7 +66,7 @@ public:
 	bool getParticleAccumulativeColor() { return m_accumBlending; }
 	const std::string &getParticleMaterial() { return m_material; }
 
-	bool AreThereParticlesLeft() { return m_num || m_particles.empty();}
+	bool areParticlesLeft() { return m_num || m_particles.empty();}
 
 	void write(std::ofstream &file);
 	void read(std::ifstream &file);
@@ -102,7 +102,7 @@ protected:
 	std::list<Particle> m_particles;
 
 	//RANDOM ENGINE
-	std::mt19937 random;
+	std::mt19937 m_random;
 };
 
 #endif // PARTICLEEMITER_H

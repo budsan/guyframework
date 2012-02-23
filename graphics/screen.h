@@ -8,8 +8,8 @@
 class Screen
 {
 public:
-	static Screen& Instance();
-	static Screen* pInstance();
+	static Screen& instance();
+	static Screen* ptrInstance();
 	~Screen(void);
 
 	typedef struct
@@ -19,14 +19,14 @@ public:
 		unsigned int bpp;
 	} vmode;
 
-	bool Init();
-	void Flip();
+	bool init();
+	void flip();
 
 	//Clear with alpha blending
-	void FillWithColor(const rgba &color);
+	void fillWithColor(const rgba &color);
 	
 	bool setVideoMode();
-	void UnloadContent();
+	void unloadContent();
 	void setCaption(const char* GameName);
 
 	//TOOLS
@@ -43,18 +43,18 @@ protected:
 
 
 	//STATIC
-	static int  CompareModes(const void *a, const void *b);
-	static void DeleteInstance();
+	static int  compareModes(const void *a, const void *b);
+	static void deleteInstance();
 	
-	static Screen* myInstance;
-	static bool myIsInstanced;
+	static Screen* m_instance;
+	static bool m_isInstanced;
 
 	//ATRIBS
-	SDL_Surface* myScreen;
-	vmode mySelectedMode;
-	vmode *myVideoModes;
-	unsigned int myVideoModesSize;
-	float myRatio;
-	bool myIsFullscreen;
+	SDL_Surface* m_screen;
+	vmode m_selectedMode;
+	vmode *m_videoModes;
+	unsigned int m_videoModesSize;
+	float m_ratio;
+	bool m_isFullscreen;
 };
 

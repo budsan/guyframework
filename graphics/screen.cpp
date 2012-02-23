@@ -23,36 +23,36 @@
 
 //---------------------------------------------------------------------------//
 
-Screen* Screen::myInstance = 0;
-bool Screen::myIsInstanced = false;
+Screen* Screen::m_instance = 0;
+bool Screen::m_isInstanced = false;
 
-Screen& Screen::Instance()
+Screen& Screen::instance()
 {
-	return *pInstance();
+	return *ptrInstance();
 }
 
-Screen* Screen::pInstance()
+Screen* Screen::ptrInstance()
 {
-	if (Screen::myInstance == 0)
+	if (Screen::m_instance == 0)
 	{
-		myInstance = new Screen();
+		m_instance = new Screen();
 	}
 	
-	return myInstance;
+	return m_instance;
 }
 
 //---------------------------------------------------------------------------//
 
 Screen:: Screen()
 {
-	myRatio = 0;
-	myVideoModesSize = 0;
-	myVideoModes = NULL;
-	myScreen = NULL;
+	m_ratio = 0;
+	m_videoModesSize = 0;
+	m_videoModes = nullptr;
+	m_screen = nullptr;
 
-	if (!myIsInstanced) {
-		atexit(Screen::DeleteInstance);
-		myIsInstanced = true;
+	if (!m_isInstanced) {
+		atexit(Screen::deleteInstance);
+		m_isInstanced = true;
 	}
 }
 
@@ -60,7 +60,7 @@ Screen:: Screen()
 
 Screen::~Screen()
 {
-	myInstance = NULL;
+	m_instance = nullptr;
 
 	if (SDL_WasInit(SDL_INIT_VIDEO)) {
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -70,12 +70,12 @@ Screen::~Screen()
 		SDL_Quit();
 	}
 
-	UnloadContent();
+	unloadContent();
 }
 
 //---------------------------------------------------------------------------//
 
-bool Screen::Init()
+bool Screen::init()
 {
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
@@ -86,7 +86,7 @@ bool Screen::Init()
 	if(!setVideoMode()) return false;
 	SDL_ShowCursor(0);
 //	const char *titol = title.c_str();
-//	SDL_WM_SetCaption(titol, NULL);
+//	SDL_WM_SetCaption(titol, nullptr);
 
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
@@ -101,14 +101,14 @@ bool Screen::Init()
 
 //---------------------------------------------------------------------------//
 
-void Screen::Flip()
+void Screen::flip()
 {
 	SDL_GL_SwapBuffers();
 }
 
 //---------------------------------------------------------------------------//
 
-void Screen::FillWithColor(const rgba &color)
+void Screen::fillWithColor(const rgba &color)
 {
 	glPushAttrib(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT|GL_ENABLE_BIT);
 	glDisable(GL_TEXTURE_2D);
@@ -139,33 +139,33 @@ void Screen::FillWithColor(const rgba &color)
 
 const Screen::vmode* Screen::getVideoModeList(unsigned int &size)
 {
-	size = myVideoModesSize;
-	if(!size) return NULL;
+	size = m_videoModesSize;
+	if(!size) return nullptr;
 	
-	return myVideoModes;
+	return m_videoModes;
 }
 //---------------------------------------------------------------------------//
 
 const Screen::vmode* Screen::getCurrentVideoMode()
 {
-	return &mySelectedMode;
+	return &m_selectedMode;
 }
 
 //---------------------------------------------------------------------------//
 
 float Screen::getRatio()
 {
-	if (myRatio != 0.0f) return myRatio;
-	if (mySelectedMode.h == 0.0f) return 0.0f;
-	return float(mySelectedMode.w)/float(mySelectedMode.h);
+	if (m_ratio != 0.0f) return m_ratio;
+	if (m_selectedMode.h == 0.0f) return 0.0f;
+	return float(m_selectedMode.w)/float(m_selectedMode.h);
 }
 
 //---------------------------------------------------------------------------//
 
 void Screen::setRatio(float ratio)
 {
-	if (ratio == myRatio) return;
-	myRatio = ratio;
+	if (ratio == m_ratio) return;
+	m_ratio = ratio;
 	resetViewport();
 }
 
@@ -180,22 +180,22 @@ bool Screen::setVideoMode()
 	unsigned int ScreenBpp    = config->get("ScreenBpp")->toInt();
 	bool Fullscreen  = config->get("Fullscreen")->toBool();
 
-	if (myScreen != NULL)
+	if (m_screen != nullptr)
 	{
-		if (mySelectedMode.w  == ScreenWidth &&
-		    mySelectedMode.h  == ScreenHeight)
+		if (m_selectedMode.w  == ScreenWidth &&
+		    m_selectedMode.h  == ScreenHeight)
 		{
-			if (Fullscreen != myIsFullscreen)
-				SDL_WM_ToggleFullScreen(myScreen);
+			if (Fullscreen != m_isFullscreen)
+				SDL_WM_ToggleFullScreen(m_screen);
 
 			return true;
 		}
-		else UnloadContent();
+		else unloadContent();
 	}
 
-	mySelectedMode.w   = ScreenWidth;
-	mySelectedMode.h   = ScreenHeight;
-	mySelectedMode.bpp = ScreenBpp;
+	m_selectedMode.w   = ScreenWidth;
+	m_selectedMode.h   = ScreenHeight;
+	m_selectedMode.bpp = ScreenBpp;
 
 	unsigned int flags =
 		SDL_OPENGL |
@@ -206,66 +206,66 @@ bool Screen::setVideoMode()
 
 	if (Fullscreen) flags |= SDL_FULLSCREEN;
 
-	SDL_Surface* screen = NULL;
+	SDL_Surface* screen = nullptr;
 
 	//GET AVAILABLE VIDEO MODES
-	SDL_Rect **modes_available = SDL_ListModes(NULL, flags|SDL_FULLSCREEN);
+	SDL_Rect **modes_available = SDL_ListModes(nullptr, flags|SDL_FULLSCREEN);
 	const SDL_VideoInfo* videoinfo = SDL_GetVideoInfo();
-	if (modes_available == (SDL_Rect **) 0) return NULL;
+	if (modes_available == (SDL_Rect **) 0) return nullptr;
 	unsigned int nModes;
 	for (nModes = 0; modes_available[nModes]; nModes++) {}
 	
-	myVideoModesSize = nModes;
-	myVideoModes = new vmode[nModes];
+	m_videoModesSize = nModes;
+	m_videoModes = new vmode[nModes];
 	for(nModes = 0; modes_available[nModes]; nModes++)
 	{
-		myVideoModes[nModes].w = modes_available[nModes]->w;
-		myVideoModes[nModes].h = modes_available[nModes]->h;
-		myVideoModes[nModes].bpp = ScreenBpp;
+		m_videoModes[nModes].w = modes_available[nModes]->w;
+		m_videoModes[nModes].h = modes_available[nModes]->h;
+		m_videoModes[nModes].bpp = ScreenBpp;
 	}
-	qsort( myVideoModes, nModes, sizeof(vmode), CompareModes);
+	qsort( m_videoModes, nModes, sizeof(vmode), compareModes);
 	
 	//select settings video-mode if exists
-	if (mySelectedMode.w != 0 || mySelectedMode.h != 0)
+	if (m_selectedMode.w != 0 || m_selectedMode.h != 0)
 	{
 		screen = SDL_SetVideoMode (
-			mySelectedMode.w,
-			mySelectedMode.h, 
-			mySelectedMode.bpp, 
+			m_selectedMode.w,
+			m_selectedMode.h,
+			m_selectedMode.bpp,
 			flags);
 	}
 
 	//select current desktop video-mode
-	if (screen == NULL)
+	if (screen == nullptr)
 	{
-		mySelectedMode.w = videoinfo->current_w;
-		mySelectedMode.h = videoinfo->current_h;
+		m_selectedMode.w = videoinfo->current_w;
+		m_selectedMode.h = videoinfo->current_h;
 		screen = SDL_SetVideoMode (
-			mySelectedMode.w,
-			mySelectedMode.h, 
-			mySelectedMode.bpp, 
+			m_selectedMode.w,
+			m_selectedMode.h,
+			m_selectedMode.bpp,
 			flags);
 	}
 
 	//select one of compatible video-mode
-	for(unsigned int i = 0; i < nModes && screen == NULL; i++)
+	for(unsigned int i = 0; i < nModes && screen == nullptr; i++)
 	{
-		mySelectedMode.w = myVideoModes[i].w;
-		mySelectedMode.h = myVideoModes[i].h;
+		m_selectedMode.w = m_videoModes[i].w;
+		m_selectedMode.h = m_videoModes[i].h;
 		
 		screen = SDL_SetVideoMode (
-			mySelectedMode.w,
-			mySelectedMode.h, 
-			mySelectedMode.bpp, 
+			m_selectedMode.w,
+			m_selectedMode.h,
+			m_selectedMode.bpp,
 			flags);
 	}
 
-	if (screen == NULL) return false;
+	if (screen == nullptr) return false;
 
-	ScreenWidth  = mySelectedMode.w;
-	ScreenHeight = mySelectedMode.h;
-	ScreenBpp    = mySelectedMode.bpp;
-	myIsFullscreen = Fullscreen;
+	ScreenWidth  = m_selectedMode.w;
+	ScreenHeight = m_selectedMode.h;
+	ScreenBpp    = m_selectedMode.bpp;
+	m_isFullscreen = Fullscreen;
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -275,17 +275,17 @@ bool Screen::setVideoMode()
 
 	initGL();
 
-	myScreen = screen;
+	m_screen = screen;
 
 
 	return true;
 }
 
 //---------------------------------------------------------------------------//
-void Screen::UnloadContent()
+void Screen::unloadContent()
 {
 	//Añade los unloads de todos los gestores aqui
-	TextureManager::Instance().UnloadTextures();
+	TextureManager::instance().unloadTextures();
 }
 
 //---------------------------------------------------------------------------//
@@ -317,42 +317,42 @@ void Screen::initGL()
 
 void Screen::resetViewport()
 {
-	if ( myRatio == 0 )
+	if ( m_ratio == 0 )
 	{
-		glViewport(0,0,mySelectedMode.w,mySelectedMode.h);
+		glViewport(0,0,m_selectedMode.w,m_selectedMode.h);
 		//glDisable(GL_SCISSOR_TEST);
 		return;
 	}
 	
-	if (mySelectedMode.h == 0.0f) return;
-	float screen_ratio = float(mySelectedMode.w)/float(mySelectedMode.h);
+	if (m_selectedMode.h == 0.0f) return;
+	float screen_ratio = float(m_selectedMode.w)/float(m_selectedMode.h);
 
-	if ( screen_ratio > myRatio)
+	if ( screen_ratio > m_ratio)
 	{
-		int weight = int((myRatio/screen_ratio)*(float)mySelectedMode.w);
-		int x = (mySelectedMode.w - weight)/2;
-		glViewport(x,0,weight,mySelectedMode.h);
+		int weight = int((m_ratio/screen_ratio)*(float)m_selectedMode.w);
+		int x = (m_selectedMode.w - weight)/2;
+		glViewport(x,0,weight,m_selectedMode.h);
 		//glScissor (x,0,weight,mySelectedMode.h);
 		//glEnable(GL_SCISSOR_TEST);
 	}
-	else if ( screen_ratio < myRatio)
+	else if ( screen_ratio < m_ratio)
 	{
-		int height = int((screen_ratio/myRatio)*(float)mySelectedMode.h);
-		int y = (mySelectedMode.h - height)/2;
-		glViewport(0,y,mySelectedMode.w,height);
+		int height = int((screen_ratio/m_ratio)*(float)m_selectedMode.h);
+		int y = (m_selectedMode.h - height)/2;
+		glViewport(0,y,m_selectedMode.w,height);
 		//glScissor (0,y,mySelectedMode.w,height);
 		//glEnable(GL_SCISSOR_TEST);
 	}
 	else
 	{
-		glViewport(0,0,mySelectedMode.w,mySelectedMode.h);
+		glViewport(0,0,m_selectedMode.w,m_selectedMode.h);
 		//glDisable(GL_SCISSOR_TEST);
 	}
 }
 
 //---------------------------------------------------------------------------//
 
-int Screen::CompareModes(const void *a, const void *b)
+int Screen::compareModes(const void *a, const void *b)
 {
 	vmode* A = (vmode*)a;
 	vmode* B = (vmode*)b;
@@ -362,8 +362,8 @@ int Screen::CompareModes(const void *a, const void *b)
 
 //---------------------------------------------------------------------------//
 
-void Screen::DeleteInstance()
+void Screen::deleteInstance()
 {
-	if (myInstance) delete myInstance;
+	if (m_instance) delete m_instance;
 }
 

@@ -12,25 +12,26 @@ private:
 	friend class TextureQTLoader;
 	friend class TextureManager;
 
-	GLuint  id;
-	GLsizei width;
-	GLsizei height;
+	GLuint  m_id;
+	GLsizei m_width;
+	GLsizei m_height;
 public:
 	Texture();
-
-	bool Load(std::string filename);
-	bool Load(GLenum iformat, int width, int height, GLfloat *pixels);
-	bool Load(GLenum iformat, int width, int height, GLubyte *pixels);
-	bool Load(const Texture &other); //TODO
-	bool LoadNullTexture();
-
-	GLsizei getWidth()  const {return width; }
-	GLsizei	getHeight() const {return height;}
-
-	GLsizei w() const {return width; }
-	GLsizei	h() const {return height;}
-
 	~Texture();
+
+	bool load(std::string filename);
+	bool load(GLenum iformat, int width, int height, GLfloat *pixels);
+	bool load(GLenum iformat, int width, int height, GLubyte *pixels);
+	bool load(const Texture &other); //TODO
+	bool loadNullTexture();
+
+	GLsizei getWidth()  const {return m_width; }
+	GLsizei	getHeight() const {return m_height;}
+
+	GLsizei w() const {return m_width; }
+	GLsizei	h() const {return m_height;}
+
+	GLuint id() const {return m_id;}
 
 	/// Set texture filtering for both magnification and minification
 	void setFiltering(GLenum filter) const;
@@ -39,8 +40,8 @@ public:
 	void setWrap(GLenum wrap) const;
 
 	/// Bind the texture to the current unit
-	       void   Bind() const;
-	static void Unbind();
+	       void   bind() const;
+	static void unbind();
 
 	// El operador igualdad para hacer copias esta PROHIBIDO.
 	const Texture& operator=(const Texture& other);
@@ -54,7 +55,7 @@ public:
 	// un identificador nuevo de textura y copiar la textura en el nuevo
 	// identificador, cosa realmente costosa.
 	// Si realmente lo que se quiere es una de estas dos ultimas soluciones
-	// se puede usar un smart_ptr o usar el Load que tiene de parametros de
+	// se puede usar un smart_ptr o usar el load que tiene de parametros de
 	// entrada otra Texture, concienciando al programador que lo que esta
 	// haciendo es costoso en tiempo y en recursos de memoria.
 };

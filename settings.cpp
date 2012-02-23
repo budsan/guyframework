@@ -20,11 +20,11 @@ Keybinds::Keybinds() {}
 
 Keybinds::Keybinds(unsigned int players, unsigned int actions)
 {
-	myPlayerKeybinds.clear();
-	myPlayerKeybinds.resize(players);
+	m_playerKeybinds.clear();
+	m_playerKeybinds.resize(players);
 	for (unsigned int i = 0 ; i < players; i ++)
 	{
-		std::vector<Keybind> &keybinds = myPlayerKeybinds.at(i);
+		std::vector<Keybind> &keybinds = m_playerKeybinds.at(i);
 		keybinds.clear();
 		keybinds.resize(actions);
 	}
@@ -37,61 +37,61 @@ Keybinds::Keybinds(const Keybinds& other)
 
 std::vector<Keybinds::Keybind> &Keybinds::operator[](unsigned int player)
 {
-	return myPlayerKeybinds.at(player);
+	return m_playerKeybinds.at(player);
 }
 
 const std::vector<Keybinds::Keybind> &Keybinds::operator[](unsigned int player) const
 {
-	return myPlayerKeybinds.at(player);
+	return m_playerKeybinds.at(player);
 }
 
 const Keybinds &Keybinds::operator=(const Keybinds& other)
 {
-	myPlayerKeybinds = other.myPlayerKeybinds;
+	m_playerKeybinds = other.m_playerKeybinds;
 	return *this;
 }
 
 unsigned int Keybinds::getPlayerCount() const
 {
-	return myPlayerKeybinds.size();
+	return m_playerKeybinds.size();
 }
 
 unsigned int Keybinds::getAccionCount() const
 {
-	if (myPlayerKeybinds.empty()) return 0;
-	return myPlayerKeybinds[0].size();
+	if (m_playerKeybinds.empty()) return 0;
+	return m_playerKeybinds[0].size();
 }
 
-Keybinds::Keybind::Keybind() : def(0), key(0) {}
+Keybinds::Keybind::Keybind() : m_def(0), m_key(0) {}
 void Keybinds::Keybind::setDefault(unsigned short k)
 {
-	def = k; if (key == 0) key = k;
+	m_def = k; if (m_key == 0) m_key = k;
 }
 
 unsigned short Keybinds::Keybind::getDefault() const
 {
-	return def;
+	return m_def;
 }
 
 void Keybinds::Keybind::setKey(unsigned short k)
 {
-	key = k;
+	m_key = k;
 }
 
 unsigned short Keybinds::Keybind::getKey() const
 {
-	return key;
+	return m_key;
 }
 
 const Keybinds::Keybind &Keybinds::Keybind::operator=(const Keybinds::Keybind& other)
 {
-	key = other.key; def = other.def;
+	m_key = other.m_key; m_def = other.m_def;
 	return *this;
 }
 
 //-SETTINGS------------------------------------------------------------------//
 
-Settings* Settings::m_pInstance = NULL;
+Settings* Settings::m_instance = nullptr;
 
 Settings::Settings()
 {
@@ -120,53 +120,53 @@ Settings::Settings()
 	*/
 }
 
-Settings::~Settings() { m_pInstance = NULL; }
+Settings::~Settings() { m_instance = nullptr; }
 
 void Settings::add(const Variable &set)
 {
 	if (set.type() == Variable::Invalid) return;
-	std::map<std::string, Variable>::iterator it = settings.find(set.name());
-	if (it != settings.end())
+	std::map<std::string, Variable>::iterator it = m_settings.find(set.name());
+	if (it != m_settings.end())
 	{
 		LOG << "Setting " << set.name() << " already exists.";
 		return;
 	}
 
-	settings[set.name()] = set;
+	m_settings[set.name()] = set;
 }
 
 Variable *Settings::get(std::string name)
 {
-	std::map<std::string, Variable>::iterator it = settings.find(name);
-	if (it == settings.end()) return NULL;
+	std::map<std::string, Variable>::iterator it = m_settings.find(name);
+	if (it == m_settings.end()) return nullptr;
 	Variable *v = &(it->second);
 	return v;
 }
 
 void Settings::setKeybinds(const Keybinds &keys)
 {
-	keybinds = keys;
+	m_keybinds = keys;
 }
 
 const Keybinds &Settings::getKeybinds() const
 {
-	return keybinds;
+	return m_keybinds;
 }
 
 Settings* Settings::pInstance()
 {
-	if(m_pInstance == NULL){
-		m_pInstance = new Settings();
+	if(m_instance == nullptr){
+		m_instance = new Settings();
 	}
-	return m_pInstance;
+	return m_instance;
 }
 
 #ifdef UNUSED
-bool Settings::Load(const char *filename)
+bool Settings::load(const char *filename)
 {
 	FILE* fSettingsFile;
 	fSettingsFile = fopen(filename, "rb");
-	if(fSettingsFile != NULL)
+	if(fSettingsFile != nullptr)
 	{
 		fread((void*)m_pInstance,1,sizeof(Settings),fSettingsFile);
 		fclose(fSettingsFile);
@@ -180,7 +180,7 @@ bool Settings::Save(const char *filename)
 {
 	FILE* fSettingsFile;
 	fSettingsFile = fopen(filename, "wb");
-	if(fSettingsFile != NULL)
+	if(fSettingsFile != nullptr)
 	{
 		fwrite((void*)m_pInstance,1,sizeof(Settings),fSettingsFile);
 		fclose(fSettingsFile);
@@ -192,7 +192,7 @@ bool Settings::Save(const char *filename)
 #endif
 
 
-bool Settings::Load(const char *filename)
+bool Settings::load(const char *filename)
 {
 	std::fstream fSettingsFile;
 	fSettingsFile.open(filename, std::fstream::in | std::fstream::binary);

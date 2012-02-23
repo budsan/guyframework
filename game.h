@@ -16,40 +16,40 @@ public:
 	 Game();
 	~Game();
 
-	bool Init();
-	void Run();
+	bool init();
+	void run();
 
-	void ChangeState(GameState* next);
-	void Exit();
+	void changeState(GameState* next);
+	void exit();
 
 protected:
-	Screen*        myScreen; //graphics
-	emyl::manager* myAudio; //sound
-	Input*         myInput; //input
-	Settings*      mySettings;
+	Screen*        m_screen; //graphics
+	emyl::manager* m_audio; //sound
+	Input*         m_input; //input
+	Settings*      m_settings;
 
 	//CONFIGURABLE SETTINGS
 	void setFramesPerSecond(unsigned short frames); //Default 0
-	void setStableGameTime(bool enable, bool autoframeskip = false); //Default false
+	void setStabledeltaTime(bool enable, bool autoframeskip = false); //Default false
 
-	virtual void Configure() = 0;
+	virtual void configure() = 0;
 
-	virtual void   Load();
-	virtual void Unload();
+	virtual void   load();
+	virtual void unload();
 
-	virtual void Update(float GameTime);
-	virtual void Draw();
+	virtual void update(float deltaTime);
+	virtual void draw();
 
         virtual const char *getName() {return "Game";}
         virtual const char *getVersion() {return "Undefined";}
 
 private:
-	GameState* myState;
-	GameState* myNextState;
-	bool       myExit;
+	GameState* m_State;
+	GameState* m_NextState;
+	bool       m_Exit;
 
-	unsigned short myFramesPerSecond;
-        float          mySecondsPerFrame;
+	unsigned short m_FramesPerSecond;
+	float          m_SecondsPerFrame;
 
 	//-GAMELOOP-BEHAVIOR-------------------------------------------------//
 
@@ -57,7 +57,7 @@ private:
 	{
 	public:
 		GameLoop(Game* parent);
-		virtual void LoopIteration() = 0;
+		virtual void loopIteration() = 0;
 	protected:
 		Game* parent;
 	};
@@ -66,7 +66,7 @@ private:
 	{
 	public:
 		VariableLoop(Game* parent);
-		void LoopIteration();
+		void loopIteration();
 	private:
 		float myNow;
 	};
@@ -75,7 +75,7 @@ private:
 	{
 	public:
 		StableLoop(Game* parent);
-		void LoopIteration();
+		void loopIteration();
 	private:
 		float myNow;
 		float myAccumTime;
@@ -85,26 +85,26 @@ private:
 	{
 	public:
 		StableSkipLoop(Game* parent);
-		void LoopIteration();
+		void loopIteration();
 	private:
 		float myNow;
 		float myAccumTime;
 	};
 
 	template <class T>
-	void ChangeGameLoop()
+	void changeGameLoop()
 	{
-		if (myGameLoop == NULL) myGameLoop = new T(this);
+		if (myGameLoop == nullptr) myGameLoop = new T(this);
 		else
 		{
 			T* pointer = dynamic_cast<T*>(myGameLoop);
-			if (pointer == NULL) myGameLoop = new T(this);
+			if (pointer == nullptr) myGameLoop = new T(this);
 		}
 	}
 
-	void LoopVariable(float &Now);
-	void LoopStable(float &Now, float &AcumTime);
-	void LoopStableSkip(float &Now, float &AcumTime);
+	void loopVariable(float &Now);
+	void loopStable(float &Now, float &AcumTime);
+	void loopStableSkip(float &Now, float &AcumTime);
 
 	GameLoop*      myGameLoop;
 };

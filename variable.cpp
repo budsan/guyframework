@@ -316,7 +316,7 @@ char Variable::toChar()
 
 std::string Variable::toString()
 {
-	char *c_ret = NULL;
+	char *c_ret = nullptr;
 	switch (myType)
 	{
 	case Variable::Invalid: std::string();

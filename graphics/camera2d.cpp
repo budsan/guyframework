@@ -10,23 +10,23 @@
 
 Camera2D::Camera2D()
 {
-	init = false;
+	m_init = false;
 	reset();
 }
 
-void Camera2D::Init()
+void Camera2D::init()
 {
-	const Screen::vmode* vmode = Screen::Instance().getCurrentVideoMode();
+	const Screen::vmode* vmode = Screen::instance().getCurrentVideoMode();
 	resizeScreen(vmode->w, vmode->h);
 }
 
 math::bbox2f Camera2D::getBounding()
 {
-	float zoominv = (1.0f/zoom);
-	float zoomw = zoominv*w*0.5f;
-	float zoomh = zoominv*h*0.5f;
-	math::vec2f min(pos.x-zoomw,pos.y-zoomh);
-	math::vec2f max(pos.x+zoomw,pos.y+zoomh);
+	float zoominv = (1.0f/m_zoom);
+	float zoomw = zoominv*m_w*0.5f;
+	float zoomh = zoominv*m_h*0.5f;
+	math::vec2f min(m_pos.x-zoomw,m_pos.y-zoomh);
+	math::vec2f max(m_pos.x+zoomw,m_pos.y+zoomh);
 	return math::bbox2f(min,max);
 }
 
@@ -37,63 +37,55 @@ math::mat4f Camera2D::getModelviewMatrix()
 
 math::mat4f Camera2D::getProjectionMatrix()
 {
-	float zoominv = (1.0f/zoom);
-	float zoomw = zoominv*w*0.5f;
-	float zoomh = zoominv*h*0.5f;
-	return math::mat4f::fromOrtho(pos.x-zoomw,pos.x+zoomw,
-				      pos.y-zoomh,pos.y+zoomh , -1, 1);
-}
+	if (!m_init) init();
 
-void Camera2D::updateOpenGLMatrices()
-{
-	if (!init) Init();
-
-	Screen &screen = Screen::Instance();
-	screen.resetViewport();
-
-	Camera::updateOpenGLMatrices();
+	float zoominv = (1.0f/m_zoom);
+	float zoomw = zoominv*m_w*0.5f;
+	float zoomh = zoominv*m_h*0.5f;
+	return math::mat4f::fromOrtho(m_pos.x-zoomw,m_pos.x+zoomw,
+				      m_pos.y-zoomh,m_pos.y+zoomh , -1, 1);
 }
 
 void Camera2D::reset()
 {
-	pos = math::vec2f(0, 0);
-	zoom = 1.0f;
+	m_pos = math::vec2f(0, 0);
+	m_zoom = 1.0f;
 }
 
 void Camera2D::resizeScreen(int width, int height)
 {
-	w = width; h = height;
-	aspect = (float)w/(float)h;
-	init = true;
+	m_w = width; m_h = height;
+	m_aspect = (float)m_w/(float)m_h;
+	m_init = true;
 }
 
 void Camera2D::resizeScreen(int height)
 {
-	Screen &screen = Screen::Instance();
+	Screen &screen = Screen::instance();
 	float ratio = screen.getRatio();
 	if (ratio == 0)
 	{
 		const Screen::vmode* vmode = screen.getCurrentVideoMode();
-		aspect = float(vmode->w) / float(vmode->h);
-		w = (int)(float(height) * aspect);
-		h = height;
-		init = true;
+		m_aspect = float(vmode->w) / float(vmode->h);
+		m_w = (int)(float(height) * m_aspect);
+		m_h = height;
+		m_init = true;
 	}
 	else
 	{
-		aspect = ratio;
-		w = (int)(float(height) * aspect);
-		h = height;
-		init = true;
+		m_aspect = ratio;
+		m_w = (int)(float(height) * m_aspect);
+		m_h = height;
+		m_init = true;
 	}
 }
 
 void Camera2D::setPos(math::vec2f pos)
 {
-	this->pos = pos;
+	this->m_pos = pos;
 }
 
 void Camera2D::setZoom(float _zoom)
 {
-	zoom = _zoom;
+	m_zoom = _zoom;
 }

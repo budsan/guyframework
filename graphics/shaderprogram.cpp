@@ -7,208 +7,208 @@
 #include <iostream> // only for debug
 ShaderProgram::ShaderProgram()
 {
-	_id = glCreateProgram();
+	m_id = glCreateProgram();
 }
 
 ShaderProgram::ShaderProgram(const char *vp_filename, const char *fp_filename)
 {
-	_id = glCreateProgram();
+	m_id = glCreateProgram();
 
 	Shader *vertex = new Shader(GL_VERTEX_SHADER);
 	Shader *fragment = new Shader(GL_FRAGMENT_SHADER);
 
-	vertex->Load(vp_filename);
-	vertex->Compile();
+	vertex->load(vp_filename);
+	vertex->compile();
 //	vertex->PrintInfoLog(); // redundant info on nvidia
-	fragment->Load(fp_filename);
-	fragment->Compile();
+	fragment->load(fp_filename);
+	fragment->compile();
 //	fragment->PrintInfoLog(); // redundant info on nvidia
-	AttachShader(vertex);
-	AttachShader(fragment);
-	Link();
-	PrintInfoLog();
+	attachShader(vertex);
+	attachShader(fragment);
+	link();
+	printInfoLog();
 }
 
 
 ShaderProgram::~ShaderProgram()
 {
 	std::vector<Shader *>::const_iterator cii;
-	for(cii = _shaders.begin(); cii != _shaders.end(); cii++) {
+	for(cii = m_shaders.begin(); cii != m_shaders.end(); cii++) {
 		delete *cii;
 	}
 
-	glDeleteProgram(_id);
+	glDeleteProgram(m_id);
 }
 
 
-void ShaderProgram::AttachShader(Shader *sh)
+void ShaderProgram::attachShader(Shader *sh)
 {
-	_shaders.push_back(sh);
-	sh->Attach(_id);
+	m_shaders.push_back(sh);
+	sh->attach(m_id);
 }
 
 
-void ShaderProgram::Link()
+void ShaderProgram::link()
 {
-	glLinkProgram(_id);
+	glLinkProgram(m_id);
 }
 
 
-void ShaderProgram::Use()
+void ShaderProgram::use()
 {
-	glUseProgram(_id);
+	glUseProgram(m_id);
 }
 
 
-void ShaderProgram::Uniform(const char* name, GLint value)
+void ShaderProgram::uniform(const char* name, GLint value)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform1i(loc, value);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::Uniform(const char* name, GLfloat value)
+void ShaderProgram::uniform(const char* name, GLfloat value)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform1f(loc, value);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::Uniform(const char* name, GLfloat v0, GLfloat v1)
+void ShaderProgram::uniform(const char* name, GLfloat v0, GLfloat v1)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform2f(loc, v0, v1);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::Uniform(const char* name, GLfloat v0, GLfloat v1, GLfloat v2)
+void ShaderProgram::uniform(const char* name, GLfloat v0, GLfloat v1, GLfloat v2)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform3f(loc, v0, v1, v2);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::Uniform(const char* name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
+void ShaderProgram::uniform(const char* name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform4f(loc, v0, v1, v2, v3);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::Uniform(const char* name, GLsizei count, const GLfloat *array)
+void ShaderProgram::uniform(const char* name, GLsizei count, const GLfloat *array)
 { 
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform1fv(loc, count, array);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::Uniform3v(const char* name, const GLfloat *array)
+void ShaderProgram::uniform3v(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform3fv(loc, 1, array);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::UniformMatrix3(const char* name, const GLfloat *array)
+void ShaderProgram::uniformMatrix3(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniformMatrix3fv(loc, 1, 0, array);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::Uniform4v(const char* name, const GLfloat *array)
+void ShaderProgram::uniform4v(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniform4fv(loc, 1, array);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::UniformMatrix4(const char* name, const GLfloat *array)
+void ShaderProgram::uniformMatrix4(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(_id);
+	glUseProgram(m_id);
 
-	loc = glGetUniformLocation(_id, name);
+	loc = glGetUniformLocation(m_id, name);
 	glUniformMatrix4fv(loc, 1, 0, array);
 
 	glUseProgram(oldprog);
 }
 
 
-void ShaderProgram::PrintInfoLog()
+void ShaderProgram::printInfoLog()
 {
 	int length = 0;
 	char *infoLog;
 
-	glGetProgramiv(_id, GL_INFO_LOG_LENGTH, &length);
+	glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length);
 	if (length > 1) {
 		infoLog = new char[length];
-		glGetProgramInfoLog(_id, length, NULL, infoLog);
+		glGetProgramInfoLog(m_id, length, nullptr, infoLog);
 		std::cout << infoLog;
 		delete[] infoLog;
 	}

@@ -4,65 +4,66 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <memory>
 
 #include "log.h"
 
 SpriteAnim::SpriteAnim() : Sprite() 
 {
-	data = NULL;
-	animSelected  = 0;
-	loopsLeft     = 0;
-	frameSelected = 0;
-	frameTimeLeft = 0;
+	m_data = nullptr;
+	m_animSelected  = 0;
+	m_loopsLeft     = 0;
+	m_frameSelected = 0;
+	m_frameTimeLeft = 0;
 }
 
-SpriteAnim::SpriteAnim(SpriteAnimData *_data) : Sprite() 
+SpriteAnim::SpriteAnim(std::shared_ptr<SpriteAnimData> _data)
 {
 	setAnimData(_data);
 }
 
-void SpriteAnim::Update(float GameTime)
+void SpriteAnim::update(float deltaTime)
 {
-	if (data == NULL) return;
+	if (m_data == nullptr) return;
 
-	float time = GameTime*1000;
+	float time = deltaTime*1000;
 	while(time != 0)
 	{
-		if (time <= frameTimeLeft) {
-			frameTimeLeft -= time;
+		if (time <= m_frameTimeLeft) {
+			m_frameTimeLeft -= time;
 			time = 0;
 		}
 		else {
-			time -= frameTimeLeft;
-			NextFrame();
+			time -= m_frameTimeLeft;
+			nextFrame();
 		}
 	}
 }
 
-void SpriteAnim::NextFrame()
+void SpriteAnim::nextFrame()
 {
-	const SpriteAnimTrack& anim = data->animations[animSelected];
-	if (frameSelected+1 >= (int) anim.frames.size()) {
-		if (loopsLeft  > 0) --loopsLeft;
-		if (loopsLeft != 0) frameSelected = 0;
+	const SpriteAnimTrack& anim = m_data->animations[m_animSelected];
+	if (m_frameSelected+1 >= (int) anim.frames.size()) {
+		if (m_loopsLeft  > 0) --m_loopsLeft;
+		if (m_loopsLeft != 0) m_frameSelected = 0;
 	}
-	else frameSelected++;
-	frameTimeLeft = anim.frames[frameSelected].time;
+	else m_frameSelected++;
+	m_frameTimeLeft = anim.frames[m_frameSelected].time;
 }
 
-bool SpriteAnim::setAnimData(SpriteAnimData* _data)
+bool SpriteAnim::setAnimData(std::shared_ptr<SpriteAnimData> _data)
 {
-	if (_data == NULL)
+	if (_data == nullptr)
 	{
-		data = NULL;
+		m_data = nullptr;
 		return true;
 	}
 
 	if (_data->animations.size() == 0) return false;
 
-	data = _data;
+	m_data = _data;
 	if (!SelectAnim(0)) {
-		data = NULL;
+		m_data = nullptr;
 		return false;
 	}
 
@@ -71,13 +72,13 @@ bool SpriteAnim::setAnimData(SpriteAnimData* _data)
 
 void SpriteAnim::getParamsToDraw(Sprite::drawParams &params)
 {
-	if (data == NULL) {
-		params.filename = NULL;
+	if (m_data == nullptr) {
+		params.filename = nullptr;
 		return;
 	}
 
-	const SpriteAnimTrack& anim = data->animations[animSelected];
-	const SpriteAnimFrame& fram = anim.frames[frameSelected];
+	const SpriteAnimTrack& anim = m_data->animations[m_animSelected];
+	const SpriteAnimFrame& fram = anim.frames[m_frameSelected];
 
 	params.filename = anim.spritesheetFilename.c_str();
 	params.x  = fram.x;
@@ -90,15 +91,15 @@ void SpriteAnim::getParamsToDraw(Sprite::drawParams &params)
 
 int SpriteAnim::getAnimID(std::string name)
 {
-	if (data == NULL) return -1;
-	std::map<std::string, int>::iterator it = data->animNames.find(name);
-	if (it == data->animNames.end()) return -1;
+	if (m_data == nullptr) return -1;
+	std::map<std::string, int>::iterator it = m_data->animNames.find(name);
+	if (it == m_data->animNames.end()) return -1;
 	return (int)it->second;
 }
 
 int SpriteAnim::getLoopsLeft()
 {
-	return loopsLeft;
+	return m_loopsLeft;
 }
 
 bool SpriteAnim::SelectAnim(std::string name)
@@ -110,21 +111,21 @@ bool SpriteAnim::SelectAnim(std::string name)
 
 bool SpriteAnim::SelectAnim(int animID)
 {
-	if (data == NULL) return false;
-	if (data->animations[animID].frames.size() == 0) return false;
+	if (m_data == nullptr) return false;
+	if (m_data->animations[animID].frames.size() == 0) return false;
 
-	animSelected  = animID;
-	const SpriteAnimTrack& anim = data->animations[animSelected];
-	loopsLeft = anim.numOfLoops;
-	if (loopsLeft == 0) loopsLeft = -1;
+	m_animSelected  = animID;
+	const SpriteAnimTrack& anim = m_data->animations[m_animSelected];
+	m_loopsLeft = anim.numOfLoops;
+	if (m_loopsLeft == 0) m_loopsLeft = -1;
 
-	frameSelected = 0;
-	frameTimeLeft = anim.frames[frameSelected].time;
+	m_frameSelected = 0;
+	m_frameTimeLeft = anim.frames[m_frameSelected].time;
 
 	return true;
 }
 
-bool SpriteAnimData::Load(const char* filename)
+bool SpriteAnimData::load(const char* filename)
 {
 	std::ifstream in(filename);
 
@@ -136,7 +137,7 @@ bool SpriteAnimData::Load(const char* filename)
 
 
 	std::string currentAnimName;
-	SpriteAnimTrack *currentAnimTrack = NULL;
+	SpriteAnimTrack *currentAnimTrack = nullptr;
 	std::string line;
 	int lineNum = 0;
 	
@@ -156,13 +157,13 @@ bool SpriteAnimData::Load(const char* filename)
 			continue; //Ignore blank line
 		}
 		if (param == std::string("ANIM") ) {
-			ReadANIM(currentAnimName, currentAnimTrack, line, lineNum);
+			readANIM(currentAnimName, currentAnimTrack, line, lineNum);
 		}
-		else if (currentAnimTrack == NULL) {
+		else if (currentAnimTrack == nullptr) {
 			LOG << "Error "<<lineNum<<": Animation name undefined yet." << std::endl;
 		}
 		else {
-			ReadFRAME(currentAnimTrack, line, lineNum);
+			readFRAME(currentAnimTrack, line, lineNum);
 		}
 	}
 	
@@ -184,7 +185,7 @@ bool SpriteAnimData::Load(const char* filename)
 	return true;
 }
 
-bool SpriteAnimData::Save(const char* filename)
+bool SpriteAnimData::save(const char* filename)
 {
 	std::ofstream out(filename, std::ios_base::out | std::ios_base::trunc);
 
@@ -210,7 +211,7 @@ bool SpriteAnimData::Save(const char* filename)
 	return true;
 }
 
-bool SpriteAnimData::ReadANIM(std::string &currentAnimName, SpriteAnimTrack *&currentAnimTrack, std::string &line, int lineNum)
+bool SpriteAnimData::readANIM(std::string &currentAnimName, SpriteAnimTrack *&currentAnimTrack, std::string &line, int lineNum)
 {
 	//Leemos el nombre de la animacion situado entre comillas.
 	size_t quoteStart = line.find('\"', 0);
@@ -275,7 +276,7 @@ bool SpriteAnimData::ReadANIM(std::string &currentAnimName, SpriteAnimTrack *&cu
 	return true;
 }
 
-bool SpriteAnimData::ReadFRAME(SpriteAnimTrack *&currentAnimTrack, std::string &line, int lineNum)
+bool SpriteAnimData::readFRAME(SpriteAnimTrack *&currentAnimTrack, std::string &line, int lineNum)
 {
 		//TODO CHECK ERRORS
 		std::stringstream sline(line);

@@ -15,76 +15,76 @@
 
 void emylErrorCallback(const std::string &error);
 
-Game::Game() : myState(NULL), myNextState(NULL), myFramesPerSecond(0), myGameLoop(NULL)
+Game::Game() : m_State(nullptr), m_NextState(nullptr), m_FramesPerSecond(0), myGameLoop(nullptr)
 {
 	SDL_Init(0);
 
-	myScreen   = Screen::pInstance();
-	myAudio    = emyl::manager::get_instance();
-	myInput    = Input::pInstance();
-	mySettings = Settings::pInstance();
+	m_screen   = Screen::ptrInstance();
+	m_audio    = emyl::manager::get_instance();
+	m_input    = Input::ptrInstance();
+	m_settings = Settings::pInstance();
 
 	setFramesPerSecond(0);
-	setStableGameTime(false, false);
+	setStabledeltaTime(false, false);
 
 #ifndef _WINDOWS
-	srand(time(NULL));
+	srand(time(nullptr));
 #else
 	srand(unsigned(time(0)));
 #endif
-	myExit = false;
+	m_Exit = false;
 }
 
 Game::~Game()
 {
-	Unload();
+	unload();
 
-	delete myScreen;
-	delete myAudio;
+	delete m_screen;
+	delete m_audio;
 
-	if(myState != NULL)
+	if(m_State != nullptr)
 	{
-		delete myState;
+		delete m_State;
 	}
 
-	mySettings->Save("data/game.cfg");
+	m_settings->Save("data/game.cfg");
 
 	SDL_Quit();
 }	
 
-bool Game::Init()
+bool Game::init()
 {
 	Log() << "--------------------------------------------------------------------------------" << std::endl;
 	Log() << getName() << " - " << getVersion() << std::endl;
 	Log() << "--------------------------------------------------------------------------------" << std::endl;
 
-	Configure();
-	mySettings->Load("data/game.cfg");
-	myInput->getKeyFromSettings();
+	configure();
+	m_settings->load("data/game.cfg");
+	m_input->getKeyFromSettings();
 
-	if (!myScreen->Init())
+	if (!m_screen->init())
 	{
 		LOG << "ERROR: Couldn't init screen." << std::endl;
 		return false;
 	}
-	myScreen->setCaption(getName());
+	m_screen->setCaption(getName());
 
-	if (!myAudio-> init())
+	if (!m_audio-> init())
 	{
 		LOG << "ERROR: Couldn't run sound." << std::endl;
 	}
 	emyl::setErrorCallback(emylErrorCallback);
 
-	if (myNextState != NULL)
+	if (m_NextState != nullptr)
 	{
-		myState = myNextState;
-		myNextState = NULL;
+		m_State = m_NextState;
+		m_NextState = nullptr;
 
-		myState->setGame(this);
-		myState->Load();
+		m_State->setGame(this);
+		m_State->load();
 	}
 
-	Load();
+	load();
 	return true;
 }
 
@@ -92,30 +92,30 @@ bool Game::Init()
 // Se pone la tasa de updates a la que se quiere ir.0 = variable.
 void Game::setFramesPerSecond(unsigned short frames)
 {
-	myFramesPerSecond = frames;
+	m_FramesPerSecond = frames;
 	if(frames != 0)
 	{
-		mySecondsPerFrame = (1000.0f/myFramesPerSecond)*0.001f;
+		m_SecondsPerFrame = (1000.0f/m_FramesPerSecond)*0.001f;
 	}
 	else
 	{
 #ifdef TICKS_PER_SECOND
 		//La unidad de tiempo mas pequenya, menos ya seria gametime = 0
-		mySecondsPerFrame = (1000.0f/float(TICKS_PER_SECOND))*0.001f;
+		m_SecondsPerFrame = (1000.0f/float(TICKS_PER_SECOND))*0.001f;
 #else
 		mySecondsPerFrame = 0.0f;
 #endif
 
 		//Con tasa de frames automatica solo puede funcionar en
 		//modo tiempo de update variable.
-		ChangeGameLoop<VariableLoop>();
+		changeGameLoop<VariableLoop>();
 	}
 }
 
-// Activa updates con un GameTime fijo.
+// Activa updates con un deltaTime fijo.
 // PROS:
 // 1. Si se trabaja con componentes logicos del juego que solo funcionan
-// con tasas de updates fijas que no miran el GameTime, activar esta opcion
+// con tasas de updates fijas que no miran el deltaTime, activar esta opcion
 // hara que los componentes logicos con tasas de updates variables vayan
 // perfectamente sincronizados con los componentes de tasas de updates fijas.
 //
@@ -128,169 +128,169 @@ void Game::setFramesPerSecond(unsigned short frames)
 // 2. Trabajar con tasas de updates fijas hace que los componentes logicos con
 // tasas de updates variables pierdan todas sus ventajas.
 
-void Game::setStableGameTime(bool enable, bool autoframeskip)
+void Game::setStabledeltaTime(bool enable, bool autoframeskip)
 {
-	if (enable && mySecondsPerFrame > 0)
+	if (enable && m_SecondsPerFrame > 0)
 	{
-		if (autoframeskip) ChangeGameLoop<StableSkipLoop>();
-		else               ChangeGameLoop<StableLoop>();
+		if (autoframeskip) changeGameLoop<StableSkipLoop>();
+		else               changeGameLoop<StableLoop>();
 	}
-	else ChangeGameLoop<VariableLoop>();
+	else changeGameLoop<VariableLoop>();
 }
 
-void Game::Update(float GameTime) {}
-void Game::Draw() {}
-void Game::Load() {}
-void Game::Unload() {}
+void Game::update(float deltaTime) {}
+void Game::draw() {}
+void Game::load() {}
+void Game::unload() {}
 
-void Game::ChangeState(GameState* next)
+void Game::changeState(GameState* next)
 {
-	if (myNextState != NULL) delete myNextState;
-	myNextState = next;
-	myNextState->setGame(this);
+	if (m_NextState != nullptr) delete m_NextState;
+	m_NextState = next;
+	m_NextState->setGame(this);
 }
 
-void Game::Exit()
+void Game::exit()
 {
-	myExit = true;
+	m_Exit = true;
 }
 
-void Game::Run()
+void Game::run()
 {
 	//MAIN LOOP
-	while (!myExit)
+	while (!m_Exit)
 	{
-		myInput->Update();
+		m_input->update();
 
 		//EXIT CASE
-		if(myInput->Exit())
+		if(m_input->exit())
 		{
-			myState->Unload();
-			delete myState;
-			myState = NULL;
-			myExit = true;
+			m_State->unload();
+			delete m_State;
+			m_State = nullptr;
+			m_Exit = true;
 			continue;
 		}
 
 		//UPDATES AND DRAWS
-		myGameLoop->LoopIteration();
+		myGameLoop->loopIteration();
 
 		//SHOW CHANGES
-		myScreen->Flip();
+		m_screen->flip();
 		emyl::stream::updateAll();
 
 		//STATE CHANGING
-		if (myNextState != NULL)
+		if (m_NextState != nullptr)
 		{
-			myState->Unload();
-			delete myState;
-			myState = myNextState;
-			myNextState = NULL;
-			myState->Load();
+			m_State->unload();
+			delete m_State;
+			m_State = m_NextState;
+			m_NextState = nullptr;
+			m_State->load();
 		}
 	}
 }
 
-void Game::LoopVariable(float &Now)
+void Game::loopVariable(float &now)
 {
-	if(Now < 0) Now = myInput->getGlobalTime();
+	if(now < 0) now = m_input->getTime();
 
 	//GAMETIME CALCULATION
-	float Before = Now;
-	Now = myInput->getGlobalTime();
-	float interval = Now - Before;
-	if (interval < mySecondsPerFrame)
+	float before = now;
+	now = m_input->getTime();
+	float deltaTime = now - before;
+	if (deltaTime < m_SecondsPerFrame)
 	{
-		int toWait = floor(1000*(mySecondsPerFrame - interval));
+		int toWait = floor(1000*(m_SecondsPerFrame - deltaTime));
 		SDL_Delay(toWait);
 
-		Now = myInput->getGlobalTimeRaw();
-		interval = Now - Before;
+		now = m_input->getTimeRaw();
+		deltaTime = now - before;
 	}
 
 	//UPDATE&DRAW
-	Update(interval);
-	if(myState != NULL)
+	update(deltaTime);
+	if(m_State != nullptr)
 	{
-		myState->Update(interval);
-		myState->Draw();
+		m_State->update(deltaTime);
+		m_State->draw();
 	}
-	Draw();
+	draw();
 }
 
-void Game::LoopStable(float &Now, float &AccumTime)
+void Game::loopStable(float &now, float &accumTime)
 {
-	if(Now < 0)
+	if(now < 0)
 	{
-		Now = myInput->getGlobalTime();
-		AccumTime = 0;
+		now = m_input->getTime();
+		accumTime = 0;
 	}
 
 	//GAMETIME CALCULATION
 	for(;;)
 	{
-		float Before = Now;
-		Now = myInput->getGlobalTimeRaw();
-		float interval = Now - Before;
-		AccumTime += interval;
+		float before = now;
+		now = m_input->getTimeRaw();
+		float deltaTime = now - before;
+		accumTime += deltaTime;
 
-		if (AccumTime < mySecondsPerFrame) SDL_Delay(1);
+		if (accumTime < m_SecondsPerFrame) SDL_Delay(1);
 		else break;
 	}
-	AccumTime -= mySecondsPerFrame;
+	accumTime -= m_SecondsPerFrame;
 
 	//UPDATE&DRAW
-	Update(mySecondsPerFrame);
-	if(myState != NULL)
+	update(m_SecondsPerFrame);
+	if(m_State != nullptr)
 	{
-		myState->Update(mySecondsPerFrame);
-		myState->Draw();
+		m_State->update(m_SecondsPerFrame);
+		m_State->draw();
 	}
-	Draw();
+	draw();
 }
 
-void Game::LoopStableSkip(float &Now, float &AccumTime)
+void Game::loopStableSkip(float &now, float &accumTime)
 {
-	if(Now < 0)
+	if(now < 0)
 	{
-		Now = myInput->getGlobalTime();
-		AccumTime = 0;
+		now = m_input->getTime();
+		accumTime = 0;
 	}
 
 	//GAMETIME CALCULATION
 	for(;;)
 	{
-		float Before = Now;
-		Now = myInput->getGlobalTimeRaw();
-		float interval = Now - Before;
-		AccumTime += interval;
+		float before = now;
+		now = m_input->getTimeRaw();
+		float deltaTime = now - before;
+		accumTime += deltaTime;
 
-		if (AccumTime < mySecondsPerFrame) SDL_Delay(1);
+		if (accumTime < m_SecondsPerFrame) SDL_Delay(1);
 		else break;
 	}
 
 	//UPDATE&DRAW
-	while(AccumTime >= mySecondsPerFrame)
+	while(accumTime >= m_SecondsPerFrame)
 	{
-		Update(mySecondsPerFrame);
-		myState->Update(mySecondsPerFrame);
-		AccumTime -= mySecondsPerFrame;
+		update(m_SecondsPerFrame);
+		m_State->update(m_SecondsPerFrame);
+		accumTime -= m_SecondsPerFrame;
 	}
 
-	if(myState != NULL) myState->Draw();
-	Draw();
+	if(m_State != nullptr) m_State->draw();
+	draw();
 }
 
 Game::GameLoop::GameLoop(Game* parent) : parent(parent){}
 
 Game::VariableLoop::VariableLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::VariableLoop::LoopIteration() {parent->LoopVariable(myNow);}
+void Game::VariableLoop::loopIteration() {parent->loopVariable(myNow);}
 
 Game::StableLoop::StableLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::StableLoop::LoopIteration() {parent->LoopStable(myNow, myAccumTime);}
+void Game::StableLoop::loopIteration() {parent->loopStable(myNow, myAccumTime);}
 
 Game::StableSkipLoop::StableSkipLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::StableSkipLoop::LoopIteration() {parent->LoopStableSkip(myNow, myAccumTime);}
+void Game::StableSkipLoop::loopIteration() {parent->loopStableSkip(myNow, myAccumTime);}
 
 void emylErrorCallback(const std::string &error)
 {

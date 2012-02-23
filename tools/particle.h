@@ -11,10 +11,10 @@ class Particle
 {
 public:
 	Particle(const vec2f &_pos, const vec2f &_vel, float m_live);
-	bool Update(float GameTime, ParticleEmitter &parent);
-	void Draw(ParticleEmitter &parent);
+	bool update(float deltaTime, ParticleEmitter &parent);
+	void draw(ParticleEmitter &parent);
 
-	void FillDrawArray(ParticleEmitter &parent,
+	void fillDrawArray(ParticleEmitter &parent,
 		std::vector<vec2f> &vertcoords,
 		std::vector<vec2f> &texcoords,
 		std::vector<rgba>  &vertcolor);

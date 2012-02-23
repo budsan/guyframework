@@ -7,73 +7,73 @@
 #include <iostream>
 #include <cmath>
 
-float Sprite::globalUnitsPerPixel = 1.0f;
+float Sprite::s_globalUnitsPerPixel = 1.0f;
 
 Sprite::Sprite()
 {
-	unitsPerPixel = globalUnitsPerPixel;
-	scaleWidth = 1.0f;
-	scaleHeight= 1.0f;
-	rotate = 0.0f;
+	m_unitsPerPixel = s_globalUnitsPerPixel;
+	m_scaleWidth = 1.0f;
+	m_scaleHeight= 1.0f;
+	m_rotate = 0.0f;
 }
 
-void Sprite::Update(float GameTime)
+void Sprite::update(float deltaTime)
 {
 
 }
 
 void Sprite::setGlobalPixelsPerUnit(float value)
 {
-	globalUnitsPerPixel = 1.0f/value;
+	s_globalUnitsPerPixel = 1.0f/value;
 }
 
 void Sprite::setPixelsPerUnit(float value)
 {
-	unitsPerPixel = 1.0f/value;
+	m_unitsPerPixel = 1.0f/value;
 }
 
 void Sprite::setScale(float value)
 {
-	scaleWidth = value;
-	scaleHeight= value;
+	m_scaleWidth = value;
+	m_scaleHeight= value;
 }
 
 void Sprite::setScaleWidth(float value)
 {
-	scaleWidth = value;
+	m_scaleWidth = value;
 }
 
 void Sprite::setScaleHeight(float value)
 {
-	scaleHeight= value;
+	m_scaleHeight= value;
 }
 
 void Sprite::setRotation(float value)
 {
-	rotate = value;
+	m_rotate = value;
 }
 
 float Sprite::getScaleWidth()
 {
-	return scaleWidth;
+	return m_scaleWidth;
 }
 
 float Sprite::getScaleHeight()
 {
-	return scaleHeight;
+	return m_scaleHeight;
 }
 float Sprite::getRotation()
 {
-	return rotate;
+	return m_rotate;
 }
 
-void Sprite::Draw()
+void Sprite::draw()
 {
 	drawParams params;
 	getParamsToDraw(params);
-	if (params.filename == NULL) return;
+	if (params.filename == nullptr) return;
 
-	TextureManager *texman = TextureManager::pInstance();
+	TextureManager *texman = TextureManager::ptrInstance();
 
 	const Texture &tex = texman->getTexture(params.filename);
 	tex.setFiltering(GL_NEAREST);
@@ -108,9 +108,9 @@ void Sprite::Draw()
 
 	preDrawing();
 
-	glTranslatef(pos.x , pos.y, 0);
-	glScalef(unitsPerPixel*scaleWidth, unitsPerPixel*scaleHeight, 0);
-	glRotatef(rotate, 0, 0, 1);
+	glTranslatef(m_pos.x , m_pos.y, 0);
+	glScalef(m_unitsPerPixel*m_scaleWidth, m_unitsPerPixel*m_scaleHeight, 0);
+	glRotatef(m_rotate, 0, 0, 1);
 	glTranslatef((float)-params.cx, (float)+params.cy, 0);
 
 	glEnableClientState(GL_VERTEX_ARRAY);

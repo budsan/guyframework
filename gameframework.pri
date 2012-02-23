@@ -1,6 +1,8 @@
 
 LIBS += -lSDL -lGL -lGLU -lGLEW -lpng -lopenal -lvorbis -logg -lvorbisfile -lfreetype
 
+QMAKE_CXXFLAGS += -std=c++0x
+DEFINES += __GXX_EXPERIMENTAL_CXX0X__
 INCLUDEPATH += $$PWD/ /usr/include/freetype2/
 
 SOURCES += \
@@ -29,8 +31,7 @@ SOURCES += \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
     $$PWD/graphics/spritestatic.cpp \
-    $$PWD/variable.cpp \
-    gameframework/graphics/camera.cpp
+    $$PWD/variable.cpp
 
     
 HEADERS += \
@@ -70,7 +71,3 @@ HEADERS += \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
     $$PWD/graphics/camera.h
-
-QMAKE_CXXFLAGS += -std=c++0x
-
-

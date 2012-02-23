@@ -9,7 +9,7 @@ struct LogStream
 {
 	std::ostream *stream;
 
-	LogStream() : stream(NULL)
+	LogStream() : stream(nullptr)
 	{
 		std::fstream *file = new std::fstream(LOG_FILE, std::ios::out|std::ios::trunc);
 		if (!file->is_open())
@@ -26,9 +26,9 @@ struct LogStream
 
 	~LogStream()
 	{
-		if (stream == NULL) return;
+		if (stream == nullptr) return;
 		std::fstream *file = dynamic_cast<std::fstream *>(stream);
-		if (file == NULL) return;
+		if (file == nullptr) return;
 		file->close();
 	}
 };

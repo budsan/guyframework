@@ -97,6 +97,8 @@ public:
 	void  pause();
 	void  stop();
 
+	void  play_buffer(ALuint _buffer);
+
 	bool  playing();
 
 	void  set_loop(int _loop);

@@ -7,8 +7,8 @@ class Sprite
  public:
 	Sprite();
 
-	virtual void Update(float GameTime);
-	void Draw();
+	virtual void update(float deltaTime);
+	void draw();
 
 	static void setGlobalPixelsPerUnit(float value);
 	       void       setPixelsPerUnit(float value);
@@ -22,14 +22,14 @@ class Sprite
 	float getScaleHeight();
 	float getRotation();
 
-	math::vec2f &position() { return pos;}
+	math::vec2f &pos() { return m_pos;}
  private:
-	static float globalUnitsPerPixel;
-	       float       unitsPerPixel;
+	static float s_globalUnitsPerPixel;
+	       float       m_unitsPerPixel;
 
-	float scaleWidth;
-	float scaleHeight;
-	float rotate;
+	float m_scaleWidth;
+	float m_scaleHeight;
+	float m_rotate;
 
  protected:
 	struct drawParams {
@@ -40,5 +40,5 @@ class Sprite
 	virtual void preDrawing();
 	virtual void postDrawing();
 
-	math::vec2f pos;
+	math::vec2f m_pos;
 };

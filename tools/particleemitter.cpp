@@ -13,12 +13,12 @@
 #include "graphics/graphics.h"
 #include "graphics/texturemanager.h"
 
-ParticleEmitter::ParticleEmitter() : random(time(0))
+ParticleEmitter::ParticleEmitter() : m_random(time(0))
 {
-	Restart();
+	restart();
 }
 
-ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : random(time(0))
+ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : m_random(time(0))
 {
 	m_pos = other.m_pos;
 	m_dir = other.m_dir;
@@ -39,10 +39,10 @@ ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : random(time(0))
 	m_accumBlending = other.m_accumBlending;
 	m_material = other.m_material;
 
-	Restart();
+	restart();
 }
 
-bool ParticleEmitter::Load(std::string path)
+bool ParticleEmitter::load(std::string path)
 {
 	std::ifstream file(path.c_str(),std::ifstream::in|std::ifstream::binary);
 	if (file.is_open())
@@ -50,57 +50,58 @@ bool ParticleEmitter::Load(std::string path)
 		read(file);
 		file.close();
 
-		Load();
+		restart();
+		load();
 		return true;
 	}
 
 	return false;
 }
 
-void ParticleEmitter::Load()
+void ParticleEmitter::load()
 {
 	if (!m_material.empty())
 	{
-		TextureManager& texman = TextureManager::Instance();
+		TextureManager& texman = TextureManager::instance();
 		texman.getTexture(m_material);
 	}}
 
-void ParticleEmitter::Unload()
+void ParticleEmitter::unload()
 {
 	if (!m_material.empty())
 	{
-		TextureManager& texman = TextureManager::Instance();
-		texman.DeleteTexture(m_material);
+		TextureManager& texman = TextureManager::instance();
+		texman.deleteTexture(m_material);
 	}
 }
 
-void ParticleEmitter::Update(float GameTime)
+void ParticleEmitter::update(float deltaTime)
 {
 	std::list<Particle>::iterator it = m_particles.begin();
 	while(it != m_particles.end())
 	{
-		if (!it->Update(GameTime, *this)) it = m_particles.erase(it);
+		if (!it->update(deltaTime, *this)) it = m_particles.erase(it);
 		else it++;
 	}
 
-	m_time += GameTime;
+	m_time += deltaTime;
 	while (m_time >= m_freq && m_num != 0)
 	{
 		m_time -= m_freq;
 		if (m_num > 0) m_num--;
 		newParticle();
-		m_particles.back().Update(m_time, *this);
+		m_particles.back().update(m_time, *this);
 	}
 }
 
-void ParticleEmitter::Draw()
+void ParticleEmitter::draw()
 {
 	if (!m_material.empty())
 	{
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
-		TextureManager& texman = TextureManager::Instance();
+		TextureManager& texman = TextureManager::instance();
 		const Texture &tex = texman.getTexture(m_material);
-		tex.Bind();
+		tex.bind();
 		//tex.setWrap(GL_CLAMP_TO_BORDER);
 		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, rgba(0,0,0,0).raw());
 		glEnable(GL_TEXTURE_2D);
@@ -120,7 +121,7 @@ void ParticleEmitter::Draw()
 
 	std::list<Particle>::iterator it = m_particles.begin();
 	for (;it != m_particles.end(); it++)
-		it->FillDrawArray(*this, vertcoords, texcoords, vertcolor);
+		it->fillDrawArray(*this, vertcoords, texcoords, vertcolor);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -136,7 +137,7 @@ void ParticleEmitter::Draw()
 	if (!m_material.empty()) glPopAttrib();
 }
 
-void ParticleEmitter::Restart()
+void ParticleEmitter::restart()
 {
 	m_particles.clear();
 	m_num = m_num0;
@@ -152,9 +153,9 @@ void ParticleEmitter::newParticle()
 	//float weight1 = dis(random);
 	//float weight2 = dis(random);
 
-	float weight0 = float(random()%(1000))/float(1000);
-	float weight1 = float(random()%(1000))/float(1000);
-	float weight2 = float(random()%(1000))/float(1000);
+	float weight0 = float(m_random()%(1000))/float(1000);
+	float weight1 = float(m_random()%(1000))/float(1000);
+	float weight2 = float(m_random()%(1000))/float(1000);
 
 	float live  = (m_l0*weight0) + (m_l1*(1-weight0));
 	float speed = (m_s0*weight1) + (m_s1*(1-weight1));

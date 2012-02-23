@@ -9,26 +9,26 @@ class Input
 {
 public:
 	static Input& Instance();
-	static Input* pInstance();
+	static Input* ptrInstance();
         ~Input();
 
-	void Update();
-	bool Exit();
+	void update();
+	bool exit();
 
-	float getGlobalTime();
-	float getGlobalTimeRaw();
+	float getTime();
+	float getTimeRaw();
 	void getKeyFromSettings();
 
-	const InputState &getInputState(int player = 0) const {return state[player];}
+	const InputState &getInputState(int player = 0) const {return m_state[player];}
 	
 private:
-	static Input *myInstance;
-	Settings* mySettings;
+	static Input *m_instance;
+	Settings* m_settings;
         Input();
 
-	float myGlobalTime;
-	bool  myDoExit;
+	float m_time;
+	bool  m_doExit;
 
-	std::vector<InputState> state;
+	std::vector<InputState> m_state;
 };
 

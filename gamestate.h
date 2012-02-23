@@ -5,15 +5,15 @@ class GameState {
 public:
 	GameState();
 
-	virtual void Update(float GameTime) = 0;
-	virtual void Draw() = 0;
+	virtual void update(float deltaTime) = 0;
+	virtual void draw() = 0;
 
-	virtual void   Load() = 0;
-	virtual void Unload() = 0;
+	virtual void   load() = 0;
+	virtual void unload() = 0;
 
-	void setGame(Game* parent);
-	Game* getGame();
+	void setGame(Game *parent);
+	Game *getGame();
 
 private:
-	Game* myParent;
+	Game *m_parent;
 };

@@ -25,28 +25,27 @@ public:
 	enum VertAlignment { TOP , BOTTOM, BASELINE };
 	enum HorzAlignment { LEFT, RIGHT , CENTER   };
 	
-	bool Load(const char *filename, unsigned int height);
+	bool load(const char *filename, unsigned int height);
 	void setAlignment(VertAlignment v, HorzAlignment h);
-	void Print(float x, float y, const char *fmt, ...);
-	void Print2D(float x, float y, const char *fmt, ...);
-#ifdef _MATH_VEC2_DEFINED_
-	void Print(math::vec2f v, const char *fmt, ...);
-	void Print2D(math::vec2f v, const char *fmt, ...);
+	void print(float x, float y, const char *fmt, ...);
+	void print2D(float x, float y, const char *fmt, ...);
+#ifdef _MATH_ALGEBRA3_DEFINED_
+	void print(math::vec2f v, const char *fmt, ...);
+	void print2D(math::vec2f v, const char *fmt, ...);
 #endif
 
-	void Clean();
+	void clean();
 private:
 
-	bool RenderFaceToTexture(FT_Face face, char ch);
-	void CalcAlignment(std::vector<std::string> &lines, std::vector<int>& align);
-	void PrintGL(float x, float y, char *text);
-	inline int NextPowerOfTwo ( int a )
+	bool renderFaceToTexture(FT_Face face, char ch);
+	void calcAlignment(std::vector<std::string> &lines, std::vector<int>& align);
+	void printGL(float x, float y, char *text);
+	inline int nextPowerOfTwo ( int a )
 	{
 		int rval=1;
 		while(rval<a) rval<<=1;
 		return rval;
 	}
-
 
 	struct glyph_metrics {
 		long advance;
@@ -56,9 +55,9 @@ private:
 		float texheight;
 	};
 
-	GLuint        *myTextures;
-	glyph_metrics *myMetrics;
-	GLuint         myListFirst;
-	unsigned short myAlignment;
-	unsigned short myHeight;
+	GLuint        *m_textures;
+	glyph_metrics *m_metrics;
+	GLuint         m_listFirst;
+	unsigned short m_alignment;
+	unsigned short m_height;
 };

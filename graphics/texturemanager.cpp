@@ -14,35 +14,35 @@
 
 //---------------------------------------------------------------------------//
 
-TextureManager* TextureManager::myInstance = 0;
-bool TextureManager::myIsInstanced = false;
+TextureManager* TextureManager::m_instance = 0;
+bool TextureManager::m_isInstanced = false;
 
-TextureManager& TextureManager::Instance()
+TextureManager& TextureManager::instance()
 {
-	return *pInstance();
+	return *ptrInstance();
 }
 
-TextureManager* TextureManager::pInstance()
+TextureManager* TextureManager::ptrInstance()
 {
-	if (TextureManager::myInstance == 0)
+	if (TextureManager::m_instance == 0)
 	{
-		myInstance = new TextureManager();
+		m_instance = new TextureManager();
 	}
 	
-	return myInstance;
+	return m_instance;
 }
 
 //---------------------------------------------------------------------------//
 
 TextureManager::TextureManager()
 {
-	myDataPath = std::string("./data/texture/");
-	myTextures[NULL_TEXTURE].LoadNullTexture();
+	m_dataPath = std::string("./data/texture/");
+	m_textures[NULL_TEXTURE].loadNullTexture();
 
-	if (!myIsInstanced)
+	if (!m_isInstanced)
 	{
-		atexit(TextureManager::DeleteInstance);
-		myIsInstanced = true;
+		atexit(TextureManager::deleteInstance);
+		m_isInstanced = true;
 	}
 }
 
@@ -50,13 +50,13 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
-	UnloadTextures();
+	unloadTextures();
 }
 
 //---------------------------------------------------------------------------//
-void TextureManager::UseTexture(std::string _filename)
+void TextureManager::useTexture(std::string _filename)
 {
-	getTexture(_filename).Bind();
+	getTexture(_filename).bind();
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
 }
@@ -65,10 +65,10 @@ void TextureManager::UseTexture(std::string _filename)
 
 const Texture& TextureManager::getTexture(std::string _filename)
 {
-	std::map<std::string,Texture>::iterator iter = myTextures.find(_filename);
+	std::map<std::string,Texture>::iterator iter = m_textures.find(_filename);
 
 	// La textura ya está cargada, así que la devolvemos
-	if(iter != myTextures.end()) return iter->second;
+	if(iter != m_textures.end()) return iter->second;
 
 	// Probaremos las rutas posibles para cargar la textura, y ver si alguna
 	// opcion nos da una textura valida.
@@ -77,7 +77,7 @@ const Texture& TextureManager::getTexture(std::string _filename)
 	for(int i = 0; i < (int)paths.size(); i++)
 	{
 		std::string &path = paths[i];
-		if (path.empty()) return myTextures[NULL_TEXTURE];
+		if (path.empty()) return m_textures[NULL_TEXTURE];
 		std::ifstream f(path.c_str());
 		if (!f.is_open())
 		{
@@ -90,14 +90,14 @@ const Texture& TextureManager::getTexture(std::string _filename)
 		break;
 	}
 
-	if (valid < 0) return myTextures[NULL_TEXTURE];
+	if (valid < 0) return m_textures[NULL_TEXTURE];
 
 	// preparamos la estructura y la insertamos
-	Texture &tex = myTextures[_filename];
-	if (!tex.Load(paths[valid]))
+	Texture &tex = m_textures[_filename];
+	if (!tex.load(paths[valid]))
 	{
-		myTextures.erase(_filename);
-		return myTextures[NULL_TEXTURE];
+		m_textures.erase(_filename);
+		return m_textures[NULL_TEXTURE];
 	}
 
 	return tex;
@@ -105,42 +105,40 @@ const Texture& TextureManager::getTexture(std::string _filename)
 
 //---------------------------------------------------------------------------//
 
-void TextureManager::DeleteTexture(std::string filename)
+void TextureManager::deleteTexture(std::string filename)
 {
-	if(myTextures.find(filename) != myTextures.end())
+	if(m_textures.find(filename) != m_textures.end())
 	{
-		GLuint uiID = myTextures[filename].id;
-		glDeleteTextures(1,&uiID);
-		myTextures.erase(filename);
+		m_textures.erase(filename);
 	}
 } 
 
 //---------------------------------------------------------------------------//
 
-unsigned int TextureManager::NumOfTextures()
+unsigned int TextureManager::numOfTextures()
 {
-    return myTextures.size();
+    return m_textures.size();
 }
 
 //---------------------------------------------------------------------------//
 
-void TextureManager::UnloadTextures()
+void TextureManager::unloadTextures()
 {
-	myTextures.clear();
+	m_textures.clear();
 }
 
 //---------------------------------------------------------------------------//
 
 void TextureManager::setDataPath(std::string path)
 {
-	myDataPath = path; 
+	m_dataPath = path; 
 }
 
 //---------------------------------------------------------------------------//
 
-void TextureManager::DeleteInstance()
+void TextureManager::deleteInstance()
 {
-	if (myInstance) delete myInstance;
+	if (m_instance) delete m_instance;
 }
 
 //---------------------------------------------------------------------------//
@@ -148,8 +146,8 @@ void TextureManager::DeleteInstance()
 std::vector<std::string> TextureManager::getPosibleDataPath(std::string filename)
 {
 	std::vector<std::string> pathOpts;
-	pathOpts.push_back(myDataPath + filename + std::string(".png"));
-	pathOpts.push_back(myDataPath + filename);
+	pathOpts.push_back(m_dataPath + filename + std::string(".png"));
+	pathOpts.push_back(m_dataPath + filename);
 	pathOpts.push_back(filename + std::string(".png"));
 	pathOpts.push_back(filename);
 

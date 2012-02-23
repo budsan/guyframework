@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <memory>
 
 #include "sprite.h"
 
@@ -21,7 +22,7 @@ public:
 	std::map<std::string, int> spritesheetIndex;
 	std::map<std::string, int> frameNames;
 
-	bool Load(const char* filename);
+	bool load(const char* filename);
 	bool Save(const char* filename);
 	bool Empty();
 
@@ -36,17 +37,17 @@ private:
 class SpriteStatic : public Sprite {
  public:
 	SpriteStatic();
-	SpriteStatic(SpriteLibrary *data);
+	SpriteStatic(std::shared_ptr<SpriteLibrary> data);
 
-	virtual void Update(float GameTime);
+	virtual void update(float deltaTime);
 
 	int getFrameID(std::string name);
-	bool setLibrary(SpriteLibrary *data);
-	bool SelectFrame(std::string name);
-	bool SelectFrame(int frameID);
+	bool setLibrary(std::shared_ptr<SpriteLibrary> data);
+	bool selectFrame(std::string name);
+	bool selectFrame(int frameID);
 
 	void getParamsToDraw(Sprite::drawParams &params);
  private:
-	SpriteLibrary *data;
-	int frameSelected;
+	std::shared_ptr<SpriteLibrary> m_data;
+	int m_frameSelected;
 };

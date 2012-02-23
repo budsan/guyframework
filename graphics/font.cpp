@@ -4,13 +4,13 @@
 #define CHARSET_SIZE 128
 
 Font::Font() {
-	myTextures = NULL;
-	myMetrics  = NULL;
-	myListFirst = 0;
-	myAlignment = (BASELINE << 2) | LEFT;
+	m_textures = nullptr;
+	m_metrics  = nullptr;
+	m_listFirst = 0;
+	m_alignment = (BASELINE << 2) | LEFT;
 }
 
-bool Font::Load(const char *filename, unsigned int height) {
+bool Font::load(const char *filename, unsigned int height) {
 
 	FT_Library library;
 	if (FT_Init_FreeType( &library ))
@@ -32,19 +32,19 @@ bool Font::Load(const char *filename, unsigned int height) {
 
 	FT_Set_Char_Size( face, height << 6, height << 6, 96, 96);
 
-	if (myTextures != NULL) Clean();
+	if (m_textures != nullptr) clean();
 
-	this->myHeight = height;
-	myTextures = new GLuint[CHARSET_SIZE];
-	myMetrics  = new glyph_metrics[CHARSET_SIZE];
-	myListFirst = glGenLists(CHARSET_SIZE);
-	glGenTextures(CHARSET_SIZE, myTextures );
+	this->m_height = height;
+	m_textures = new GLuint[CHARSET_SIZE];
+	m_metrics  = new glyph_metrics[CHARSET_SIZE];
+	m_listFirst = glGenLists(CHARSET_SIZE);
+	glGenTextures(CHARSET_SIZE, m_textures );
 
 	for(unsigned int i=0 ; i < CHARSET_SIZE ; i++)
 	{
-		bool result = RenderFaceToTexture(face, i);
+		bool result = renderFaceToTexture(face, i);
 		if (!result) {
-			Clean();
+			clean();
 			return false;
 		}
 	}
@@ -56,31 +56,31 @@ bool Font::Load(const char *filename, unsigned int height) {
 }
 
 void Font::setAlignment(VertAlignment v, HorzAlignment h) {
-	myAlignment = (short(v) << 2) | short(h);
+	m_alignment = (short(v) << 2) | short(h);
 }
 
-#ifdef _MATH_VEC2_DEFINED_
+#ifdef _MATH_ALGEBRA3_DEFINED_
 using namespace math;
-void Font::Print(vec2f v, const char *fmt, ...) {
+void Font::print(vec2f v, const char *fmt, ...) {
 	char text[256];
 	va_list ap;
 
-	if (fmt == NULL) return;
+	if (fmt == nullptr) return;
 	else {
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
 		va_end(ap);
 	}
 
-	PrintGL(v.x, v.y, text);
+	printGL(v.x, v.y, text);
 }
 
-void Font::Print2D(vec2f v, const char *fmt, ...)
+void Font::print2D(vec2f v, const char *fmt, ...)
 {	
 	char text[256];
 	va_list ap;
 
-	if (fmt == NULL) return;
+	if (fmt == nullptr) return;
 	else {
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
@@ -98,7 +98,7 @@ void Font::Print2D(vec2f v, const char *fmt, ...)
 	glLoadIdentity();
 	gluOrtho2D(viewport[0],viewport[2],viewport[1],viewport[3]);
 	
-	PrintGL(v.x, v.y, text);
+	printGL(v.x, v.y, text);
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -106,27 +106,27 @@ void Font::Print2D(vec2f v, const char *fmt, ...)
 }
 #endif
 
-void Font::Print(float x, float y, const char *fmt, ...)
+void Font::print(float x, float y, const char *fmt, ...)
 {	
 	char text[256];
 	va_list ap;
 
-	if (fmt == NULL) return;
+	if (fmt == nullptr) return;
 	else {
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
 		va_end(ap);
 	}
 	
-	PrintGL(x, y, text);
+	printGL(x, y, text);
 }
 
-void Font::Print2D(float x, float y, const char *fmt, ...)
+void Font::print2D(float x, float y, const char *fmt, ...)
 {	
 	char text[256];
 	va_list ap;
 
-	if (fmt == NULL) return;
+	if (fmt == nullptr) return;
 	else {
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
@@ -144,17 +144,17 @@ void Font::Print2D(float x, float y, const char *fmt, ...)
 	glLoadIdentity();
 	gluOrtho2D(viewport[0],viewport[2],viewport[1],viewport[3]);
 	
-	PrintGL(x, y, text);
+	printGL(x, y, text);
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glPopAttrib();
 }
 
-void Font::PrintGL(float x, float y, char *text)
+void Font::printGL(float x, float y, char *text)
 {
-	GLuint font = myListFirst;
-	float height = this->myHeight/.63f;
+	GLuint font = m_listFirst;
+	float height = this->m_height/.63f;
 
 	const char *startLine=text;
 	std::vector<std::string> lines;
@@ -181,7 +181,7 @@ void Font::PrintGL(float x, float y, char *text)
 	}
 
 	std::vector<int> align = std::vector< int >(lines.size());
-	CalcAlignment(lines, align);
+	calcAlignment(lines, align);
 
 	glPushAttrib(GL_LIST_BIT | GL_CURRENT_BIT  | GL_ENABLE_BIT | GL_TRANSFORM_BIT | GL_DEPTH_BUFFER_BIT);	
 	glMatrixMode(GL_MODELVIEW);
@@ -214,7 +214,7 @@ void Font::PrintGL(float x, float y, char *text)
 	//glPopAttrib();
 }
 
-bool Font::RenderFaceToTexture(FT_Face face, char ch)
+bool Font::renderFaceToTexture(FT_Face face, char ch)
 {
 	
 	if(FT_Load_Glyph( face, FT_Get_Char_Index( face, ch ), FT_LOAD_DEFAULT ))
@@ -238,8 +238,8 @@ bool Font::RenderFaceToTexture(FT_Face face, char ch)
 	FT_BitmapGlyph bitmap_glyph = (FT_BitmapGlyph)glyph;
 	FT_Bitmap& bitmap=bitmap_glyph->bitmap;
 
-	int width  = NextPowerOfTwo( bitmap.width );
-	int height = NextPowerOfTwo( bitmap.rows  );
+	int width  = nextPowerOfTwo( bitmap.width );
+	int height = nextPowerOfTwo( bitmap.rows  );
 
 	GLubyte* tempbuff = new GLubyte[ 2 * width * height];
 
@@ -254,7 +254,7 @@ bool Font::RenderFaceToTexture(FT_Face face, char ch)
 		}
 	}
 
-	glBindTexture( GL_TEXTURE_2D, myTextures[(int)ch]);
+	glBindTexture( GL_TEXTURE_2D, m_textures[(int)ch]);
 //	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);/
 //	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 //	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height,
@@ -267,7 +267,7 @@ bool Font::RenderFaceToTexture(FT_Face face, char ch)
 
 	delete [] tempbuff;
 
-	glyph_metrics &m = myMetrics[(int)ch];
+	glyph_metrics &m = m_metrics[(int)ch];
 	m.advance = face->glyph->advance.x >> 6;
 	m.width   = bitmap.width;
 	m.rows    = bitmap.rows;
@@ -278,9 +278,9 @@ bool Font::RenderFaceToTexture(FT_Face face, char ch)
 	m.texheight = (float)m.rows  / (float)height;
 
 
-	glNewList(myListFirst+ch,GL_COMPILE);
+	glNewList(m_listFirst+ch,GL_COMPILE);
 
-	glBindTexture(GL_TEXTURE_2D,myTextures[(int)ch]);
+	glBindTexture(GL_TEXTURE_2D,m_textures[(int)ch]);
 	glPushMatrix();
 	glTranslatef(m.left, m.top - m.rows, 0);
 
@@ -299,10 +299,10 @@ bool Font::RenderFaceToTexture(FT_Face face, char ch)
 	return true;
 }
 
-void Font::CalcAlignment(std::vector<std::string>& lines, std::vector<int>& align) {
+void Font::calcAlignment(std::vector<std::string>& lines, std::vector<int>& align) {
 	int vertAlignment, horzAlignment;
-	vertAlignment = myAlignment >> 2;
-	horzAlignment = myAlignment &0x03;
+	vertAlignment = m_alignment >> 2;
+	horzAlignment = m_alignment &0x03;
 
 	if (horzAlignment == LEFT) return;
 
@@ -314,7 +314,7 @@ void Font::CalcAlignment(std::vector<std::string>& lines, std::vector<int>& alig
 
 		for (int i = 0; i < current_size; i++)
 		{
-			const glyph_metrics &m = myMetrics[(int)current[i]];
+			const glyph_metrics &m = m_metrics[(int)current[i]];
 			total_advance += m.advance;
 		}
 
@@ -335,24 +335,24 @@ void Font::CalcAlignment(std::vector<std::string>& lines, std::vector<int>& alig
 	}
 }
 
-void Font::Clean() {
+void Font::clean() {
 	
-	if (myTextures != NULL)
+	if (m_textures != nullptr)
 	{
 		for (int i = 0; i < CHARSET_SIZE; i++) {
 			//TODO: DELETE TEXTURES		
 		}
-		delete myTextures;
-		myTextures = NULL;
+		delete m_textures;
+		m_textures = nullptr;
 	}
 
-	if (myMetrics != NULL)
+	if (m_metrics != nullptr)
 	{
-		delete myMetrics;
-		myMetrics = NULL;
+		delete m_metrics;
+		m_metrics = nullptr;
 	}
 
 	//TODO: CLEAN m_listfirst
-	myListFirst = 0;
-	myAlignment = (BASELINE << 2) | LEFT;
+	m_listFirst = 0;
+	m_alignment = (BASELINE << 2) | LEFT;
 }

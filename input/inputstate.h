@@ -18,14 +18,14 @@ public:
 	bool getKeyDown (unsigned char key) const;
 	bool getKeyUp   (unsigned char key) const;
 
-	void ResetEvents();
-	void Reset();
+	void resetEvents();
+	void reset();
 private:
-	unsigned int actions;
+	unsigned int m_actions;
 
-	std::vector<bool> myKeyState;
-	std::vector<bool> myKeyUp;
-	std::vector<bool> myKeyDown;
+	std::vector<bool> m_keyState;
+	std::vector<bool> m_keyUp;
+	std::vector<bool> m_keyDown;
 	friend class Input;
 };
 

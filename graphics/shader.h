@@ -7,15 +7,15 @@
 class Shader
 {
 	private:
-		GLuint _id;
+		GLuint m_id;
 	public:
 		Shader(GLenum type);
 		~Shader();
-		bool Load(const char *filename);
+		bool load(const char *filename);
 
-		void Compile() const;
-		void Attach(GLuint program) const;
-		void PrintInfoLog() const;
+		void compile() const;
+		void attach(GLuint program) const;
+		void printInfoLog() const;
 };
 
 #endif

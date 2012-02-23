@@ -10,11 +10,11 @@ Particle::Particle(const vec2f &_pos, const vec2f &_vel, float live):
 
 }
 
-bool Particle::Update(float GameTime, ParticleEmitter &parent)
+bool Particle::update(float deltaTime, ParticleEmitter &parent)
 {
 	if(m_live == m_time) return false;
 
-	m_time += GameTime;
+	m_time += deltaTime;
 	if (m_live < m_time) m_time = m_live;
 
 	vec2f acc = parent.m_grav;
@@ -23,7 +23,7 @@ bool Particle::Update(float GameTime, ParticleEmitter &parent)
 	return true;
 }
 
-void Particle::Draw(ParticleEmitter &parent)
+void Particle::draw(ParticleEmitter &parent)
 {
 	float weight = (m_live-m_time)/m_live;
 	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
@@ -50,7 +50,7 @@ void Particle::Draw(ParticleEmitter &parent)
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void Particle::FillDrawArray(ParticleEmitter &parent,
+void Particle::fillDrawArray(ParticleEmitter &parent,
 	std::vector<vec2f> &vertcoords,
 	std::vector<vec2f> &texcoords,
 	std::vector<rgba>  &vertcolor)

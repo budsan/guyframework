@@ -46,11 +46,11 @@ void TransitionLinear::goPos(float _fPos)
 	Transition::goPos(_fPos);
 }
 
-void TransitionLinear::update(float _GameTime)
+void TransitionLinear::update(float _deltaTime)
 {
 	if(m_fPercent < 1.0f)
 	{
-		m_fPercent += _GameTime/m_fTime;
+		m_fPercent += _deltaTime/m_fTime;
 		if (m_fPercent >= 1.0f)
 		{
 			m_fPercent = 1.0f;
@@ -76,7 +76,7 @@ void TransitionSinus::goPos(float _fPos)
 	Transition::goPos(_fPos);
 }
 
-void TransitionSinus::update(float _GameTime)
+void TransitionSinus::update(float _deltaTime)
 {
 	if(m_fSinPos < M_PI)
 	{
@@ -84,7 +84,7 @@ void TransitionSinus::update(float _GameTime)
 		m_fPos =
 			m_fInitPos * (     fPercent) +
 			m_fPosToGo * (1.0f-fPercent);
-		m_fSinPos += (float)M_PI/m_fVel*_GameTime;
+		m_fSinPos += (float)M_PI/m_fVel*_deltaTime;
 
 		if (m_fSinPos > M_PI) {
 			m_fSinPos = (float)M_PI;
@@ -107,7 +107,7 @@ void TransitionSinusFadeIn::goPos(float _fPos)
 	Transition::goPos(_fPos);
 }
 
-void TransitionSinusFadeIn::update(float _GameTime)
+void TransitionSinusFadeIn::update(float _deltaTime)
 {
 	if(m_fSinPos < M_PI/2)
 	{
@@ -115,7 +115,7 @@ void TransitionSinusFadeIn::update(float _GameTime)
 		m_fPos =
 			m_fInitPos * (     fPercent) +
 			m_fPosToGo * (1.0f-fPercent);
-		m_fSinPos += (float)(M_PI/2)/m_fVel*_GameTime;
+		m_fSinPos += (float)(M_PI/2)/m_fVel*_deltaTime;
 
 		if(m_fSinPos > M_PI/2) {
 			m_fSinPos = (float)M_PI/2;
@@ -139,7 +139,7 @@ void TransitionSinusFadeOut::goPos(float _fPos)
 	Transition::goPos(_fPos);
 }
 
-void TransitionSinusFadeOut::update(float _GameTime)
+void TransitionSinusFadeOut::update(float _deltaTime)
 {
 	if(m_fSinPos < M_PI/2)
 	{
@@ -147,7 +147,7 @@ void TransitionSinusFadeOut::update(float _GameTime)
 		m_fPos =
 			m_fInitPos * (1.0f-fPercent) +
 			m_fPosToGo * (     fPercent);
-		m_fSinPos += (float)(M_PI/2)/m_fVel*_GameTime;
+		m_fSinPos += (float)(M_PI/2)/m_fVel*_deltaTime;
 
 		if(m_fSinPos > M_PI/2) {
 			m_fSinPos = (float)M_PI/2;

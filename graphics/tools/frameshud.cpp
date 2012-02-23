@@ -5,21 +5,21 @@ FramesHUD::FramesHUD()
 {
 	setColor(rgba(1,0,1,1));
 	setDisplayTime(1.0f);
-	myIsFontLoaded = false;
+	m_isFontLoaded = false;
 
-	Reset();
+	reset();
 }
 
-bool FramesHUD::LoadFont(const char *filename)
+bool FramesHUD::loadFont(const char *filename)
 {
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	unsigned int h = viewport[3] - viewport[1];
 
-	if (myFont.Load(filename, h/32))
+	if (m_font.load(filename, h/32))
 	{
-		myIsFontLoaded = true;
-		myFont.setAlignment(Font::TOP, Font::LEFT);
+		m_isFontLoaded = true;
+		m_font.setAlignment(Font::TOP, Font::LEFT);
 		return true;
 	}
 
@@ -28,34 +28,34 @@ bool FramesHUD::LoadFont(const char *filename)
 
 void FramesHUD::setColor(const rgba &color)
 {
-	myColor = color;
+	m_color = color;
 }
 
 void FramesHUD::setDisplayTime(float time)
 {
 	if (time <= 0 ) time = 1.0f;
-	myDisplayTime = time;
-	myDisplayTimeInv = 1.0f/time;
+	m_displayTime = time;
+	m_displayTimeInv = 1.0f/time;
 }
-void FramesHUD::Update(float GameTime)
+void FramesHUD::update(float deltaTime)
 {
-	myTimeCount += GameTime;
-	if(myTimeCount > myDisplayTime)
+	m_timeCount += deltaTime;
+	if(m_timeCount > m_displayTime)
 	{
-		float currentFramesToDisplay  = float(myNumOfFrames) * myDisplayTimeInv;
-		float timesHappenedDisplayTime = floor(myTimeCount * myDisplayTimeInv);
+		float currentFramesToDisplay  = float(m_framesCount) * m_displayTimeInv;
+		float timesHappenedDisplayTime = floor(m_timeCount * m_displayTimeInv);
 		currentFramesToDisplay /= timesHappenedDisplayTime;
-		myFramesToDisplay = currentFramesToDisplay*0.8 + myFramesToDisplay*0.2;
+		m_framesToDisplay = currentFramesToDisplay*0.8 + m_framesToDisplay*0.2;
 
-		myTimeCount -= timesHappenedDisplayTime * myDisplayTime;
-		myNumOfFrames = 0;
+		m_timeCount -= timesHappenedDisplayTime * m_displayTime;
+		m_framesCount = 0;
 	}
 }
 
-void FramesHUD::Draw()
+void FramesHUD::draw()
 {
-	myNumOfFrames++;
-	if (myIsFontLoaded)
+	m_framesCount++;
+	if (m_isFontLoaded)
 	{
 		GLint viewport[4];
 		glGetIntegerv(GL_VIEWPORT, viewport);
@@ -63,15 +63,15 @@ void FramesHUD::Draw()
 		unsigned int h = viewport[1];
 
 		glPushAttrib(GL_CURRENT_BIT);
-		glColor(myColor);
-		myFont.Print2D(w, h, "%4.2f", myFramesToDisplay);
+		glColor(m_color);
+		m_font.print2D(w, h, "%4.2f", m_framesToDisplay);
 		glPopAttrib();
 	}
 }
 
-void FramesHUD::Reset()
+void FramesHUD::reset()
 {
-	myTimeCount = 0;
-	myFramesToDisplay = 0;
-	myNumOfFrames = 0;
+	m_timeCount = 0;
+	m_framesToDisplay = 0;
+	m_framesCount = 0;
 }

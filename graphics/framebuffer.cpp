@@ -7,23 +7,23 @@
 #include <iostream>
 
 
-FrameBuffer::FrameBuffer() : _width(0), _height(0), _frame_id(0), _depth_id(0), _stencil_id(0), _buffers(0)
+FrameBuffer::FrameBuffer() : m_width(0), m_height(0), m_frameId(0), m_depthId(0), m_stencilId(0), m_buffers(0)
 {
-	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &_max_color_attachments);
-	_buffers = new GLenum[_max_color_attachments];
+	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &m_maxColorAttachments);
+	m_buffers = new GLenum[m_maxColorAttachments];
 
-	glGenFramebuffers(1, &_frame_id);
+	glGenFramebuffers(1, &m_frameId);
 }
 
 
-FrameBuffer::FrameBuffer(int width, int height) : _width(0), _height(0), _frame_id(0), _depth_id(0), _stencil_id(0), _buffers(0)
+FrameBuffer::FrameBuffer(int width, int height) : m_width(0), m_height(0), m_frameId(0), m_depthId(0), m_stencilId(0), m_buffers(0)
 {
-	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &_max_color_attachments);
-	_buffers = new GLenum[_max_color_attachments];
+	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &m_maxColorAttachments);
+	m_buffers = new GLenum[m_maxColorAttachments];
 
-	glGenFramebuffersEXT(1, &_frame_id);
-	_width = width;
-	_height = height;
+	glGenFramebuffersEXT(1, &m_frameId);
+	m_width = width;
+	m_height = height;
 }
 
 
@@ -32,29 +32,29 @@ FrameBuffer::~FrameBuffer()
 	GLuint tex_id;
 
 	std::vector<GLuint>::const_iterator cii;
-	for(cii = _tex_id.begin(); cii != _tex_id.end(); cii++) {
+	for(cii = m_texId.begin(); cii != m_texId.end(); cii++) {
 		tex_id = *cii;
 		glDeleteTextures(1, &tex_id);
 	}
 
-	if (_depth_id) {
-		glDeleteRenderbuffersEXT(1, &_depth_id);
+	if (m_depthId) {
+		glDeleteRenderbuffersEXT(1, &m_depthId);
 	}
-	if (_stencil_id) {
-		glDeleteRenderbuffersEXT(1, &_stencil_id);
+	if (m_stencilId) {
+		glDeleteRenderbuffersEXT(1, &m_stencilId);
 	}
-	glDeleteFramebuffersEXT(1, &_frame_id);
-	delete[] _buffers;
+	glDeleteFramebuffersEXT(1, &m_frameId);
+	delete[] m_buffers;
 }
 
 
-void FrameBuffer::AttachRender(GLenum iformat)
+void FrameBuffer::attachRender(GLenum iformat)
 	throw (std::domain_error, std::invalid_argument)
 {
 	GLenum attachment;
 	GLuint render_id;
 
-	if (_width == 0 || _height == 0) {
+	if (m_width == 0 || m_height == 0) {
 		throw std::domain_error("FrameBuffer::AttachRender - one of the dimensions is zero");
 	}
 
@@ -73,21 +73,21 @@ void FrameBuffer::AttachRender(GLenum iformat)
 	}
 
 	glGenRenderbuffersEXT(1, &render_id);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _frame_id);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, render_id);
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, iformat, _width, _height);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, iformat, m_width, m_height);
 	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, render_id);
 
 	if (attachment == GL_DEPTH_ATTACHMENT_EXT || attachment == GL_DEPTH_STENCIL_ATTACHMENT) {
-		_depth_id = render_id;
+		m_depthId = render_id;
 	}
 	else if (attachment == GL_STENCIL_ATTACHMENT_EXT) {
-		_stencil_id = render_id;
+		m_stencilId = render_id;
 	}
 }
 
 
-void FrameBuffer::AttachTexture(GLenum iformat, GLint filter)
+void FrameBuffer::attachTexture(GLenum iformat, GLint filter)
 	throw(std::domain_error, std::out_of_range, std::invalid_argument)
 {
 	GLenum format;
@@ -95,15 +95,15 @@ void FrameBuffer::AttachTexture(GLenum iformat, GLint filter)
 	GLenum attachment;
 	GLuint tex_id;
 
-	if (_width == 0 || _height == 0) {
+	if (m_width == 0 || m_height == 0) {
 		throw std::domain_error("FrameBuffer::AttachTexture - one of the dimensions is zero");
 	}
 
-	if (int(_tex_id.size()) == _max_color_attachments) {
+	if (int(m_texId.size()) == m_maxColorAttachments) {
 		throw std::out_of_range("FrameBuffer::AttachTexture - GL_MAX_COLOR_ATTACHMENTS exceeded");
 	}
 
-	attachment = GL_COLOR_ATTACHMENT0_EXT + _tex_id.size(); // common attachment for color textures
+	attachment = GL_COLOR_ATTACHMENT0_EXT + m_texId.size(); // common attachment for color textures
 	if (iformat == GL_RGBA16F_ARB || iformat == GL_RGBA32F_ARB) {
 		format = GL_RGBA;
 		type = GL_FLOAT;
@@ -160,9 +160,9 @@ void FrameBuffer::AttachTexture(GLenum iformat, GLint filter)
 	}
 
 	glGenTextures(1, &tex_id);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _frame_id);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
 	glBindTexture(GL_TEXTURE_2D, tex_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, iformat, _width, _height, 0, format, type, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, iformat, m_width, m_height, 0, format, type, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 	if (format == GL_DEPTH_STENCIL) { // packed depth and stencil added separately
@@ -173,65 +173,65 @@ void FrameBuffer::AttachTexture(GLenum iformat, GLint filter)
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attachment, GL_TEXTURE_2D, tex_id, 0);
 	}
 
-	_tex_id.push_back(tex_id);
-	_buffers[_tex_id.size() - 1] = attachment;
+	m_texId.push_back(tex_id);
+	m_buffers[m_texId.size() - 1] = attachment;
 }
 
 
-void FrameBuffer::BindInput()
+void FrameBuffer::bindInput()
 {
-	for (int i = 0; i < int(_tex_id.size()); i++) {
+	for (int i = 0; i < int(m_texId.size()); i++) {
 		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, _tex_id[i]);
+		glBindTexture(GL_TEXTURE_2D, m_texId[i]);
 	}
 }
 
 
-void FrameBuffer::BindInput(int num) throw(std::out_of_range)
+void FrameBuffer::bindInput(int num) throw(std::out_of_range)
 {
-	if (num + 1 > int(_tex_id.size())) {
+	if (num + 1 > int(m_texId.size())) {
 		throw std::out_of_range("FrameBuffer::BindInput - texture vector size exceeded");
 	}
 
-	glBindTexture(GL_TEXTURE_2D, _tex_id[num]);
+	glBindTexture(GL_TEXTURE_2D, m_texId[num]);
 }
 
 
-void FrameBuffer::BindOutput() throw(std::domain_error)
+void FrameBuffer::bindOutput() throw(std::domain_error)
 {
-	if (_tex_id.empty()) {
+	if (m_texId.empty()) {
 		throw std::domain_error("FrameBuffer::BindOutput - no textures to bind");
 	}	
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _frame_id);
-	if (_tex_id.size() == 1) {
-		glDrawBuffer(_buffers[0]);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
+	if (m_texId.size() == 1) {
+		glDrawBuffer(m_buffers[0]);
 	}
 	else {
-		glDrawBuffers(_tex_id.size(), _buffers);
+		glDrawBuffers(m_texId.size(), m_buffers);
 	}
 }
 
 
-void FrameBuffer::BindOutput(int num) throw(std::out_of_range)
+void FrameBuffer::bindOutput(int num) throw(std::out_of_range)
 {
-	if (num + 1 > int(_tex_id.size())) {
+	if (num + 1 > int(m_texId.size())) {
 		throw std::out_of_range("FrameBuffer::BindOutput - texture vector size exceeded");
 	}
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _frame_id);
-	glDrawBuffer(_buffers[num]);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
+	glDrawBuffer(m_buffers[num]);
 }
 
 
-void FrameBuffer::BindTex(int num) throw(std::out_of_range)
+void FrameBuffer::bindTex(int num) throw(std::out_of_range)
 {
 	// Implemented through BindInput()
-	BindInput(num);
+	bindInput(num);
 }
 
 
-void FrameBuffer::BlitTo(FrameBuffer *dest, GLbitfield mask, GLenum filter)
+void FrameBuffer::blitTo(FrameBuffer *dest, GLbitfield mask, GLenum filter)
 {
 	int old_read, old_draw;
 
@@ -242,24 +242,24 @@ void FrameBuffer::BlitTo(FrameBuffer *dest, GLbitfield mask, GLenum filter)
 		filter = GL_NEAREST;
 	}
 
-	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, _frame_id);
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, m_frameId);
 	if (dest)
-		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, dest->_frame_id);
+		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, dest->m_frameId);
 	else
 		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, 0);
 
-	glBlitFramebufferEXT(0, 0, _width, _height, 0, 0, _width, _height, mask, filter);
+	glBlitFramebufferEXT(0, 0, m_width, m_height, 0, 0, m_width, m_height, mask, filter);
 
 	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, old_read);
 	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, old_draw);
 }
 
 
-void FrameBuffer::Check()
+void FrameBuffer::check()
 {
 	GLenum status;
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _frame_id);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
 	status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) {
 		std::cout << "FBO Status error: " << status << std::endl;
@@ -268,7 +268,7 @@ void FrameBuffer::Check()
 }
 
 
-void FrameBuffer::Unbind()
+void FrameBuffer::unbind()
 {
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glDrawBuffer(GL_BACK);

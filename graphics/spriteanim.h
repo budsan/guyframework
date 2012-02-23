@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <memory>
 
 #include "sprite.h"
 
@@ -24,18 +25,18 @@ public:
 	std::vector<SpriteAnimTrack> animations;
 	std::map<std::string, int> animNames; // Nombre -> posicion en el vector "animations"
 
-	bool Load(const char* filename);
-	bool Save(const char* filename);
+	bool load(const char* filename);
+	bool save(const char* filename);
 
 	std::set<std::string> getContentFilename();
 	void getContentFilename(std::set<std::string> &contentFilename);
 
 private:
-	bool ReadANIM (
+	bool readANIM (
 		std::string &currentAnimName,
 		SpriteAnimTrack *&currentAnimTrack,
 		std::string &line, int lineNum);
-	bool ReadFRAME(
+	bool readFRAME(
 		SpriteAnimTrack *&currentAnimTrack,
 		std::string &line, int lineNum);
 };
@@ -43,23 +44,23 @@ private:
 class SpriteAnim : public Sprite {
  public:
 	SpriteAnim();
-	SpriteAnim(SpriteAnimData *data);
+	SpriteAnim(std::shared_ptr<SpriteAnimData> data);
 
-	virtual void Update(float GameTime);
+	virtual void update(float deltaTime);
 
 	int getAnimID(std::string name);
 	int getLoopsLeft();
-	bool setAnimData(SpriteAnimData *data);
+	bool setAnimData(std::shared_ptr<SpriteAnimData> data);
 	bool SelectAnim(std::string name);
 	bool SelectAnim(int animID);
 
 	void getParamsToDraw(Sprite::drawParams &params);
  private:
-	SpriteAnimData *data;
-	int animSelected;
-	int loopsLeft;
-	int frameSelected;
-	float frameTimeLeft;
+	std::shared_ptr<SpriteAnimData> m_data;
+	int m_animSelected;
+	int m_loopsLeft;
+	int m_frameSelected;
+	float m_frameTimeLeft;
 
-	void NextFrame();
+	void nextFrame();
 };
