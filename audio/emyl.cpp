@@ -817,6 +817,19 @@ void sound::play_buffer(ALuint _buffer)
 	set_buffer(_buffer);
 	alSourcePlay(m_uiSource);
 }
+
+/*---------------------------------------------------------------------------*/
+
+void sound::play_buffer(ALuint _buffer, int _loop)
+{
+	if (!m_uiSource) return;
+
+	alSourceStop(m_uiSource);
+	set_buffer(_buffer);
+	alSourcePlay(m_uiSource);
+	alSourcei(m_uiSource, AL_LOOPING, _loop ? AL_TRUE : AL_FALSE);
+}
+
 /*---------------------------------------------------------------------------*/
 
 bool sound::playing()

@@ -98,6 +98,7 @@ public:
 	void  stop();
 
 	void  play_buffer(ALuint _buffer);
+	void  play_buffer(ALuint _buffer, int _loop);
 
 	bool  playing();
 
