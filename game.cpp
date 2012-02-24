@@ -25,7 +25,7 @@ Game::Game() : m_State(nullptr), m_NextState(nullptr), m_FramesPerSecond(0), myG
 	m_settings = Settings::pInstance();
 
 	setFramesPerSecond(0);
-	setStabledeltaTime(false, false);
+	setStableDeltaTime(false, false);
 
 #ifndef _WINDOWS
 	srand(time(nullptr));
@@ -128,7 +128,7 @@ void Game::setFramesPerSecond(unsigned short frames)
 // 2. Trabajar con tasas de updates fijas hace que los componentes logicos con
 // tasas de updates variables pierdan todas sus ventajas.
 
-void Game::setStabledeltaTime(bool enable, bool autoframeskip)
+void Game::setStableDeltaTime(bool enable, bool autoframeskip)
 {
 	if (enable && m_SecondsPerFrame > 0)
 	{

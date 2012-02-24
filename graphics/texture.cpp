@@ -222,9 +222,9 @@ bool TextureQTLoader::LoadQT(const char *fname, Texture &t)
 		img.width(), img.height(),
 		GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
 
-	t.id     = id;
-	t.width  = img.width();
-	t.height = img.height();
+	t.m_id     = id;
+	t.m_width  = img.width();
+	t.m_height = img.height();
 
 	return true;
 }

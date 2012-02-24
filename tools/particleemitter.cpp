@@ -84,7 +84,9 @@ void ParticleEmitter::update(float deltaTime)
 		else it++;
 	}
 
-	m_time += deltaTime;
+	if (m_num == 0) m_time = 0;
+	else m_time += deltaTime;
+
 	while (m_time >= m_freq && m_num != 0)
 	{
 		m_time -= m_freq;

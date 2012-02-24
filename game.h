@@ -30,7 +30,7 @@ protected:
 
 	//CONFIGURABLE SETTINGS
 	void setFramesPerSecond(unsigned short frames); //Default 0
-	void setStabledeltaTime(bool enable, bool autoframeskip = false); //Default false
+	void setStableDeltaTime(bool enable, bool autoframeskip = false); //Default false
 
 	virtual void configure() = 0;
 

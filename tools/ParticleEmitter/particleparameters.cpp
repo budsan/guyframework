@@ -44,7 +44,7 @@ void ParticleParameters::newEmitter()
 	m_parameters.setPosition(vec2f(0,0));
 	m_parameters.setParticleAccumulativeColor(false);
 	m_parameters.setParticleMaterial("glow");
-	m_parameters.Restart();
+	m_parameters.restart();
 	UpdateUI();
 }
 
@@ -144,5 +144,5 @@ void ParticleParameters::on_EndColorBut_clicked()
 void ParticleParameters::on_ApplyBut_clicked()
 {
     ApplyChanges();
-    m_parameters.Restart();
+    m_parameters.restart();
 }

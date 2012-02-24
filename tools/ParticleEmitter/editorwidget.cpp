@@ -57,7 +57,7 @@ void EditorWidget::paintGL( void )
 	//glColor3f(0,0,1);glVertex2f(0,0);glVertex2f(0,0.5f);
 	//glEnd();
 
-	parameters->getEmitter().Draw();
+	parameters->getEmitter().draw();
 }
 
 void EditorWidget::resizeGL (int width, int height)
@@ -117,7 +117,7 @@ void EditorWidget::open()
 
 	if (!file.is_open()) return;
 	parameters->getEmitter().read(file);
-	parameters->getEmitter().Restart();
+	parameters->getEmitter().restart();
 	parameters->UpdateUI();
 
 }
@@ -125,8 +125,8 @@ void EditorWidget::open()
 void EditorWidget::update()
 {
 	int now = ticks->elapsed();
-	float interval = float(now - before)/1000.f;
-	parameters->getEmitter().Update(interval);
+	float deltaTime = float(now - before)/1000.f;
+	parameters->getEmitter().update(deltaTime);
 
 	updateGL();
 	before = now;
@@ -143,7 +143,7 @@ void EditorWidget::keyPressEvent(QKeyEvent *e)
 		cam.reset();
 		break;
         case Qt::Key_Space:
-		parameters->getEmitter().Restart();
+		parameters->getEmitter().restart();
                 break;
 	default: e->ignore();
 	 }
