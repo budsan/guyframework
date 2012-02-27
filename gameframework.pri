@@ -27,6 +27,7 @@ SOURCES += \
     $$PWD/graphics/primitives.cpp \
     $$PWD/audio/emyl.cpp \
     $$PWD/graphics/tools/frameshud.cpp \
+    $$PWD/graphics/tools/texthud.cpp \
     $$PWD/graphics/font.cpp \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
@@ -65,9 +66,12 @@ HEADERS += \
     $$PWD/graphics/primitives.h \
     $$PWD/audio/emyl.h \
     $$PWD/graphics/tools/frameshud.h \
+    $$PWD/graphics/tools/texthud.h \
     $$PWD/graphics/font.h \
     $$PWD/tools/particleemitter.h \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
-    $$PWD/graphics/camera.h
+    $$PWD/graphics/camera.h \
+    $$PWD/generic/event.h
+

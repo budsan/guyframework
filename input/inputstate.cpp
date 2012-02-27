@@ -71,21 +71,21 @@ bool InputState::getKeyUp   (unsigned char key) const
 	return m_keyUp[key];
 }
 
-bool InputState::getAnyKeyState() const
+bool InputState::isAnyKeyState() const
 {
 	for (unsigned int i = 0; i < m_actions; i++)
 		if(m_keyState[i]) return true;
 	return false;
 }
 
-bool InputState::getAnyKeyDown () const
+bool InputState::isAnyKeyDown () const
 {
 	for (unsigned int i = 0; i < m_actions; i++)
 		if(m_keyDown[i]) return true;
 	return false;
 }
 
-bool InputState::getAnyKeyUp   () const
+bool InputState::isAnyKeyUp   () const
 {
 	for (unsigned int i = 0; i < m_actions; i++)
 		if(m_keyUp[i]) return true;
