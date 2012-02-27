@@ -18,6 +18,10 @@ public:
 	bool getKeyDown (unsigned char key) const;
 	bool getKeyUp   (unsigned char key) const;
 
+	bool getAnyKeyState() const;
+	bool getAnyKeyDown()  const;
+	bool getAnyKeyUp()    const;
+
 	void resetEvents();
 	void reset();
 private:

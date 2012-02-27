@@ -19,6 +19,7 @@ const InputState &InputState::operator=(const InputState &in)
 	m_keyState = in.m_keyState;
 	m_keyDown  = in.m_keyDown;
 	m_keyUp    = in.m_keyUp;
+	m_actions  = in.m_actions;
 
 	return *this;
 }
@@ -68,5 +69,26 @@ bool InputState::getKeyDown (unsigned char key) const
 bool InputState::getKeyUp   (unsigned char key) const
 {
 	return m_keyUp[key];
+}
+
+bool InputState::getAnyKeyState() const
+{
+	for (unsigned int i = 0; i < m_actions; i++)
+		if(m_keyState[i]) return true;
+	return false;
+}
+
+bool InputState::getAnyKeyDown () const
+{
+	for (unsigned int i = 0; i < m_actions; i++)
+		if(m_keyDown[i]) return true;
+	return false;
+}
+
+bool InputState::getAnyKeyUp   () const
+{
+	for (unsigned int i = 0; i < m_actions; i++)
+		if(m_keyUp[i]) return true;
+	return false;
 }
 
