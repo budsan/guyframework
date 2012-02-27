@@ -117,7 +117,9 @@ struct vec3
 	vec3() : x(0), y(0), z(0) {}
 	vec3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
 	vec3(T a) : x(a), y(a), z(a) {}
+	template <typename U> vec3(const vec2<U> &v) : x(v.x), y(v.y), z( 0 ) {}
 	template <typename U> vec3(const vec3<U> &v) : x(v.x), y(v.y), z(v.z) {}
+
 
 	double module() const {
 		return sqrt(moduleSqr());
@@ -219,6 +221,8 @@ struct vec4
 	vec4() : x(0), y(0), z(0), w(0) {}
 	vec4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
 	vec4(T a) : x(a), y(a), z(a) {}
+	template <typename U> vec4(const vec2<U> &v) : x(v.x), y(v.y), z( 0 ), w( 0 ) {}
+	template <typename U> vec4(const vec3<U> &v) : x(v.x), y(v.y), z(v.z), w( 0 ) {}
 	template <typename U> vec4(const vec4<U> &v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 
 	double module() const {
