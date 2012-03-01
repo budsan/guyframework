@@ -153,7 +153,7 @@ const Keybinds &Settings::getKeybinds() const
 	return m_keybinds;
 }
 
-Settings* Settings::pInstance()
+Settings* Settings::ptrInstance()
 {
 	if(m_instance == nullptr){
 		m_instance = new Settings();

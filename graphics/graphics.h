@@ -14,5 +14,6 @@
 #else
 
 #include <QtOpenGL/qgl.h>
+#include <GL/glu.h>
 
 #endif

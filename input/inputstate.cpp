@@ -4,7 +4,7 @@
 #include "settings.h"
 
 InputState::InputState()
-	: m_actions(Settings::pInstance()->getKeybinds().getAccionCount())
+	: m_actions(Settings::ptrInstance()->getKeybinds().getAccionCount())
 {
 	reset();
 }

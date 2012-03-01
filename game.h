@@ -68,7 +68,7 @@ private:
 		VariableLoop(Game* parent);
 		void loopIteration();
 	private:
-		float myNow;
+        float m_now;
 	};
 
 	class StableLoop : public GameLoop
@@ -77,8 +77,8 @@ private:
 		StableLoop(Game* parent);
 		void loopIteration();
 	private:
-		float myNow;
-		float myAccumTime;
+        float m_now;
+		float m_accumTime;
 	};
 
 	class StableSkipLoop : public GameLoop
@@ -87,8 +87,8 @@ private:
 		StableSkipLoop(Game* parent);
 		void loopIteration();
 	private:
-		float myNow;
-		float myAccumTime;
+        float m_now;
+		float m_accumTime;
 	};
 
 	template <class T>

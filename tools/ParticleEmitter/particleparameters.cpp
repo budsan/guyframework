@@ -52,7 +52,7 @@ void ParticleParameters::UpdateUI()
 {
 	ui->ApertureSpin->setValue(m_parameters.getAngle()*RAG2DEG);
 	ui->DirectionSpin->setValue(m_parameters.getDirection()*RAG2DEG);
-	const math::vec2f &pos = m_parameters.position();
+    const math::vec2f &pos = m_parameters.position();
 	const math::vec2f &grav = m_parameters.getGravity();
 	ui->PosXSpin->setValue(pos.x);
 	ui->PosYSpin->setValue(pos.y);

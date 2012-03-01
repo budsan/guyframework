@@ -19,7 +19,7 @@ Input* Input::m_instance = nullptr;
 Input::Input()
 {
 	m_doExit = false;
-	m_settings = Settings::pInstance();
+	m_settings = Settings::ptrInstance();
 	m_time = 0;
 	m_state.clear();
 }
@@ -29,7 +29,7 @@ Input::~Input()
 	m_instance = nullptr;
 }
 
-Input& Input::Instance()
+Input& Input::instance()
 {
 	return *ptrInstance();
 }

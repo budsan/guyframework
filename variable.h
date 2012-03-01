@@ -19,11 +19,11 @@ public:
 
 	Variable();
 	Variable(const Variable & other);
-	Variable(std::string myName, bool dval);
-	Variable(std::string myName, int dval);
-	Variable(std::string myName, double dval);
-	Variable(std::string myName, char dval);
-	Variable(std::string myName, std::string dval);
+    Variable(std::string name, bool dval);
+    Variable(std::string name, int dval);
+    Variable(std::string name, double dval);
+    Variable(std::string name, char dval);
+    Variable(std::string name, std::string dval);
 
 	~Variable();
 
@@ -42,8 +42,8 @@ public:
 	char        toChar();
 	std::string toString();
 
-	const std::string &name() const {return myName;}
-	Type type() const {return myType;}
+	const std::string &name() const {return m_name;}
+	Type type() const {return m_type;}
 
 private:
 
@@ -56,10 +56,10 @@ private:
 		char*  asString;
 	};
 
-	std::string myName;
-	Type myType;
-	Value myDefVal;
-	Value myCurVal;
+	std::string m_name;
+	Type m_type;
+    Value m_defVal;
+    Value m_curVal;
 };
 
 std::ostream &operator <<(std::ostream &out, const Variable &var);

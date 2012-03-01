@@ -45,7 +45,7 @@ class Settings
 {
 public:
 	~Settings();
-	static Settings* pInstance();
+	static Settings* ptrInstance();
 
 	bool load(const char *filename);
 	bool Save(const char *filename);

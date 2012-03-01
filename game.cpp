@@ -22,7 +22,7 @@ Game::Game() : m_State(nullptr), m_NextState(nullptr), m_FramesPerSecond(0), myG
 	m_screen   = Screen::ptrInstance();
 	m_audio    = emyl::manager::get_instance();
 	m_input    = Input::ptrInstance();
-	m_settings = Settings::pInstance();
+	m_settings = Settings::ptrInstance();
 
 	setFramesPerSecond(0);
 	setStableDeltaTime(false, false);
@@ -103,7 +103,7 @@ void Game::setFramesPerSecond(unsigned short frames)
 		//La unidad de tiempo mas pequenya, menos ya seria gametime = 0
 		m_SecondsPerFrame = (1000.0f/float(TICKS_PER_SECOND))*0.001f;
 #else
-		mySecondsPerFrame = 0.0f;
+		m_secondsPerFrame = 0.0f;
 #endif
 
 		//Con tasa de frames automatica solo puede funcionar en
@@ -283,14 +283,14 @@ void Game::loopStableSkip(float &now, float &accumTime)
 
 Game::GameLoop::GameLoop(Game* parent) : parent(parent){}
 
-Game::VariableLoop::VariableLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::VariableLoop::loopIteration() {parent->loopVariable(myNow);}
+Game::VariableLoop::VariableLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
+void Game::VariableLoop::loopIteration() {parent->loopVariable(m_now);}
 
-Game::StableLoop::StableLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::StableLoop::loopIteration() {parent->loopStable(myNow, myAccumTime);}
+Game::StableLoop::StableLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
+void Game::StableLoop::loopIteration() {parent->loopStable(m_now, m_accumTime);}
 
-Game::StableSkipLoop::StableSkipLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::StableSkipLoop::loopIteration() {parent->loopStableSkip(myNow, myAccumTime);}
+Game::StableSkipLoop::StableSkipLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
+void Game::StableSkipLoop::loopIteration() {parent->loopStableSkip(m_now, m_accumTime);}
 
 void emylErrorCallback(const std::string &error)
 {

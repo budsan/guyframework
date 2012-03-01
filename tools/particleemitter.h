@@ -25,7 +25,7 @@ public:
 
 	// SETTERS
 
-	void setPosition(const vec2f &pos);
+	void setPosition(const vec2f &position);
 	void setDirection(const vec2f &dir);
 	void setDirection(float dir);
 	void setAngle(float angle);

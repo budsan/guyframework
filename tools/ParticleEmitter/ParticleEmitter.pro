@@ -6,6 +6,8 @@
 
 QT += core gui opengl
 
+LIBS += -lGLU
+
 TARGET = ParticleEmitter
 TEMPLATE = app
 SOURCES += main.cpp\
