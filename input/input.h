@@ -8,7 +8,7 @@
 class Input
 {
 public:
-	static Input& Instance();
+	static Input& instance();
 	static Input* ptrInstance();
         ~Input();
 

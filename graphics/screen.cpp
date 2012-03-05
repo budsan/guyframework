@@ -170,7 +170,7 @@ void Screen::setRatio(float ratio)
 
 bool Screen::setVideoMode()
 {
-	Settings *config = Settings::pInstance();
+	Settings *config = Settings::ptrInstance();
 
 	unsigned int ScreenWidth  = config->get("ScreenWidth")->toInt();
 	unsigned int ScreenHeight = config->get("ScreenHeight")->toInt();
@@ -329,7 +329,7 @@ void Screen::resetViewport()
 		int weight = int((m_ratio/screen_ratio)*(float)m_selectedMode.w);
 		int x = (m_selectedMode.w - weight)/2;
 		glViewport(x,0,weight,m_selectedMode.h);
-		//glScissor (x,0,weight,mySelectedMode.h);
+		//glScissor (x,0,weight,m_selectedMode.h);
 		//glEnable(GL_SCISSOR_TEST);
 	}
 	else if ( screen_ratio < m_ratio)
@@ -337,7 +337,7 @@ void Screen::resetViewport()
 		int height = int((screen_ratio/m_ratio)*(float)m_selectedMode.h);
 		int y = (m_selectedMode.h - height)/2;
 		glViewport(0,y,m_selectedMode.w,height);
-		//glScissor (0,y,mySelectedMode.w,height);
+		//glScissor (0,y,m_selectedMode.w,height);
 		//glEnable(GL_SCISSOR_TEST);
 	}
 	else
