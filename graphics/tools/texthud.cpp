@@ -47,10 +47,8 @@ void TextHUD::draw()
 		unsigned int w = viewport[2];
 		unsigned int h = viewport[3];
 
-		glPushAttrib(GL_CURRENT_BIT);
 		glColor(m_color);
 		m_font.print2D(math::vec2f(m_clampedPos.x*w, m_clampedPos.y*h), m_displayText.c_str());
-		glPopAttrib();
 	}
 }
 

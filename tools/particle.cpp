@@ -53,12 +53,14 @@ void Particle::draw(ParticleEmitter &parent)
 void Particle::fillDrawArray(ParticleEmitter &parent,
 	std::vector<vec2f> &vertcoords,
 	std::vector<vec2f> &texcoords,
-	std::vector<rgba>  &vertcolor)
+	std::vector<rgba>  &vertcolor,
+	std::vector<unsigned int> &indices)
 {
 	float weight = (m_live-m_time)/m_live;
 	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
 	float size = ((parent.m_z0*weight) + (parent.m_z1*(1.0f-weight)))*0.5f;
 
+	int indBase = vertcoords.size();
 	texcoords.push_back(math::vec2f(0,0));
 	texcoords.push_back(math::vec2f(1,0));
 	texcoords.push_back(math::vec2f(1,1));
@@ -73,4 +75,11 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	vertcolor.push_back(current);
 	vertcolor.push_back(current);
 	vertcolor.push_back(current);
+
+	indices.push_back(indBase + 3);
+	indices.push_back(indBase + 0);
+	indices.push_back(indBase + 1);
+	indices.push_back(indBase + 1);
+	indices.push_back(indBase + 2);
+	indices.push_back(indBase + 3);
 }

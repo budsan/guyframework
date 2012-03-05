@@ -98,7 +98,6 @@ void Sprite::draw()
 		{0, 0},{0,-h},{w,-h},{w, 0}
 	};
 
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
@@ -122,8 +121,6 @@ void Sprite::draw()
 	glDisableClientState(GL_VERTEX_ARRAY);	
 
 	glPopMatrix();
-	glPopAttrib();
-
 	postDrawing();
 }
 

@@ -24,6 +24,7 @@ public:
 private:
 	static Input *m_instance;
 	Settings* m_settings;
+	Keybinds m_keybinds;
         Input();
 
 	float m_time;

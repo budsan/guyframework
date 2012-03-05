@@ -17,7 +17,8 @@ public:
 	void fillDrawArray(ParticleEmitter &parent,
 		std::vector<vec2f> &vertcoords,
 		std::vector<vec2f> &texcoords,
-		std::vector<rgba>  &vertcolor);
+		std::vector<rgba>  &vertcolor,
+		std::vector<unsigned int> &indices);
 protected:
 	vec2f m_pos0, m_pos, m_vel0;
 	float m_live, m_time;

@@ -62,10 +62,8 @@ void FramesHUD::draw()
 		unsigned int w = viewport[0];
 		unsigned int h = viewport[1];
 
-		glPushAttrib(GL_CURRENT_BIT);
 		glColor(m_color);
 		m_font.print2D(w, h, "%4.2f", m_framesToDisplay);
-		glPopAttrib();
 	}
 }
 

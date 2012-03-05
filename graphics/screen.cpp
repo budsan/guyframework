@@ -110,7 +110,6 @@ void Screen::flip()
 
 void Screen::fillWithColor(const rgba &color)
 {
-	glPushAttrib(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT|GL_ENABLE_BIT);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
@@ -131,8 +130,6 @@ void Screen::fillWithColor(const rgba &color)
 	 glVertex3f( 1, -1, 0);
 	 glVertex3f(-1, -1, 0);
 	glEnd();
-
-	glPopAttrib();
 }
 
 //---------------------------------------------------------------------------//
