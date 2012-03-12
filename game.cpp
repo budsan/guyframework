@@ -15,7 +15,7 @@
 
 void emylErrorCallback(const std::string &error);
 
-Game::Game() : m_State(nullptr), m_NextState(nullptr), m_FramesPerSecond(0), myGameLoop(nullptr)
+Game::Game() : m_State(NULL), m_NextState(NULL), m_FramesPerSecond(0), myGameLoop(NULL)
 {
 	SDL_Init(0);
 
@@ -28,7 +28,7 @@ Game::Game() : m_State(nullptr), m_NextState(nullptr), m_FramesPerSecond(0), myG
 	setStableDeltaTime(false, false);
 
 #ifndef _WINDOWS
-	srand(time(nullptr));
+	srand(time(NULL));
 #else
 	srand(unsigned(time(0)));
 #endif
@@ -42,7 +42,7 @@ Game::~Game()
 	delete m_screen;
 	delete m_audio;
 
-	if(m_State != nullptr)
+	if(m_State != NULL)
 	{
 		delete m_State;
 	}
@@ -75,10 +75,10 @@ bool Game::init()
 	}
 	emyl::setErrorCallback(emylErrorCallback);
 
-	if (m_NextState != nullptr)
+	if (m_NextState != NULL)
 	{
 		m_State = m_NextState;
-		m_NextState = nullptr;
+		m_NextState = NULL;
 
 		m_State->setGame(this);
 		m_State->load();
@@ -145,7 +145,7 @@ void Game::unload() {}
 
 void Game::changeState(GameState* next)
 {
-	if (m_NextState != nullptr) delete m_NextState;
+	if (m_NextState != NULL) delete m_NextState;
 	m_NextState = next;
 	m_NextState->setGame(this);
 }
@@ -167,7 +167,7 @@ void Game::run()
 		{
 			m_State->unload();
 			delete m_State;
-			m_State = nullptr;
+			m_State = NULL;
 			m_Exit = true;
 			continue;
 		}
@@ -180,12 +180,12 @@ void Game::run()
 		emyl::stream::updateAll();
 
 		//STATE CHANGING
-		if (m_NextState != nullptr)
+		if (m_NextState != NULL)
 		{
 			m_State->unload();
 			delete m_State;
 			m_State = m_NextState;
-			m_NextState = nullptr;
+			m_NextState = NULL;
 			m_State->load();
 		}
 	}
@@ -210,7 +210,7 @@ void Game::loopVariable(float &now)
 
 	//UPDATE&DRAW
 	update(deltaTime);
-	if(m_State != nullptr)
+	if(m_State != NULL)
 	{
 		m_State->update(deltaTime);
 		m_State->draw();
@@ -241,7 +241,7 @@ void Game::loopStable(float &now, float &accumTime)
 
 	//UPDATE&DRAW
 	update(m_SecondsPerFrame);
-	if(m_State != nullptr)
+	if(m_State != NULL)
 	{
 		m_State->update(m_SecondsPerFrame);
 		m_State->draw();
@@ -277,7 +277,7 @@ void Game::loopStableSkip(float &now, float &accumTime)
 		accumTime -= m_SecondsPerFrame;
 	}
 
-	if(m_State != nullptr) m_State->draw();
+	if(m_State != NULL) m_State->draw();
 	draw();
 }
 

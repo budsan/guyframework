@@ -1,8 +1,13 @@
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#include "algebra3_cpp11.h"
+#else
 #ifndef _MATH_ALGEBRA3_DEFINED_
 #define _MATH_ALGEBRA3_DEFINED_
 
-#define _USE_MATH_DEFINES
+#define _TSE_MATH_DEFINES
 #include <cmath>
+#include <math.h>
+#include <string.h>
 
 namespace math {
 
@@ -19,7 +24,7 @@ struct vec2
 	vec2() : x(0), y(0) {}
 	vec2(T _x, T _y) : x(_x), y(_y) {}
 	vec2(T a) : x(a), y(a) {}
-	template <typename U> vec2(const vec2<U> &v) : x(v.x), y(v.y) {}
+	vec2(const vec2<T> &v) : x(v.x), y(v.y) {}
 
 	double module() const {
 		return sqrt(moduleSqr());
@@ -55,40 +60,31 @@ struct vec2
 		return vec2<T>(-x, -y);
 	}
 
-	template <typename U> vec2<T> &operator += (const vec2<U> &other) {
+	vec2<T> &operator += (const vec2<T> &other) {
 		x += other.x;
 		y += other.y;
 		return *this;
 	}
 
-	template <typename U> vec2<T> &operator -= (const vec2<U> &other) {
+	vec2<T> &operator -= (const vec2<T> &other) {
 		x -= other.x;
 		y -= other.y;
 		return *this;
 	}
 
-	template <typename U> vec2<T> &operator*=(U num) {
+	vec2<T> &operator*=(T num) {
 		x *= num;
 		y *= num;
 		return *this;
 	}
 
-	vec2<T> &operator/=(double num) {
-		return *this *= (1.0/num);
-	}
-
-	vec2<T> &operator/=(float num) {
-		return *this *= (1.0f/num);
-	}
-
-	template <typename U> vec2<T> &operator/=(U num) {
+	vec2<T> &operator/=(T num) {
 		x /= num;
 		y /= num;
 		return *this;
 	}
 
-	template <typename U>
-	vec2<T> &operator=(const vec2<U> &other)
+	vec2<T> &operator=(const vec2<T> &other)
 	{
 		x = other.x;
 		y = other.y;
@@ -117,8 +113,8 @@ struct vec3
 	vec3() : x(0), y(0), z(0) {}
 	vec3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
 	vec3(T a) : x(a), y(a), z(a) {}
-	template <typename U> vec3(const vec2<U> &v) : x(v.x), y(v.y), z( 0 ) {}
-	template <typename U> vec3(const vec3<U> &v) : x(v.x), y(v.y), z(v.z) {}
+	vec3(const vec2<T> &v) : x(v.x), y(v.y), z( 0 ) {}
+	vec3(const vec3<T> &v) : x(v.x), y(v.y), z(v.z) {}
 
 
 	double module() const {
@@ -155,44 +151,35 @@ struct vec3
 		return vec3<T>(-x, -y, -z);
 	}
 
-	template <typename U> vec3<T> &operator += (const vec3<U> &other) {
+	vec3<T> &operator += (const vec3<T> &other) {
 		x += other.x;
 		y += other.y;
 		z += other.z;
 		return *this;
 	}
 
-	template <typename U> vec3<T> &operator -= (const vec3<U> &other) {
+	vec3<T> &operator -= (const vec3<T> &other) {
 		x -= other.x;
 		y -= other.y;
 		z -= other.z;
 		return *this;
 	}
 
-	template <typename U> vec3<T> &operator*=(U num) {
+	vec3<T> &operator*=(T num) {
 		x *= num;
 		y *= num;
 		z *= num;
 		return *this;
 	}
 
-	vec3<T> &operator/=(double num) {
-		return *this *= (1.0/num);
-	}
-
-	vec3<T> &operator/=(float num) {
-		return *this *= (1.0f/num);
-	}
-
-	template <typename U> vec3<T> &operator/=(U num) {
+	vec3<T> &operator/=(T num) {
 		x /= num;
 		y /= num;
 		z /= num;
 		return *this;
 	}
 
-	template <typename U>
-	vec3<T> &operator=(const vec3<U> &other)
+	vec3<T> &operator=(const vec3<T> &other)
 	{
 		x = other.x;
 		y = other.y;
@@ -221,9 +208,9 @@ struct vec4
 	vec4() : x(0), y(0), z(0), w(0) {}
 	vec4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
 	vec4(T a) : x(a), y(a), z(a) {}
-	template <typename U> vec4(const vec2<U> &v) : x(v.x), y(v.y), z( 0 ), w( 0 ) {}
-	template <typename U> vec4(const vec3<U> &v) : x(v.x), y(v.y), z(v.z), w( 0 ) {}
-	template <typename U> vec4(const vec4<U> &v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+	vec4(const vec2<T> &v) : x(v.x), y(v.y), z( 0 ), w( 0 ) {}
+	vec4(const vec3<T> &v) : x(v.x), y(v.y), z(v.z), w( 0 ) {}
+	vec4(const vec4<T> &v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 
 	double module() const {
 		return sqrt(moduleSqr());
@@ -258,7 +245,7 @@ struct vec4
 		return vec4<T>(-x, -y, -z, -w);
 	}
 
-	template <typename U> vec4<T> &operator += (const vec4<U> &other) {
+	vec4<T> &operator += (const vec4<T> &other) {
 		x += other.x;
 		y += other.y;
 		z += other.z;
@@ -266,7 +253,7 @@ struct vec4
 		return *this;
 	}
 
-	template <typename U> vec4<T> &operator -= (const vec4<U> &other) {
+	vec4<T> &operator -= (const vec4<T> &other) {
 		x -= other.x;
 		y -= other.y;
 		z -= other.z;
@@ -274,7 +261,7 @@ struct vec4
 		return *this;
 	}
 
-	template <typename U> vec4<T> &operator*=(U num) {
+	vec4<T> &operator*=(T num) {
 		x *= num;
 		y *= num;
 		z *= num;
@@ -290,7 +277,7 @@ struct vec4
 		return *this *= (1.0f/num);
 	}
 
-	template <typename U> vec4<T> &operator/=(U num) {
+	vec4<T> &operator/=(T num) {
 		x /= num;
 		y /= num;
 		z /= num;
@@ -298,8 +285,7 @@ struct vec4
 		return *this;
 	}
 
-	template <typename U>
-	vec4<T> &operator=(const vec4<U> &other)
+	vec4<T> &operator=(const vec4<T> &other)
 	{
 		x = other.x;
 		y = other.y;
@@ -350,20 +336,12 @@ struct mat3
 		return &v[3*i];
 	}
 
-	template <typename U>
-	mat3<T> &operator=(const mat3<U> &m) {
+	mat3<T> &operator=(const mat3<T> &m) {
 		return *this = m.v;
 	}
 
 	mat3<T> &operator=(const T val[16]) {
 		memcpy(this->v, val, 16 * sizeof(T));
-		return *this;
-	}
-
-	template <typename U> mat3<T> &operator=(const U val[16]) {
-		v[0] = val[0]; v[1] = val[1]; v[2] = val[2];
-		v[3] = val[3]; v[4] = val[4]; v[5] = val[5];
-		v[6] = val[6]; v[7] = val[7]; v[8] = val[8];
 		return *this;
 	}
 
@@ -376,7 +354,7 @@ struct mat3
 		return res;
 	}
 
-	template <typename U> mat3<T> &operator*=(const mat3<U> &mat) {
+	mat3<T> &operator*=(const mat3<T> &mat) {
 		return *this = *this * mat;
 	}
 
@@ -444,21 +422,12 @@ struct mat4
 		return &v[4*i];
 	}
 
-	template <typename U>
-	mat4<T> &operator=(const mat4<U> &m) {
+	mat4<T> &operator=(const mat4<T> &m) {
 		return *this = m.v;
 	}
 
 	mat4<T> &operator=(const T val[16]) {
 		memcpy(this->v, val, 16 * sizeof(T));
-		return *this;
-	}
-
-	template <typename U> mat4<T> &operator=(const U val[16]) {
-		v[0] = val[0]; v[1] = val[1]; v[2] = val[2]; v[3] = val[3];
-		v[4] = val[4]; v[5] = val[5]; v[6] = val[6]; v[7] = val[7];
-		v[8] = val[8]; v[9] = val[9]; v[10]= val[10];v[11]= val[11];
-		v[12]= val[12];v[13]= val[13];v[14]= val[14];v[15]= val[15];
 		return *this;
 	}
 
@@ -472,7 +441,7 @@ struct mat4
 		return res;
 	}
 
-	template <typename U> mat4<T> &operator*=(const mat4<U> &mat) {
+	mat4<T> &operator*=(const mat4<T> &mat) {
 		return *this = *this * mat;
 	}
 
@@ -758,52 +727,51 @@ typedef mat4<float>   mat4f;
 typedef mat4<double>  mat4d;
 
 //-VEC2----------------------------------------------------------------------//
-template <typename T, typename U>
-bool operator == (const vec2<T> &a, const vec2<U> &b) {
+template <typename T>
+bool operator == (const vec2<T> &a, const vec2<T> &b) {
 	return a.x == b.x && a.y == b.y;
 }
 
-template <typename T, typename U>
-bool operator != (const vec2<T> &a, const vec2<U> &b) {
+template <typename T>
+bool operator != (const vec2<T> &a, const vec2<T> &b) {
 	return a.x != b.x || a.y != b.y;
 }
 
-template <typename T, typename U>
-bool operator < (const vec2<T> &a, const vec2<U> &b) {
+template <typename T>
+bool operator < (const vec2<T> &a, const vec2<T> &b) {
 	if ( a.x == b.x) return a.y < b.y;
 	return a.x < b.x;
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator > (const vec2<T> &a, const vec2<T> &b) {
 	if ( a.x == b.x) return a.y > b.y;
 	return a.x > b.x;
 }
 
-template <typename T, typename U>
-auto operator + (const vec2<T> &a, const vec2<U> &b) -> vec2<decltype(a.x+b.x)> {
-	return vec2<decltype(a.x+b.x)>(a.x + b.x, a.y + b.y);
+template <typename T>
+vec2<T> operator + (const vec2<T> &a, const vec2<T> &b) {
+	return vec2<T>(a.x + b.x, a.y + b.y);
 }
 
-template <typename T, typename U>
-auto operator - (const vec2<T> &a, const vec2<U> &b) -> vec2<decltype(a.x-b.x)> {
-	return vec2<decltype(a.x-b.x)>(a.x - b.x, a.y - b.y);
+template <typename T>
+vec2<T> operator - (const vec2<T> &a, const vec2<T> &b) {
+	return vec2<T>(a.x - b.x, a.y - b.y);
 }
 
-template <typename T, typename U>
-auto operator * (const vec2<T> &a, U num) -> vec2<decltype(a.x*num)> {
-	return vec2<decltype(a.x*num)>(a.x*num, a.y*num);
+template <typename T>
+vec2<T> operator * (const vec2<T> &a, T num) {
+	return vec2<T>(a.x*num, a.y*num);
 }
 
-template <typename T, typename U>
-auto operator * (U num, const vec2<T> &a) -> vec2<decltype(a.x*num)> {
+template <typename T>
+vec2<T> operator * (T num, const vec2<T> &a) {
 	return a*num;
 }
 
-template <typename T, typename U>
-auto operator * (const mat3<T> &a, const vec3<U> &v) -> vec3<decltype(v.x*a.v[0])>
-{
-    vec3<decltype(v.x*a.v[0])> res;
+template <typename T>
+vec3<T> operator * (const mat3<T> &a, const vec3<T> &v) {
+    vec3<T> res;
 
     res.x = a.v[0]*v.x + a.v[3]*v.y + a.v[6]*v.z;
     res.y = a.v[1]*v.x + a.v[4]*v.y + a.v[7]*v.z;
@@ -812,50 +780,37 @@ auto operator * (const mat3<T> &a, const vec3<U> &v) -> vec3<decltype(v.x*a.v[0]
     return res;
 }
 
-template <typename T, typename U>
-auto operator * (const vec3<T> &v, const mat3<U> &a)  -> vec3<decltype(v.x*a.v[0])>
-{
+template <typename T>
+vec3<T> operator * (const vec3<T> &v, const mat3<T> &a) {
     return a.transpose() * v;
 }
 
 //cross product
-template <typename T, typename U>
-auto operator ^ (const vec2<T> &a, const vec2<U> &b) -> vec3<decltype(a.x*b.x)> {
-	return vec3<decltype(a.x*b.x)>( 0, 0,
+template <typename T>
+vec3<T> operator ^ (const vec2<T> &a, const vec2<T> &b) {
+	return vec3<T>( 0, 0,
 		a.x*b.y - a.y*b.x);
 }
 
-//float specialization
-template <typename T>
-auto operator / (const vec2<T> &a, float num) -> vec2<decltype(a.x/num)> {
-	return a*(1.0f/num);
-}
-
-//double specialization
-template <typename T>
-auto operator / (const vec2<T> &a, double num) -> vec2<decltype(a.x/num)> {
-	return a*(1.0/num);
-}
-
 //general case
-template <typename T, typename U>
-auto operator / (const vec2<T> &a, U num) -> vec2<decltype(a.x/num)> {
-	return vec2<decltype(a.x/num)>(a.x/num, a.y/num);
+template <typename T>
+vec2<T> operator / (const vec2<T> &a, T num) {
+	return vec2<T>(a.x/num, a.y/num);
 }
 
 //-VEC3----------------------------------------------------------------------//
-template <typename T, typename U>
-bool operator == (const vec3<T> &a, const vec3<U> &b) {
+template <typename T>
+bool operator == (const vec3<T> &a, const vec3<T> &b) {
 	return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
-template <typename T, typename U>
-bool operator != (const vec3<T> &a, const vec3<U> &b) {
+template <typename T>
+bool operator != (const vec3<T> &a, const vec3<T> &b) {
 	return a.x != b.x || a.y != b.y || a.z != b.z;
 }
 
-template <typename T, typename U>
-bool operator < (const vec3<T> &a, const vec3<U> &b) {
+template <typename T>
+bool operator < (const vec3<T> &a, const vec3<T> &b) {
 	if ( a.x == b.x) {
 		if( a.y == b.y) return a.z < b.z;
 		return a.y < b.y;
@@ -863,7 +818,7 @@ bool operator < (const vec3<T> &a, const vec3<U> &b) {
 	return a.x < b.x;
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator > (const vec3<T> &a, const vec3<T> &b) {
 	if ( a.x == b.x)
 	{
@@ -873,36 +828,36 @@ bool operator > (const vec3<T> &a, const vec3<T> &b) {
 	return a.x > b.x;
 }
 
-template <typename T, typename U>
-auto operator + (const vec3<T> &a, const vec3<U> &b) -> vec3<decltype(a.x+b.x)> {
-	return vec3<decltype(a.x+b.x)>(a.x + b.x, a.y + b.y, a.z + b.z);
+template <typename T>
+vec3<T> operator + (const vec3<T> &a, const vec3<T> &b) {
+	return vec3<T>(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
-template <typename T, typename U>
-auto operator - (const vec3<T> &a, const vec3<U> &b) -> vec3<decltype(a.x-b.x)> {
-	return vec3<decltype(a.x-b.x)>(a.x - b.x, a.y - b.y, a.z - b.z);
+template <typename T>
+vec3<T> operator - (const vec3<T> &a, const vec3<T> &b) {
+	return vec3<T>(a.x - b.x, a.y - b.y, a.z - b.z);
 }
 
-template <typename T, typename U>
-auto operator * (const vec3<T> &a, U num) -> vec3<decltype(a.x*num)> {
-	return vec3<decltype(a.x*num)>(a.x*num, a.y*num, a.z*num);
+template <typename T>
+vec3<T> operator * (const vec3<T> &a, T num) {
+	return vec3<T>(a.x*num, a.y*num, a.z*num);
 }
 
-template <typename T, typename U>
-auto operator * (U num, const vec3<T> &a) -> vec3<decltype(a.x*num)> {
+template <typename T>
+vec3<T> operator * (T num, const vec3<T> &a) {
 	return a*num;
 }
 
 //dot product
-template <typename T, typename U>
-auto operator * (const vec3<T> &a, const vec3<U> &b) -> decltype(a.x*b.x) {
+template <typename T>
+T operator * (const vec3<T> &a, const vec3<T> &b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 //cross product
-template <typename T, typename U>
-auto operator ^ (const vec3<T> &a, const vec3<U> &b) -> vec3<decltype(a.x*b.x)> {
-	return vec3<decltype(a.x*b.x)>(
+template <typename T>
+vec3<T> operator ^ (const vec3<T> &a, const vec3<T> &b) {
+	return vec3<T>(
 				a.y*b.z - a.z*b.y,
 				a.z*b.x - a.x*b.z,
 				a.x*b.y - a.y*b.x);
@@ -910,20 +865,20 @@ auto operator ^ (const vec3<T> &a, const vec3<U> &b) -> vec3<decltype(a.x*b.x)> 
 
 //float specialization
 template <typename T>
-auto operator / (const vec3<T> &a, float num) -> vec3<decltype(a.x/num)>{
+vec3<T> operator / (const vec3<T> &a, float num) {
 	return a*(1.0f/num);
 }
 
 //double specialization
 template <typename T>
-auto operator / (const vec3<T> &a, double num) -> vec3<decltype(a.x/num)>{
+vec3<T> operator / (const vec3<T> &a, double num) {
 	return a*(1.0/num);
 }
 
 //general case
-template <typename T, typename U>
-auto operator / (const vec3<T> &a, U num) -> vec3<decltype(a.x/num)>{
-	return vec3<decltype(a.x/num)>(a.x/num, a.y/num, a.z/num);
+template <typename T>
+vec3<T> operator / (const vec3<T> &a, T num) {
+	return vec3<T>(a.x/num, a.y/num, a.z/num);
 }
 
 /* TODO
@@ -932,18 +887,18 @@ vec3<T>  operator *  (const vec3<T> &v, const mat4 &a);  // v . M
 */
 
 //-VEC4----------------------------------------------------------------------//
-template <typename T, typename U>
-bool operator == (const vec4<T> &a, const vec4<U> &b) {
+template <typename T>
+bool operator == (const vec4<T> &a, const vec4<T> &b) {
 	return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
 }
 
-template <typename T, typename U>
-bool operator != (const vec4<T> &a, const vec4<U> &b) {
+template <typename T>
+bool operator != (const vec4<T> &a, const vec4<T> &b) {
 	return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
 }
 
-template <typename T, typename U>
-bool operator < (const vec4<T> &a, const vec4<U> &b) {
+template <typename T>
+bool operator < (const vec4<T> &a, const vec4<T> &b) {
 	if ( a.x == b.x) {
 		if( a.y == b.y) {
 			if (a.z == b.z) return a.w < b.w;
@@ -954,7 +909,7 @@ bool operator < (const vec4<T> &a, const vec4<U> &b) {
 	return a.x < b.x;
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator > (const vec4<T> &a, const vec4<T> &b) {
 	if ( a.x == b.x) {
 		if( a.y == b.y) {
@@ -966,30 +921,30 @@ bool operator > (const vec4<T> &a, const vec4<T> &b) {
 	return a.x > b.x;
 }
 
-template <typename T, typename U>
-auto operator + (const vec4<T> &a, const vec4<U> &b) -> vec4<decltype(a.x+b.x)> {
-	return vec4<decltype(a.x+b.x)>(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+template <typename T>
+vec4<T> operator + (const vec4<T> &a, const vec4<T> &b) {
+	return vec4<T>(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 }
 
-template <typename T, typename U>
-auto operator - (const vec4<T> &a, const vec4<U> &b) -> vec4<decltype(a.x-b.x)> {
-	return vec4<decltype(a.x-b.x)>(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+template <typename T>
+vec4<T> operator - (const vec4<T> &a, const vec4<T> &b) {
+	return vec4<T>(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 }
 
-template <typename T, typename U>
-auto operator * (const vec4<T> &a, U num) -> vec4<decltype(a.x*num)> {
-	return vec4<decltype(a.x*num)>(a.x*num, a.y*num, a.z*num, a.w*num);
+template <typename T>
+vec4<T> operator * (const vec4<T> &a, T num) {
+	return vec4<T>(a.x*num, a.y*num, a.z*num, a.w*num);
 }
 
-template <typename T, typename U>
-auto operator * (U num, const vec4<T> &a) -> vec4<decltype(a.x*num)> {
+template <typename T>
+vec4<T> operator * (T num, const vec4<T> &a) {
 	return a*num;
 }
 
-template <typename T, typename U>
-auto operator*(const mat4<T> &a, const vec4<U> &v) -> vec4<decltype(a.x*a.v[0])> {
+template <typename T>
+vec4<T> operator*(const mat4<T> &a, const vec4<T> &v) {
 
-	vec4<decltype(a.x*a.v[0])> res;
+	vec4<T> res;
 
 	res.x = a.v[0] * v.x + a.v[4] * v.y + a.v[8] * v.z + a.v[12] * v.w;
 	res.y = a.v[1] * v.x + a.v[5] * v.y + a.v[9] * v.z + a.v[13] * v.w;
@@ -999,41 +954,40 @@ auto operator*(const mat4<T> &a, const vec4<U> &v) -> vec4<decltype(a.x*a.v[0])>
 	return res;
 }
 
-template <typename T, typename U>
-auto operator*(const vec4<T> &v, const mat4<U> &a) -> vec4<decltype(a.x*a.v[0])> {
+template <typename T>
+vec4<T> operator*(const vec4<T> &v, const mat4<T> &a) {
     return a.transpose()*v;
 }
 
 //dot product
-template <typename T, typename U>
-auto operator * (const vec4<T> &a, const vec4<U> &b) -> decltype(a.x*b.x) {
+template <typename T>
+vec4<T> operator * (const vec4<T> &a, const vec4<T> &b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
 //float specialization
 template <typename T>
-auto operator / (const vec4<T> &a, float num) -> vec4<decltype(a.x/num)>{
+vec4<T> operator / (const vec4<T> &a, float num) {
 	return a*(1.0f/num);
 }
 
 //double specialization
 template <typename T>
-auto operator / (const vec4<T> &a, double num) -> vec4<decltype(a.x/num)>{
+vec4<T> operator / (const vec4<T> &a, double num) {
 	return a*(1.0/num);
 }
 
 //general case
-template <typename T, typename U>
-auto operator / (const vec4<T> &a, U num) -> vec4<decltype(a.x/num)>{
-	return vec4<decltype(a.x/num)>(a.x/num, a.y/num, a.z/num);
+template <typename T>
+vec4<T> operator / (const vec4<T> &a, T num) {
+	return vec4<T>(a.x/num, a.y/num, a.z/num);
 }
 
 //-MAT4----------------------------------------------------------------------//
 
-template <typename T, typename U>
-auto operator * (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]*b.v[0])>
-{
-	mat4<decltype(a.v[0]*b.v[0])> res;
+template <typename T>
+mat4<T> operator * (const mat4<T> &a, const mat4<T> &b) {
+	mat4<T> res;
 
 	res(0,0) = a(0,0)*b(0,0) + a(1,0)*b(0,1) + a(2,0)*b(0,2) + a(3,0)*b(0,3);
 	res(0,1) = a(0,1)*b(0,0) + a(1,1)*b(0,1) + a(2,1)*b(0,2) + a(3,1)*b(0,3);
@@ -1055,9 +1009,9 @@ auto operator * (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]*b.v
 	return res;
 }
 
-template <typename T, typename U>
-auto operator + (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]+b.v[0])> {
-	mat4<decltype(a.v[0]+b.v[0])> res;
+template <typename T>
+mat4<T> operator + (const mat4<T> &a, const mat4<T> &b) {
+	mat4<T> res;
 	res.v[0] = a.v[0] + b.v[0];
 	res.v[1] = a.v[1] + b.v[1];
 	res.v[2] = a.v[2] + b.v[2];
@@ -1077,9 +1031,9 @@ auto operator + (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]+b.v
 	return res;
 }
 
-template <typename T, typename U>
-auto operator - (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]-b.v[0])> {
-	mat4<decltype(a.v[0]-b.v[0])> res;
+template <typename T>
+mat4<T> operator - (const mat4<T> &a, const mat4<T> &b) {
+	mat4<T> res;
 	res.v[0] = a.v[0] - b.v[0];
 	res.v[1] = a.v[1] - b.v[1];
 	res.v[2] = a.v[2] - b.v[2];
@@ -1099,9 +1053,9 @@ auto operator - (const mat4<T> &a, const mat4<U> &b) -> mat4<decltype(a.v[0]-b.v
 	return res;
 }
 
-template <typename T, typename U>
-auto operator * (const mat4<T> &a, U num) -> mat4<decltype(a.v[0]*num)> {
-	mat4<decltype(a.v[0]*num)> res;
+template <typename T>
+mat4<T> operator * (const mat4<T> &a, T num) {
+	mat4<T> res;
 	res.v[0] = a.v[0] * num;
 	res.v[1] = a.v[1] * num;
 	res.v[2] = a.v[2] * num;
@@ -1121,25 +1075,14 @@ auto operator * (const mat4<T> &a, U num) -> mat4<decltype(a.v[0]*num)> {
 	return res;
 }
 
-template <typename T, typename U>
-auto operator * (U num, const mat4<T> &a) -> mat4<decltype(a.v[0]*num)> {
+template <typename T>
+mat4<T> operator * (T num, const mat4<T> &a) {
 	return a*num;
 }
 
 template <typename T>
-auto operator / (const mat4<T> &a, float num) -> mat4<decltype(a.v[0]/num)> {
-	return a*(1.0f/num);
-
-}
-
-template <typename T>
-auto operator / (const mat4<T> &a, double num) -> mat4<decltype(a.v[0]/num)> {
-	return a*(1.0/num);
-}
-
-template <typename T, typename U>
-auto operator / (const mat4<T> &a, U num) -> mat4<decltype(a.v[0]/num)> {
-	mat4<decltype(a.v[0]/num)> res;
+mat4<T> operator / (const mat4<T> &a, T num) {
+	mat4<T> res;
 	res.v[0] = a.v[0] / num;
 	res.v[1] = a.v[1] / num;
 	res.v[2] = a.v[2] / num;
@@ -1159,8 +1102,8 @@ auto operator / (const mat4<T> &a, U num) -> mat4<decltype(a.v[0]/num)> {
 	return res;
 }
 
-template <typename T, typename U>
-bool operator == (const mat4<T> &a, const mat4<U> &b) {
+template <typename T>
+bool operator == (const mat4<T> &a, const mat4<T> &b) {
 	return
 	a.v[0] == b.v[0] &&
 	a.v[1] == b.v[1] &&
@@ -1180,8 +1123,8 @@ bool operator == (const mat4<T> &a, const mat4<U> &b) {
 	a.v[15]== b.v[15];
 }
 
-template <typename T, typename U>
-bool operator != (const mat4<T> &a, const mat4<U> &b) {
+template <typename T>
+bool operator != (const mat4<T> &a, const mat4<T> &b) {
 	return
 	a.v[0] != b.v[0] ||
 	a.v[1] != b.v[1] ||
@@ -1201,12 +1144,6 @@ bool operator != (const mat4<T> &a, const mat4<U> &b) {
 	a.v[15]!= b.v[15];
 }
 
-//---------------------------------------------------------------------------//
-
-/* TODO
-vec4<T>  operator *  (const mat4 &a, const vec4<T> &v);  // M . v
-vec4<T>  operator *  (const vec4<T> &v, const mat4 &a);  // v . M
-*/
-
 } //namespace math
 #endif // _MATH_ALGEBRA3_DEFINED_
+#endif // #ifndef __GXX_EXPERIMENTAL_CXX0X__

@@ -47,8 +47,8 @@ Screen:: Screen()
 {
 	m_ratio = 0;
 	m_videoModesSize = 0;
-	m_videoModes = nullptr;
-	m_screen = nullptr;
+	m_videoModes = NULL;
+	m_screen = NULL;
 
 	if (!m_isInstanced) {
 		atexit(Screen::deleteInstance);
@@ -60,7 +60,7 @@ Screen:: Screen()
 
 Screen::~Screen()
 {
-	m_instance = nullptr;
+	m_instance = NULL;
 
 	if (SDL_WasInit(SDL_INIT_VIDEO)) {
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -86,7 +86,7 @@ bool Screen::init()
 	if(!setVideoMode()) return false;
 	SDL_ShowCursor(0);
 //	const char *titol = title.c_str();
-//	SDL_WM_SetCaption(titol, nullptr);
+//	SDL_WM_SetCaption(titol, NULL);
 
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
@@ -140,7 +140,7 @@ void Screen::fillWithColor(const rgba &color)
 const Screen::vmode* Screen::getVideoModeList(unsigned int &size)
 {
 	size = m_videoModesSize;
-	if(!size) return nullptr;
+	if(!size) return NULL;
 	
 	return m_videoModes;
 }
@@ -180,7 +180,7 @@ bool Screen::setVideoMode()
 	unsigned int ScreenBpp    = config->get("ScreenBpp")->toInt();
 	bool Fullscreen  = config->get("Fullscreen")->toBool();
 
-	if (m_screen != nullptr)
+	if (m_screen != NULL)
 	{
 		if (m_selectedMode.w  == ScreenWidth &&
 		    m_selectedMode.h  == ScreenHeight)
@@ -206,12 +206,12 @@ bool Screen::setVideoMode()
 
 	if (Fullscreen) flags |= SDL_FULLSCREEN;
 
-	SDL_Surface* screen = nullptr;
+	SDL_Surface* screen = NULL;
 
 	//GET AVAILABLE VIDEO MODES
-	SDL_Rect **modes_available = SDL_ListModes(nullptr, flags|SDL_FULLSCREEN);
+	SDL_Rect **modes_available = SDL_ListModes(NULL, flags|SDL_FULLSCREEN);
 	const SDL_VideoInfo* videoinfo = SDL_GetVideoInfo();
-	if (modes_available == (SDL_Rect **) 0) return nullptr;
+	if (modes_available == (SDL_Rect **) 0) return NULL;
 	unsigned int nModes;
 	for (nModes = 0; modes_available[nModes]; nModes++) {}
 	
@@ -236,7 +236,7 @@ bool Screen::setVideoMode()
 	}
 
 	//select current desktop video-mode
-	if (screen == nullptr)
+	if (screen == NULL)
 	{
 		m_selectedMode.w = videoinfo->current_w;
 		m_selectedMode.h = videoinfo->current_h;
@@ -248,7 +248,7 @@ bool Screen::setVideoMode()
 	}
 
 	//select one of compatible video-mode
-	for(unsigned int i = 0; i < nModes && screen == nullptr; i++)
+	for(unsigned int i = 0; i < nModes && screen == NULL; i++)
 	{
 		m_selectedMode.w = m_videoModes[i].w;
 		m_selectedMode.h = m_videoModes[i].h;
@@ -260,7 +260,7 @@ bool Screen::setVideoMode()
 			flags);
 	}
 
-	if (screen == nullptr) return false;
+	if (screen == NULL) return false;
 
 	ScreenWidth  = m_selectedMode.w;
 	ScreenHeight = m_selectedMode.h;

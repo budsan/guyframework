@@ -21,7 +21,7 @@ bool TextHUD::loadFont(const char *filename)
 	if (m_font.load(filename, h/32))
 	{
 		m_isFontLoaded = true;
-		m_font.setAlignment(Font::TOP, Font::LEFT);
+		m_font.setAlignment(Font::LEFT);
 		return true;
 	}
 
@@ -47,10 +47,7 @@ void TextHUD::draw()
 		unsigned int w = viewport[2];
 		unsigned int h = viewport[3];
 
-		glPushAttrib(GL_CURRENT_BIT);
-		glColor(m_color);
-		m_font.print2D(math::vec2f(m_clampedPos.x*w, m_clampedPos.y*h), m_displayText.c_str());
-		glPopAttrib();
+		m_font.draw2D(m_displayText.c_str(), math::vec2f(m_clampedPos.x*w, m_clampedPos.y*h), m_color);
 	}
 }
 

@@ -208,7 +208,7 @@ void ShaderProgram::printInfoLog()
 	glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length);
 	if (length > 1) {
 		infoLog = new char[length];
-		glGetProgramInfoLog(m_id, length, nullptr, infoLog);
+		glGetProgramInfoLog(m_id, length, NULL, infoLog);
 		std::cout << infoLog;
 		delete[] infoLog;
 	}

@@ -91,7 +91,7 @@ const Keybinds::Keybind &Keybinds::Keybind::operator=(const Keybinds::Keybind& o
 
 //-SETTINGS------------------------------------------------------------------//
 
-Settings* Settings::m_instance = nullptr;
+Settings* Settings::m_instance = NULL;
 
 Settings::Settings()
 {
@@ -120,7 +120,7 @@ Settings::Settings()
 	*/
 }
 
-Settings::~Settings() { m_instance = nullptr; }
+Settings::~Settings() { m_instance = NULL; }
 
 void Settings::add(const Variable &set)
 {
@@ -138,7 +138,7 @@ void Settings::add(const Variable &set)
 Variable *Settings::get(std::string name)
 {
 	std::map<std::string, Variable>::iterator it = m_settings.find(name);
-	if (it == m_settings.end()) return nullptr;
+	if (it == m_settings.end()) return NULL;
 	Variable *v = &(it->second);
 	return v;
 }
@@ -155,7 +155,7 @@ const Keybinds &Settings::getKeybinds() const
 
 Settings* Settings::pInstance()
 {
-	if(m_instance == nullptr){
+	if(m_instance == NULL){
 		m_instance = new Settings();
 	}
 	return m_instance;
@@ -166,7 +166,7 @@ bool Settings::load(const char *filename)
 {
 	FILE* fSettingsFile;
 	fSettingsFile = fopen(filename, "rb");
-	if(fSettingsFile != nullptr)
+	if(fSettingsFile != NULL)
 	{
 		fread((void*)m_pInstance,1,sizeof(Settings),fSettingsFile);
 		fclose(fSettingsFile);
@@ -180,7 +180,7 @@ bool Settings::Save(const char *filename)
 {
 	FILE* fSettingsFile;
 	fSettingsFile = fopen(filename, "wb");
-	if(fSettingsFile != nullptr)
+	if(fSettingsFile != NULL)
 	{
 		fwrite((void*)m_pInstance,1,sizeof(Settings),fSettingsFile);
 		fclose(fSettingsFile);

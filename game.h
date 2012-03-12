@@ -94,11 +94,11 @@ private:
 	template <class T>
 	void changeGameLoop()
 	{
-		if (myGameLoop == nullptr) myGameLoop = new T(this);
+		if (myGameLoop == NULL) myGameLoop = new T(this);
 		else
 		{
 			T* pointer = dynamic_cast<T*>(myGameLoop);
-			if (pointer == nullptr) myGameLoop = new T(this);
+			if (pointer == NULL) myGameLoop = new T(this);
 		}
 	}
 

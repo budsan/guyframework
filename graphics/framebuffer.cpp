@@ -162,7 +162,7 @@ void FrameBuffer::attachTexture(GLenum iformat, GLint filter)
 	glGenTextures(1, &tex_id);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
 	glBindTexture(GL_TEXTURE_2D, tex_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, iformat, m_width, m_height, 0, format, type, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, iformat, m_width, m_height, 0, format, type, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 	if (format == GL_DEPTH_STENCIL) { // packed depth and stencil added separately

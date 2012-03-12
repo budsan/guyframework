@@ -1,8 +1,6 @@
 
 LIBS += -lSDL -lGL -lGLU -lGLEW -lpng -lopenal -lvorbis -logg -lvorbisfile -lfreetype
 
-QMAKE_CXXFLAGS += -std=c++0x
-DEFINES += __GXX_EXPERIMENTAL_CXX0X__
 INCLUDEPATH += $$PWD/ /usr/include/freetype2/
 
 SOURCES += \
@@ -62,6 +60,7 @@ HEADERS += \
     $$PWD/math/vec3.h \
     $$PWD/math/mat4.h \
     $$PWD/math/algebra3.h \
+    $$PWD/math/algebra3_cpp11.h \
     $$PWD/graphics/camera2d.h \
     $$PWD/graphics/primitives.h \
     $$PWD/audio/emyl.h \
@@ -72,6 +71,9 @@ HEADERS += \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
-    $$PWD/graphics/camera.h \
-    $$PWD/generic/event.h
+    $$PWD/graphics/camera.h
+
+
+
+
 

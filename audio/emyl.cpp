@@ -30,7 +30,7 @@ void setErrorCallback(error_callback cb) {_error_callback = cb;}
 /*---------------------------------------------------------------------------*/
 
 static int _fseek64_wrap(FILE *f, ogg_int64_t off, int whence){
-	if(f==nullptr)return(-1);
+	if(f==NULL)return(-1);
 	return fseek(f,off,whence);
 }
 
@@ -45,7 +45,7 @@ ov_callbacks callbacks = {
 /*-manager-------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-manager* manager::s_pInstance = nullptr;
+manager* manager::s_pInstance = NULL;
 bool manager::s_bInstanced = false;
 
 /*---------------------------------------------------------------------------*/
@@ -79,18 +79,18 @@ manager::~manager()
 	m_alContext = alcGetCurrentContext();
 	m_alDev     = alcGetContextsDevice(m_alContext);
 
-	alcMakeContextCurrent(nullptr);
+	alcMakeContextCurrent(NULL);
 	alcDestroyContext(m_alContext);
 	alcCloseDevice(m_alDev);
 
-	s_pInstance = nullptr;
+	s_pInstance = NULL;
 }
 
 /*---------------------------------------------------------------------------*/
 
 manager* manager::get_instance()
 {
-	if(s_pInstance == nullptr)
+	if(s_pInstance == NULL)
 	{
 		s_pInstance = new manager();
 	}
@@ -109,7 +109,7 @@ void manager::delete_instance()
 bool manager::init()
 {
 	
-	m_alDev = alcOpenDevice(nullptr);
+	m_alDev = alcOpenDevice(NULL);
 	if (!m_alDev)
 	{
 		SetError("OpenAL error: Could not init OpenAL.\n");
@@ -121,7 +121,7 @@ bool manager::init()
 	fprintf(stderr, "Audio device extensions: %s.\n", alcGetString(m_alDev, ALC_EXTENSIONS));
 #endif
 
-	m_alContext = alcCreateContext(m_alDev, nullptr);	// Context para alDev
+	m_alContext = alcCreateContext(m_alDev, NULL);	// Context para alDev
 	if (!m_alContext)
 	{
 		SetError("OpenAL error: Context can't be created.\n");
@@ -174,12 +174,12 @@ ALuint manager::get_buffer(std::string _filename)
 
 	OggVorbis_File vf;
 	FILE *sndfile = fopen(filename, "rb");
-	if (sndfile == nullptr)
+	if (sndfile == NULL)
 	{
 		SetError("Manager Error: File could not be opened.\n");
 		return -1;
 	}
-	if (ov_open_callbacks(sndfile, &vf, nullptr, 0, callbacks) < 0 ) {
+	if (ov_open_callbacks(sndfile, &vf, NULL, 0, callbacks) < 0 ) {
 		fclose(sndfile);
 		SetError("OGG Error: It doesn't seem to be an OGG File.\n");
 		return -1;
@@ -390,13 +390,13 @@ bool stream::load(std::string _filename)
 	const char *filename = _filename.c_str();
 
 	FILE *sndfile = fopen(filename, "rb");
-	if (sndfile == nullptr)
+	if (sndfile == NULL)
 	{
 		SetError("File error: File doesn't exist.\n");
 		return false;
 	}
 	OggVorbis_File vf;
-	if (ov_open_callbacks(sndfile, &vf, nullptr, 0, callbacks) < 0 ) {
+	if (ov_open_callbacks(sndfile, &vf, NULL, 0, callbacks) < 0 ) {
 		fclose(sndfile);
 		SetError("Ogg error: File doesn't seem to be OGG file.\n");
 		return false;

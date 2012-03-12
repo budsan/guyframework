@@ -1,45 +1,53 @@
 #pragma once
 
-#ifdef _WINDOWS
-#include <windows.h>
-#endif
+#include "color.h"
+#include "math/algebra3.h"
 
 #include <ft2build.h>
-#include <freetype/freetype.h>
-#include <freetype/ftglyph.h>
-#include <freetype/ftoutln.h>
-#include <freetype/fttrigon.h>
-
-#include "graphics.h"
-
-#include <vector>
-#include <string>
-
-#include <math/vec2.h>
+#include FT_FREETYPE_H
 
 class Font
 {
 public:
-	Font();
-	
-	enum VertAlignment { TOP , BOTTOM, BASELINE };
-	enum HorzAlignment { LEFT, RIGHT , CENTER   };
-	
-	bool load(const char *filename, unsigned int height);
-	void setAlignment(VertAlignment v, HorzAlignment h);
-	void print(float x, float y, const char *fmt, ...);
-	void print2D(float x, float y, const char *fmt, ...);
-#ifdef _MATH_ALGEBRA3_DEFINED_
-	void print(math::vec2f v, const char *fmt, ...);
-	void print2D(math::vec2f v, const char *fmt, ...);
-#endif
 
-	void clean();
+	Font() : initialized(0), m_alignment(LEFT) {}
+
+	bool load(const char* path, int point_size, int dpi = 96);
+	math::vec2f measure(const char* msg);
+
+	enum Alignment { LEFT, RIGHT, CENTER };
+	void setAlignment(Alignment h) { m_alignment = h; }
+
+	void draw2D(const char* msg, float x, float y, float r = 1, float g = 1, float b = 1, float a = 1);
+	void draw(const char* msg, float x, float y, float r = 1, float g = 1, float b = 1, float a = 1);
+
+
+	void draw2D(const char* msg, const math::vec2f &pos, const rgba &c) {
+		draw2D(msg, pos.x, pos.y, c.r, c.g, c.b, c.a);
+	}
+
+	void draw2D(const char* msg, float x, float y, const rgba &c) {
+		draw2D(msg, x, y, c.r, c.g, c.b, c.a);
+	}
+
+	void draw2D(const char* msg, const math::vec2f &pos, float r = 1, float g = 1, float b = 1, float a = 1) {
+		draw2D(msg, pos.x, pos.y, r, g, b, a);
+	}
+
+	void draw(const char* msg, const math::vec2f &pos, const rgba &c) {
+		draw(msg, pos.x, pos.y, c.r, c.g, c.b, c.a);
+	}
+
+	void draw(const char* msg, float x, float y, const rgba &c) {
+		draw(msg, x, y, c.r, c.g, c.b, c.a);
+	}
+
+	void draw(const char* msg, const math::vec2f &pos, float r = 1, float g = 1, float b = 1, float a = 1) {
+		draw(msg, pos.x, pos.y, r, g, b, a);
+	}
+
 private:
 
-	bool renderFaceToTexture(FT_Face face, char ch);
-	void calcAlignment(std::vector<std::string> &lines, std::vector<int>& align);
-	void printGL(float x, float y, char *text);
 	inline int nextPowerOfTwo ( int a )
 	{
 		int rval=1;
@@ -47,17 +55,17 @@ private:
 		return rval;
 	}
 
-	struct glyph_metrics {
-		long advance;
-		long width, rows;
-		long top, left;
-		float texwidth;
-		float texheight;
-	};
-
-	GLuint        *m_textures;
-	glyph_metrics *m_metrics;
-	GLuint         m_listFirst;
 	unsigned short m_alignment;
-	unsigned short m_height;
+	unsigned int font_texture;
+	float pt;
+	float advance[128];
+	float width[128];
+	float height[128];
+	float tex_x1[128];
+	float tex_x2[128];
+	float tex_y1[128];
+	float tex_y2[128];
+	float offset_x[128];
+	float offset_y[128];
+	int initialized;
 };

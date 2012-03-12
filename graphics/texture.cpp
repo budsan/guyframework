@@ -275,15 +275,15 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     png_structp png_ptr;
     png_infop info_ptr;
     int bit_depth, color_type;
-    FILE *fp = nullptr;
-    png_bytep *row_pointers = nullptr;
+    FILE *fp = NULL;
+    png_bytep *row_pointers = NULL;
     int i;
 
     /* open image file */
     fp = fopen (fname, "rb");
     if (!fp)
     {
-	return nullptr;
+	return NULL;
     }
 
     /* read magic number */
@@ -293,15 +293,15 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     if (!png_check_sig (magic, sizeof(magic)))
     {
 	fclose (fp);
-	return nullptr;
+	return NULL;
     }
 
     /* create a png read struct */
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!png_ptr)
     {
 	fclose (fp);
-	return nullptr;
+	return NULL;
     }
 
     /* create a png info struct */
@@ -309,8 +309,8 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     if (!info_ptr)
     {
 	fclose (fp);
-	png_destroy_read_struct (&png_ptr, nullptr, nullptr);
-	return nullptr;
+	png_destroy_read_struct (&png_ptr, NULL, NULL);
+	return NULL;
     }
 
     /* create our OpenGL texture object */
@@ -320,7 +320,7 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     if (setjmp (png_jmpbuf (png_ptr)))
     {
 	fclose (fp);
-	png_destroy_read_struct (&png_ptr, &info_ptr, nullptr);
+	png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
 
 	if(row_pointers)
 	       free(row_pointers);
@@ -330,7 +330,7 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
 	    if (texinfo->texels) free(texinfo->texels);
 	    free (texinfo);
 	}
-	return nullptr;
+	return NULL;
     }
 
     /* setup libpng for using standard C fread() function with our FILE pointer */
@@ -361,7 +361,7 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     png_read_update_info (png_ptr, info_ptr);
 
     /* retrieve updated information */
-    png_get_IHDR (png_ptr, info_ptr, (png_uint_32*)(&texinfo->width), (png_uint_32*)(&texinfo->height), &bit_depth, &color_type, nullptr, nullptr, nullptr);
+    png_get_IHDR (png_ptr, info_ptr, (png_uint_32*)(&texinfo->width), (png_uint_32*)(&texinfo->height), &bit_depth, &color_type, NULL, NULL, NULL);
 
     /* get image format and components per pixel */
     getPNGTextureInfo (color_type, texinfo);
@@ -381,8 +381,8 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
     png_read_image (png_ptr, row_pointers);
 
     /* finish decompression and release memory */
-    png_read_end (png_ptr, nullptr);
-    png_destroy_read_struct (&png_ptr, &info_ptr, nullptr);
+    png_read_end (png_ptr, NULL);
+    png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
 
     /* we don't need row pointers anymore */
     free(row_pointers);
@@ -395,7 +395,7 @@ TexturePNGLoader::gl_texture_t *TexturePNGLoader::ReadPNGFromFile (const char *f
 
 bool TexturePNGLoader::LoadPNG(const char *fname, Texture &t)
 {
-	gl_texture_t *png_tex = nullptr;
+	gl_texture_t *png_tex = NULL;
 	t.m_id = 0;
 
 	png_tex = ReadPNGFromFile(fname);

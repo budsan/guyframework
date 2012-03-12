@@ -51,7 +51,7 @@ bool Shader::load(const char *filename)
 
 	buffer[length] = '\0';
 	const char *source = buffer;
-	glShaderSource(m_id, 1, &source, nullptr);
+	glShaderSource(m_id, 1, &source, NULL);
 
 	delete[] buffer;
 
@@ -73,7 +73,7 @@ void Shader::printInfoLog() const
 	glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &length);
 	if (length > 1) {
 		infoLog = new char[length];
-		glGetShaderInfoLog(m_id, length, nullptr, infoLog);
+		glGetShaderInfoLog(m_id, length, NULL, infoLog);
 		std::cout << infoLog;
 		delete[] infoLog;
 	}

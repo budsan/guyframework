@@ -3,7 +3,7 @@
 
 #include <list>
 #include <fstream>
-#include <random>
+#include "boost/random.hpp"
 
 #include "math/vec2.h"
 #include "graphics/color.h"
@@ -102,7 +102,7 @@ protected:
 	std::list<Particle> m_particles;
 
 	//RANDOM ENGINE
-	std::mt19937 m_random;
+	boost::mt19937 m_random;
 };
 
 #endif // PARTICLEEMITER_H

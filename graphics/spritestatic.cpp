@@ -7,13 +7,12 @@
 
 #include "log.h"
 
-SpriteStatic::SpriteStatic() : Sprite()
+SpriteStatic::SpriteStatic() : Sprite(), m_data()
 {
-	m_data = nullptr;
 	m_frameSelected  = 0;
 }
 
-SpriteStatic::SpriteStatic(std::shared_ptr<SpriteLibrary> _data) : Sprite()
+SpriteStatic::SpriteStatic(boost::shared_ptr<SpriteLibrary> _data) : Sprite()
 {
 	setLibrary(_data);
 }
@@ -24,11 +23,11 @@ void SpriteStatic::update(float deltaTime)
 }
 
 
-bool SpriteStatic::setLibrary(std::shared_ptr<SpriteLibrary> _data)
+bool SpriteStatic::setLibrary(boost::shared_ptr<SpriteLibrary> _data)
 {
-	if(_data == nullptr)
+	if(_data == NULL)
 	{
-		m_data = nullptr;
+		m_data.reset();
 		return true;
 	}
 
@@ -41,8 +40,8 @@ bool SpriteStatic::setLibrary(std::shared_ptr<SpriteLibrary> _data)
 
 void SpriteStatic::getParamsToDraw(Sprite::drawParams &params)
 {
-	if (m_data == nullptr) {
-		params.filename = nullptr;
+	if (m_data == NULL) {
+		params.filename = NULL;
 		return;
 	}
 	const SpriteFrame& fram = m_data->frames[m_frameSelected];
@@ -57,7 +56,7 @@ void SpriteStatic::getParamsToDraw(Sprite::drawParams &params)
 
 int SpriteStatic::getFrameID(std::string name)
 {
-	if (m_data == nullptr) return -1;
+	if (m_data == NULL) return -1;
 	std::map<std::string, int>::iterator it = m_data->frameNames.find(name);
 	if (it == m_data->frameNames.end()) return -1;
 	return (int)it->second;
@@ -72,7 +71,7 @@ bool SpriteStatic::selectFrame(std::string name)
 
 bool SpriteStatic::selectFrame(int frameID)
 {
-	if (m_data == nullptr) return false;
+	if (m_data == NULL) return false;
 	if (m_data->Empty()) return false;
 	m_frameSelected  = frameID;
 	return true;

@@ -1,12 +1,13 @@
 #include "particleemitter.h"
 
-#include <GL/gl.h>
+
 #include <stdlib.h>
 #include <cmath>
+#include <math.h>
 #include <iostream>
 #include <time.h>
 
-#include <random>
+#include "boost/random.hpp"
 
 #include <functional>
 
@@ -100,12 +101,13 @@ void ParticleEmitter::draw()
 {
 	if (!m_material.empty())
 	{
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		TextureManager& texman = TextureManager::instance();
 		const Texture &tex = texman.getTexture(m_material);
 		tex.bind();
 		//tex.setWrap(GL_CLAMP_TO_BORDER);
 		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, rgba(0,0,0,0).raw());
+		tex.setFiltering(GL_NEAREST);
+		tex.setWrap(GL_CLAMP_TO_EDGE);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 	}
@@ -113,30 +115,35 @@ void ParticleEmitter::draw()
 	if (m_accumBlending) glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	else glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	/*
 	std::vector<vec2f> vertcoords;
 	std::vector<vec2f> texcoords;
 	std::vector<rgba>  vertcolor;
+	std::vector<unsigned int> indices;
 
 	vertcoords.reserve(m_particles.size()*4);
 	texcoords.reserve(m_particles.size()*4);
 	vertcolor.reserve(m_particles.size()*4);
+	indices.reserve(m_particles.size()*6);
+	*/
 
 	std::list<Particle>::iterator it = m_particles.begin();
 	for (;it != m_particles.end(); it++)
-		it->fillDrawArray(*this, vertcoords, texcoords, vertcolor);
+		//it->fillDrawArray(*this, vertcoords, texcoords, vertcolor, indices);
+		it->draw(*this);
 
+	/*
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 	glVertexPointer  (2, GL_FLOAT, 0, &vertcoords[0]);
 	glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
 	glColorPointer(4,    GL_FLOAT, 0, &vertcolor[0]);
-	glDrawArrays(GL_QUADS, 0, m_particles.size()*4);
+	glDrawElements(GL_TRIANGLES, m_particles.size()*6, GL_UNSIGNED_INT, &indices[0]);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
-
-	if (!m_material.empty()) glPopAttrib();
+	*/
 }
 
 void ParticleEmitter::restart()

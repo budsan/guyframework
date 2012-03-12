@@ -71,7 +71,7 @@ void Sprite::draw()
 {
 	drawParams params;
 	getParamsToDraw(params);
-	if (params.filename == nullptr) return;
+	if (params.filename == NULL) return;
 
 	TextureManager *texman = TextureManager::ptrInstance();
 

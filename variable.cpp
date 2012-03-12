@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 //Buffer for number conversions to ascii
 char tmp[128];
@@ -316,7 +317,7 @@ char Variable::toChar()
 
 std::string Variable::toString()
 {
-	char *c_ret = nullptr;
+	char *c_ret = NULL;
 	switch (myType)
 	{
 	case Variable::Invalid: std::string();

@@ -14,7 +14,7 @@
 
 //---------------------------------------------------------------------------//
 
-Input* Input::m_instance = nullptr;
+Input* Input::m_instance = NULL;
 
 Input::Input()
 {
@@ -26,7 +26,7 @@ Input::Input()
 
 Input::~Input()
 {
-	m_instance = nullptr;
+	m_instance = NULL;
 }
 
 Input& Input::Instance()
@@ -36,7 +36,7 @@ Input& Input::Instance()
 
 Input* Input::ptrInstance()
 {
-	if(m_instance == nullptr)
+	if(m_instance == NULL)
 		m_instance = new Input();
 
 	return m_instance;

@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <set>
-#include <memory>
+#include "boost/shared_ptr.hpp"
 
 #include "sprite.h"
 
@@ -44,19 +44,19 @@ private:
 class SpriteAnim : public Sprite {
  public:
 	SpriteAnim();
-	SpriteAnim(std::shared_ptr<SpriteAnimData> data);
+	SpriteAnim(boost::shared_ptr<SpriteAnimData> data);
 
 	virtual void update(float deltaTime);
 
 	int getAnimID(std::string name);
 	int getLoopsLeft();
-	bool setAnimData(std::shared_ptr<SpriteAnimData> data);
+	bool setAnimData(boost::shared_ptr<SpriteAnimData> data);
 	bool SelectAnim(std::string name);
 	bool SelectAnim(int animID);
 
 	void getParamsToDraw(Sprite::drawParams &params);
  private:
-	std::shared_ptr<SpriteAnimData> m_data;
+	boost::shared_ptr<SpriteAnimData> m_data;
 	int m_animSelected;
 	int m_loopsLeft;
 	int m_frameSelected;
