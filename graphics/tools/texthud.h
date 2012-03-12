@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "boost/smart_ptr.hpp"
 
 #include "graphics/font.h"
 #include "graphics/color.h"
@@ -17,15 +18,14 @@ class TextHUD
 	void draw();
 	void reset();
 
-	Font &font() { return m_font;}
+    boost::shared_ptr<Font> &font() { return m_font;}
 	std::string &displayText() {return m_displayText;}
 	math::vec2f &clampedPos() {return m_clampedPos;}
 
 protected:
-	Font m_font;
+    boost::shared_ptr<Font> m_font;
 	rgba m_color;
 
 	std::string m_displayText;
 	math::vec2f m_clampedPos;
-	bool m_isFontLoaded;
 };

@@ -10,7 +10,7 @@ class Font
 {
 public:
 
-	Font() : initialized(0), m_alignment(LEFT) {}
+    Font() : m_alignment(LEFT), initialized(0) {}
 
 	bool load(const char* path, int point_size, int dpi = 96);
 	math::vec2f measure(const char* msg);
