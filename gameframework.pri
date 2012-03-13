@@ -30,7 +30,8 @@ SOURCES += \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
     $$PWD/graphics/spritestatic.cpp \
-    $$PWD/variable.cpp
+    $$PWD/variable.cpp \
+    gameframework/content/content.cpp
 
     
 HEADERS += \
@@ -71,7 +72,10 @@ HEADERS += \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
-    $$PWD/graphics/camera.h
+    $$PWD/graphics/camera.h \
+    gameframework/content/content.h
+
+
 
 
 
