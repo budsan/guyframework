@@ -8,6 +8,7 @@ SOURCES += \
     $$PWD/settings.cpp \
     $$PWD/gamestate.cpp \
     $$PWD/log.cpp \
+    $$PWD/content/content.cpp \
     $$PWD/graphics/screen.cpp \
     $$PWD/graphics/texture.cpp \
     $$PWD/graphics/sprite.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     $$PWD/gamestate.h \
     $$PWD/settings.h \
     $$PWD/log.h \
+    $$PWD/content/content.h \
     $$PWD/graphics/screen.h \
     $$PWD/graphics/texture.h \
     $$PWD/graphics/sprite.h \

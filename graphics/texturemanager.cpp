@@ -14,8 +14,8 @@
 
 //---------------------------------------------------------------------------//
 
-TextureManager* TextureManager::m_instance = 0;
-bool TextureManager::m_isInstanced = false;
+TextureManager* TextureManager::s_instance = 0;
+bool TextureManager::s_isInstanced = false;
 
 TextureManager& TextureManager::instance()
 {
@@ -24,12 +24,12 @@ TextureManager& TextureManager::instance()
 
 TextureManager* TextureManager::ptrInstance()
 {
-	if (TextureManager::m_instance == 0)
+	if (TextureManager::s_instance == 0)
 	{
-		m_instance = new TextureManager();
+		s_instance = new TextureManager();
 	}
 	
-	return m_instance;
+	return s_instance;
 }
 
 //---------------------------------------------------------------------------//
@@ -39,10 +39,10 @@ TextureManager::TextureManager()
 	m_dataPath = std::string("./data/texture/");
 	m_textures[NULL_TEXTURE].loadNullTexture();
 
-	if (!m_isInstanced)
+	if (!s_isInstanced)
 	{
 		atexit(TextureManager::deleteInstance);
-		m_isInstanced = true;
+		s_isInstanced = true;
 	}
 }
 
@@ -138,7 +138,7 @@ void TextureManager::setDataPath(std::string path)
 
 void TextureManager::deleteInstance()
 {
-	if (m_instance) delete m_instance;
+	if (s_instance) delete s_instance;
 }
 
 //---------------------------------------------------------------------------//

@@ -25,8 +25,8 @@ protected:
 
 	TextureManager();
 	static void deleteInstance();
-	static TextureManager* m_instance;
-	static bool m_isInstanced;
+	static TextureManager* s_instance;
+	static bool s_isInstanced;
 
 	std::vector<std::string> getPosibleDataPath(std::string filename);
 	std::map<std::string, Texture> m_textures;
