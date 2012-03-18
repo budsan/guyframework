@@ -199,13 +199,13 @@ ALuint manager::get_buffer(std::string _filename)
 		return -1;
 	}
 
-	int samples = (int)ov_pcm_total(&vf,-1);
-	int channels = vi->channels;
-	int rate = vi->rate;
+	int samples  = (int) ov_pcm_total(&vf,-1);
+	int channels = (int) vi->channels;
+	int rate     = (int) vi->rate;
 	signed short *data = new signed short[samples*channels];
 
 	char *stream = (char*)data;
-	int bytes = samples * channels * sizeof(signed short);
+	int bytes = samples * channels * (int) sizeof(signed short);
 	int current_section;
 	while(bytes > 0) {
 		long read_bytes = ov_read(&vf,stream,bytes,0,2,1,&current_section);
@@ -218,8 +218,8 @@ ALuint manager::get_buffer(std::string _filename)
 //					LOG << "Error: OV_EBADLINK" << std::endl;
 		}
 		else {
-			bytes  -= read_bytes;
-			stream += read_bytes;
+			bytes  -= (int) read_bytes;
+			stream += (int) read_bytes;
 		}
 	}
 
@@ -236,7 +236,7 @@ ALuint manager::get_buffer(std::string _filename)
 	}
 	
 	alGetError();
-	alBufferData(newbuffer, AL_FORMAT_MONO16, data, samples*sizeof(short), rate);
+	alBufferData(newbuffer, AL_FORMAT_MONO16, data, samples * (int) sizeof(short), rate);
 
 	delete data;
 
@@ -407,7 +407,7 @@ bool stream::load(std::string _filename)
 	if(vi->channels == 1) m_eformat = AL_FORMAT_MONO16;
 	else                  m_eformat = AL_FORMAT_STEREO16;
 
-	m_ifreq = vi->rate;
+	m_ifreq = (ALsizei) vi->rate;
 
 	if(m_uiFlags & STREAM_OGG_LOADED) ov_clear(&m_ogg);
 	memcpy(&m_ogg, &vf, sizeof(OggVorbis_File));
@@ -643,7 +643,7 @@ bool stream::bStream(ALuint _buff)
 	
 	while(bytes < BUFFER_SIZE)
 	{
-		read_bytes = ov_read(&m_ogg, data + bytes, BUFFER_SIZE - bytes, 0, 2, 1, &current_section);
+		read_bytes = (int) ov_read(&m_ogg, data + bytes, BUFFER_SIZE - bytes, 0, 2, 1, &current_section);
 		
 		if(read_bytes > 0) bytes += read_bytes;
 		else

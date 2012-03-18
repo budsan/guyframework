@@ -93,7 +93,7 @@ void Sprite::draw()
 		{ normCoords.x1, normCoords.y0 }
 	};
 
-	float h = abs(params.h), w = abs(params.w);
+	float h = (float)abs(params.h), w = (float)abs(params.w);
 	struct { float x, y; } vertcoordsArray[4] = {
 		{0, 0},{0,-h},{w,-h},{w, 0}
 	};

@@ -70,8 +70,8 @@ bool cohen_sutherland(const bbox<vec3<Real> > &bb, const seg<vec3<Real> > &s)
 		if( outcode1 & PLA_DRET ) rec.x = bb.max.x;
 		else                      rec.x = bb.min.x;
 
-		float x1 = p2.x  - p1.x;
-		float x2 = rec.x - p1.x;
+		Real x1 = p2.x  - p1.x;
+		Real x2 = rec.x - p1.x;
 		rec.y = p1.y + x2 * (p2.y - p1.y) / x1;
 		rec.z = p1.z + x2 * (p2.z - p1.z) / x1;
 
@@ -88,8 +88,8 @@ bool cohen_sutherland(const bbox<vec3<Real> > &bb, const seg<vec3<Real> > &s)
 		if( outcode1 & PLA_SUPERIOR ) rec.y = bb.max.y;
 		else                          rec.y = bb.min.y;
 
-		float y1 = p2.y  - p1.y;
-		float y2 = rec.y - p1.y;
+		Real y1 = p2.y  - p1.y;
+		Real y2 = rec.y - p1.y;
 		rec.x = p1.x + y2 * (p2.x - p1.x) / y1;
 		rec.z = p1.z + y2 * (p2.z - p1.z) / y1;
 
@@ -106,8 +106,8 @@ bool cohen_sutherland(const bbox<vec3<Real> > &bb, const seg<vec3<Real> > &s)
 		if( outcode1 & PLA_DARRERE ) rec.z = bb.max.z;
 		else                         rec.z = bb.min.z;
 
-		float z1 = p2.z  - p1.z;
-		float z2 = rec.z - p1.z;
+		Real z1 = p2.z  - p1.z;
+		Real z2 = rec.z - p1.z;
 		rec.x = p1.x + z2 * (p2.x - p1.x) / z1;
 		rec.y = p1.y + z2 * (p2.y - p1.y) / z1;
 
@@ -146,8 +146,8 @@ bool cohen_sutherland(const bbox<vec2<Real> > &bb, const seg<vec2<Real> > &s)
 		if( outcode1 & PLA_DRET ) rec.x = bb.max.x;
 		else                      rec.x = bb.min.x;
 
-		float x1 = p2.x  - p1.x;
-		float x2 = rec.x - p1.x;
+		Real x1 = p2.x  - p1.x;
+		Real x2 = rec.x - p1.x;
 		rec.y = p1.y + x2 * (p2.y - p1.y) / x1;
 
 		if( rec.y <= bb.max.y && rec.y >= bb.min.y ) return true;
@@ -158,8 +158,8 @@ bool cohen_sutherland(const bbox<vec2<Real> > &bb, const seg<vec2<Real> > &s)
 		if( outcode1 & PLA_SUPERIOR ) rec.y = bb.max.y;
 		else                          rec.y = bb.min.y;
 
-		float y1 = p2.y - p1.y;
-		float y2 = rec.y - p1.y;
+		Real y1 = p2.y - p1.y;
+		Real y2 = rec.y - p1.y;
 		rec.x = p1.x + y2 * (p2.x - p1.x) / y1;
 
 		if( rec.x <= bb.max.x && rec.x >= bb.min.x ) return true;

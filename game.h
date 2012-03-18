@@ -59,7 +59,7 @@ private:
 		GameLoop(Game* parent);
 		virtual void loopIteration() = 0;
 	protected:
-		Game* parent;
+		Game* m_parent;
 	};
 
 	class VariableLoop : public GameLoop
@@ -68,7 +68,7 @@ private:
 		VariableLoop(Game* parent);
 		void loopIteration();
 	private:
-		float myNow;
+		float m_now;
 	};
 
 	class StableLoop : public GameLoop
@@ -77,8 +77,8 @@ private:
 		StableLoop(Game* parent);
 		void loopIteration();
 	private:
-		float myNow;
-		float myAccumTime;
+		float m_now;
+		float m_accumTime;
 	};
 
 	class StableSkipLoop : public GameLoop
@@ -87,18 +87,18 @@ private:
 		StableSkipLoop(Game* parent);
 		void loopIteration();
 	private:
-		float myNow;
-		float myAccumTime;
+		float m_now;
+		float m_accumTime;
 	};
 
 	template <class T>
 	void changeGameLoop()
 	{
-		if (myGameLoop == NULL) myGameLoop = new T(this);
+		if (m_gameLoop == NULL) m_gameLoop = new T(this);
 		else
 		{
-			T* pointer = dynamic_cast<T*>(myGameLoop);
-			if (pointer == NULL) myGameLoop = new T(this);
+			T* pointer = dynamic_cast<T*>(m_gameLoop);
+			if (pointer == NULL) m_gameLoop = new T(this);
 		}
 	}
 
@@ -106,6 +106,6 @@ private:
 	void loopStable(float &Now, float &AcumTime);
 	void loopStableSkip(float &Now, float &AcumTime);
 
-	GameLoop*      myGameLoop;
+	GameLoop*      m_gameLoop;
 };
 

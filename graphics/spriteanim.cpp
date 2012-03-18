@@ -248,7 +248,7 @@ bool SpriteAnimData::readANIM(std::string &currentAnimName, SpriteAnimTrack *&cu
 	std::string lineLeft = line.substr(quoteEnd, line.size() - quoteEnd);
 	std::stringstream sline(lineLeft);
 
-	int loops = 0;
+	short loops = 0;
 	if (!(sline >> loops)) {
 		LOG<<"Error "<< lineNum <<": ANIM num of loops not found.  Skipping line."<<std::endl;
 		return false;

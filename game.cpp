@@ -15,7 +15,7 @@
 
 void emylErrorCallback(const std::string &error);
 
-Game::Game() : m_State(NULL), m_NextState(NULL), m_FramesPerSecond(0), myGameLoop(NULL)
+Game::Game() : m_State(NULL), m_NextState(NULL), m_FramesPerSecond(0), m_gameLoop(NULL)
 {
 	SDL_Init(0);
 
@@ -28,7 +28,7 @@ Game::Game() : m_State(NULL), m_NextState(NULL), m_FramesPerSecond(0), myGameLoo
 	setStableDeltaTime(false, false);
 
 #ifndef _WINDOWS
-	srand(time(NULL));
+	srand(unsigned(time(NULL)));
 #else
 	srand(unsigned(time(0)));
 #endif
@@ -103,7 +103,7 @@ void Game::setFramesPerSecond(unsigned short frames)
 		//La unidad de tiempo mas pequenya, menos ya seria gametime = 0
 		m_SecondsPerFrame = (1000.0f/float(TICKS_PER_SECOND))*0.001f;
 #else
-		mySecondsPerFrame = 0.0f;
+		m_SecondsPerFrame = 0.0f;
 #endif
 
 		//Con tasa de frames automatica solo puede funcionar en
@@ -173,7 +173,7 @@ void Game::run()
 		}
 
 		//UPDATES AND DRAWS
-		myGameLoop->loopIteration();
+		m_gameLoop->loopIteration();
 
 		//SHOW CHANGES
 		m_screen->flip();
@@ -201,7 +201,7 @@ void Game::loopVariable(float &now)
 	float deltaTime = now - before;
 	if (deltaTime < m_SecondsPerFrame)
 	{
-		int toWait = floor(1000*(m_SecondsPerFrame - deltaTime));
+		unsigned int toWait = (unsigned int)floor(1000*(m_SecondsPerFrame - deltaTime));
 		SDL_Delay(toWait);
 
 		now = m_input->getTimeRaw();
@@ -281,16 +281,16 @@ void Game::loopStableSkip(float &now, float &accumTime)
 	draw();
 }
 
-Game::GameLoop::GameLoop(Game* parent) : parent(parent){}
+Game::GameLoop::GameLoop(Game* parent) : m_parent(parent){}
 
-Game::VariableLoop::VariableLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::VariableLoop::loopIteration() {parent->loopVariable(myNow);}
+Game::VariableLoop::VariableLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
+void Game::VariableLoop::loopIteration() {m_parent->loopVariable(m_now);}
 
-Game::StableLoop::StableLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::StableLoop::loopIteration() {parent->loopStable(myNow, myAccumTime);}
+Game::StableLoop::StableLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
+void Game::StableLoop::loopIteration() {m_parent->loopStable(m_now, m_accumTime);}
 
-Game::StableSkipLoop::StableSkipLoop(Game* parent) : GameLoop(parent), myNow(-1) {}
-void Game::StableSkipLoop::loopIteration() {parent->loopStableSkip(myNow, myAccumTime);}
+Game::StableSkipLoop::StableSkipLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
+void Game::StableSkipLoop::loopIteration() {m_parent->loopStableSkip(m_now, m_accumTime);}
 
 void emylErrorCallback(const std::string &error)
 {

@@ -147,15 +147,15 @@ void Texture::unbind()
 bool Texture::loadNullTexture()
 {
 	m_id = 0;
-	const unsigned int h = 64, w = 64;
-	unsigned char *texels = new unsigned char[4*h*w];
+	const unsigned int he = 64, wi = 64;
+	unsigned char *texels = new unsigned char[4*he*wi];
 	unsigned char *p = texels;
-	for (unsigned int y = 0; y < h; y++)
+	for (unsigned int y = 0; y < he; y++)
 	{
-		unsigned char fucsia_y = y < (h/2) ? ~0:0;
-		for (unsigned int x = 0; x < w; x++)
+		unsigned char fucsia_y = y < (he/2) ? ~0:0;
+		for (unsigned int x = 0; x < wi; x++)
 		{
-			unsigned char fucsia_x = x < (w/2) ? ~0:0;
+			unsigned char fucsia_x = x < (wi/2) ? ~0:0;
 			if (fucsia_y^fucsia_x)
 			{
 				*p++ = ~0; //R
@@ -176,10 +176,10 @@ bool Texture::loadNullTexture()
 	glGenTextures (1, &m_id);
 	if (m_id == 0) return false;
 	glBindTexture (GL_TEXTURE_2D, m_id);
-	gluBuild2DMipmaps (GL_TEXTURE_2D, GL_RGBA, w, h, GL_RGBA, GL_UNSIGNED_BYTE, texels);
+	gluBuild2DMipmaps (GL_TEXTURE_2D, GL_RGBA, wi, he, GL_RGBA, GL_UNSIGNED_BYTE, texels);
 
-	m_width  = w;
-	m_height = h;
+	m_width  = wi;
+	m_height = he;
 	delete texels;
 	return true;
 }

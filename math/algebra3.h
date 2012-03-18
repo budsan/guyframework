@@ -542,16 +542,16 @@ struct mat4
 		return *this *= fromTranslate(x, y, z);
 	}
 
-	mat4<T> &translate(const vec3<T> &v) {
-		return *this *= fromTranslate(v);
+	mat4<T> &translate(const vec3<T> &vec) {
+		return *this *= fromTranslate(vec);
 	}
 
 	mat4<T> &scale(T x, T y, T z) {
 		return *this *= fromScale(x, y, z);
 	}
 
-	mat4<T> &scale(const vec3<T> &v) {
-		return *this *= fromScale(v);
+	mat4<T> &scale(const vec3<T> &vec) {
+		return *this *= fromScale(vec);
 	}
 
 	T det() {
@@ -584,15 +584,15 @@ struct mat4
 
 	mat4<T> inverted(bool * invertible = 0) {
 		mat4<T> res;
-		T det = this->det();
+		T determinant = this->det();
 
-		if(det == 0) { // Singular matrix
+		if(determinant == 0) { // Singular matrix
 			if (invertible) *invertible = false;
 			return fromIdentity();
 		}
 
 		if (invertible) *invertible = true;
-		T invDet = 1/det;
+		T invDet = 1/determinant;
 
 		res[0][0] = invDet *  ((-(*this)[1][3]*(*this)[2][2]*(*this)[3][1]) +
 					((*this)[1][2]*(*this)[2][3]*(*this)[3][1]) +

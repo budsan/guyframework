@@ -53,13 +53,13 @@ const Keybinds &Keybinds::operator=(const Keybinds& other)
 
 unsigned int Keybinds::getPlayerCount() const
 {
-	return m_playerKeybinds.size();
+	return (unsigned int) m_playerKeybinds.size();
 }
 
 unsigned int Keybinds::getAccionCount() const
 {
 	if (m_playerKeybinds.empty()) return 0;
-	return m_playerKeybinds[0].size();
+	return (unsigned int) m_playerKeybinds[0].size();
 }
 
 Keybinds::Keybind::Keybind() : m_def(0), m_key(0) {}

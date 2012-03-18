@@ -80,7 +80,7 @@ void TransitionSinus::update(float _deltaTime)
 {
 	if(m_fSinPos < M_PI)
 	{
-		float fPercent = (cos(m_fSinPos)+1.0f)/2.0f;
+		float fPercent = ((float)cos(m_fSinPos)+1.0f)/2.0f;
 		m_fPos =
 			m_fInitPos * (     fPercent) +
 			m_fPosToGo * (1.0f-fPercent);
@@ -111,7 +111,7 @@ void TransitionSinusFadeIn::update(float _deltaTime)
 {
 	if(m_fSinPos < M_PI/2)
 	{
-		float fPercent = cos(m_fSinPos);
+		float fPercent = (float) cos(m_fSinPos);
 		m_fPos =
 			m_fInitPos * (     fPercent) +
 			m_fPosToGo * (1.0f-fPercent);
@@ -143,7 +143,7 @@ void TransitionSinusFadeOut::update(float _deltaTime)
 {
 	if(m_fSinPos < M_PI/2)
 	{
-		float fPercent = sin(m_fSinPos);
+		float fPercent = (float)sin(m_fSinPos);
 		m_fPos =
 			m_fInitPos * (1.0f-fPercent) +
 			m_fPosToGo * (     fPercent);
@@ -170,8 +170,8 @@ void TransitionBounce::update(float fTime)
 	}
 
 	//PHYSICS FORMULA
-	float fTimeLeft = (-m_fVel + fFacing * sqrt(m_fVel*m_fVel -
-			(4 * (fFacing  * m_fAcc / 2) * 
+	float fTimeLeft = (-m_fVel + fFacing * (float) sqrt(m_fVel*m_fVel -
+			(4.0f * (fFacing  * m_fAcc * 0.5f) *
 			(m_fPos - m_fPosToGo))))/(fFacing  * m_fAcc);
 	float fNextTime = (fTimeLeft - fTime);
 
@@ -202,14 +202,14 @@ void TransitionInertial::update(float fTime)
 
 	register float TimeToStop = (float)fabs(m_fVel)/m_fAcc;
 	register float DistToStop =
-		(fabs(m_fVel)*TimeToStop) + (-m_fAcc*TimeToStop*TimeToStop/2);
-	register float DistLeft   = fabs(m_fPos-m_fPosToGo);
+		((float) fabs(m_fVel)*TimeToStop) + (-m_fAcc*TimeToStop*TimeToStop/2);
+	register float DistLeft   = (float) fabs(m_fPos-m_fPosToGo);
 
-	if((m_fVel*fAcc) > 0 &&  DistLeft <= DistToStop) fAcc *= -1.0;
+	if((m_fVel*fAcc) > 0 &&  DistLeft <= DistToStop) fAcc *= -1.0f;
 
 	register float fVel = m_fVel + (fTime * fAcc);
 	if (fVel * m_fVel < 0) fVel = 0;
-	if (fVel >= m_fVelMax) fVel = (fVel/fabs(fVel)) * m_fVelMax;
+	if (fVel >= m_fVelMax) fVel = (fVel/(float) fabs(fVel)) * m_fVelMax;
 	m_fVel = fVel;
 
 	m_fPos = m_fPos + (m_fVel*fTime) + (fTime*fTime*fAcc*0.5f);

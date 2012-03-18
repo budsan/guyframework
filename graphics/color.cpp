@@ -15,7 +15,7 @@ rgb::rgb(const rgb &c) : r(c.r), g(c.g), b(c.b)
 
 }
 
-rgb::rgb(float r, float g, float b) : r(r), g(g), b(b)
+rgb::rgb(float _r, float _g, float _b) : r(_r), g(_g), b(_b)
 {
 
 }
@@ -117,31 +117,31 @@ void rgb::setFromHSL(float h, float s, float l)
 	else
 	{
 		//Calculamos los valores temporales
-		if(l < 0.5) temp2 = l * (1 + s);
+		if(l < 0.5f) temp2 = l * (1 + s);
 		else temp2 = (l + s) - (l * s);
 		temp1 = 2 * l - temp2;
-		tempr = h + 1.0 / 3.0;
+		tempr = h + 1.0f / 3.0f;
 		if(tempr > 1) tempr--;
 		tempg = h;
-		tempb = h - 1.0 / 3.0;
+		tempb = h - 1.0f / 3.0f;
 		if(tempb < 0) tempb++;
 
 		//R (Rojo)
-		if(tempr < 1.0 / 6.0) r = temp1 + (temp2 - temp1) * 6.0 * tempr;
-		else if(tempr < 0.5) r = temp2;
-		else if(tempr < 2.0 / 3.0) r = temp1 + (temp2 - temp1) * ((2.0 / 3.0) - tempr) * 6.0;
+		if(tempr < 1.0f / 6.0f) r = temp1 + (temp2 - temp1) * 6.0f * tempr;
+		else if(tempr < 0.5f) r = temp2;
+		else if(tempr < 2.0f / 3.0f) r = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempr) * 6.0f;
 		else r = temp1;
 
 		//G (Verde)
-		if(tempg < 1.0 / 6.0) g = temp1 + (temp2 - temp1) * 6.0 * tempg;
-		else if(tempg < 0.5) g = temp2;
-		else if(tempg < 2.0 / 3.0) g = temp1 + (temp2 - temp1) * ((2.0 / 3.0) - tempg) * 6.0;
+		if(tempg < 1.0f / 6.0f) g = temp1 + (temp2 - temp1) * 6.0f * tempg;
+		else if(tempg < 0.5f) g = temp2;
+		else if(tempg < 2.0f / 3.0f) g = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempg) * 6.0f;
 		else g = temp1;
 
 		//B (Azul)
-		if(tempb < 1.0 / 6.0) b = temp1 + (temp2 - temp1) * 6.0 * tempb;
-		else if(tempb < 0.5) b = temp2;
-		else if(tempb < 2.0 / 3.0) b = temp1 + (temp2 - temp1) * ((2.0 / 3.0) - tempb) * 6.0;
+		if(tempb < 1.0f / 6.0f) b = temp1 + (temp2 - temp1) * 6.0f * tempb;
+		else if(tempb < 0.5f) b = temp2;
+		else if(tempb < 2.0f / 3.0f) b = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempb) * 6.0f;
 		else b = temp1;
 	}
 }
@@ -192,7 +192,7 @@ rgba::rgba(float c) : r(c), g(c), b(c), a(c)
 
 }
 
-rgba::rgba(rgb c, float a) : r(c.r), g(c.g), b(c.b), a(a)
+rgba::rgba(rgb c, float _a) : r(c.r), g(c.g), b(c.b), a(_a)
 {
 
 }
@@ -202,7 +202,7 @@ rgba::rgba() : r(0), g(0), b(0), a(0)
 
 }
 
-rgba::rgba(float r, float g, float b, float a) : r(r), g(g), b(b), a(a)
+rgba::rgba(float _r, float _g, float _b, float _a) : r(_r), g(_g), b(_b), a(_a)
 {
 
 }

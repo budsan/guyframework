@@ -117,7 +117,7 @@ void TextureManager::deleteTexture(std::string filename)
 
 unsigned int TextureManager::numOfTextures()
 {
-    return m_textures.size();
+    return (unsigned int) m_textures.size();
 }
 
 //---------------------------------------------------------------------------//

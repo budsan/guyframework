@@ -55,7 +55,7 @@ void Input::update()
 		switch (event.type)
 		{
 		  case SDL_KEYDOWN:
-			for (int i = 0; i < m_state.size(); i++)
+			for (unsigned int i = 0; i < m_state.size(); i++)
 			{
 				const std::vector<Keybinds::Keybind> &keybinds
 					= m_settings->getKeybinds()[i];
@@ -77,7 +77,7 @@ void Input::update()
 			}
 			break;
 		  case SDL_KEYUP:
-			for (int i = 0; i < m_state.size(); i++)
+			for (unsigned int i = 0; i < m_state.size(); i++)
 			{
 				const std::vector<Keybinds::Keybind> &keybinds
 					= m_settings->getKeybinds()[i];
