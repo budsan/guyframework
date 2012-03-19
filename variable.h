@@ -19,11 +19,11 @@ public:
 
 	Variable();
 	Variable(const Variable & other);
-	Variable(std::string _name, bool dval);
-	Variable(std::string _name, int dval);
-	Variable(std::string _name, double dval);
-	Variable(std::string _name, char dval);
-	Variable(std::string _name, std::string dval);
+	Variable(const std::string &_name, bool dval);
+	Variable(const std::string &_name, int dval);
+	Variable(const std::string &_name, double dval);
+	Variable(const std::string &_name, char dval);
+	Variable(const std::string &_name, std::string dval);
 
 	~Variable();
 

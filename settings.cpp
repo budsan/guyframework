@@ -194,31 +194,29 @@ bool Settings::Save(const char *filename)
 
 bool Settings::load(const char *filename)
 {
-	std::fstream fSettingsFile;
-	fSettingsFile.open(filename, std::fstream::in | std::fstream::binary);
-	/*
-	if (fSettingsFile)
+	std::fstream file;
+	file.open(filename, std::fstream::in | std::fstream::binary);
+
+	Variable var;
+	while(file >> var)
 	{
-		fSettingsFile.read((char*)m_pInstance, sizeof(CSettings));
-		fSettingsFile.close();
+		add(var);
 	}
-	else return false;
-*/
+
 	return true;
 }
 
 bool Settings::Save(const char *filename)
 {
-	std::fstream fSettingsFile;
-	fSettingsFile.open(filename, std::fstream::out | std::fstream::binary | std::fstream::trunc);
-	/*
-	if (fSettingsFile)
+	std::fstream file;
+	file.open(filename, std::fstream::out | std::fstream::binary | std::fstream::trunc);
+
+	std::map<std::string, Variable>::iterator it = m_settings.begin();
+	for(;it != m_settings.end(); ++it)
 	{
-		fSettingsFile.write((char*)m_pInstance, sizeof(CSettings));
-		fSettingsFile.close();
+		file << it->second;
 	}
-	else return false;
-	*/
+
 	return true;
 }
 

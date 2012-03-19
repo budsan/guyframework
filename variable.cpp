@@ -101,35 +101,35 @@ Variable::Variable(const Variable & other)
 	}
 }
 
-Variable::Variable(std::string _name, bool dval)
+Variable::Variable(const std::string &_name, bool dval)
 	: m_name(_name), m_type(Variable::Bool)
 {
 	m_defVal.asBool = dval;
 	m_curVal.asBool = dval;
 }
 
-Variable::Variable(std::string _name, int dval)
+Variable::Variable(const std::string &_name, int dval)
 	: m_name(_name), m_type(Variable::Int)
 {
 	m_defVal.asInt = dval;
 	m_curVal.asInt = dval;
 }
 
-Variable::Variable(std::string _name, double dval)
+Variable::Variable(const std::string &_name, double dval)
 	: m_name(_name), m_type(Variable::Double)
 {
 	m_defVal.asDouble = dval;
 	m_curVal.asDouble = dval;
 }
 
-Variable::Variable(std::string _name, char dval)
+Variable::Variable(const std::string &_name, char dval)
 	: m_name(_name), m_type(Variable::Char)
 {
 	m_defVal.asChar = dval;
 	m_curVal.asChar = dval;
 }
 
-Variable::Variable(std::string _name, std::string dval)
+Variable::Variable(const std::string &_name, std::string dval)
 	: m_name(_name), m_type(Variable::String)
 {
 	m_defVal.asString = allocStringCopy(dval);
@@ -336,7 +336,7 @@ std::string Variable::toString() const
 std::ostream &operator <<(std::ostream &out, const Variable &var)
 {
 	Variable::Type type = var.type();
-	out.write((const char*)&type, sizeof(Variable::Type));
+	out.write((const char *)&type, sizeof(Variable::Type));
 	if(var.type() == Variable::Invalid) return out;
 
 	out.write(var.name().c_str(), var.name().length()+1);
@@ -345,19 +345,19 @@ std::ostream &operator <<(std::ostream &out, const Variable &var)
 	case Variable::Invalid: break;
 	case Variable::Bool: {
 		bool value = var.toBool();
-		out.write((const char *)&value,sizeof(bool)); break;
+		out.write((const char *)&value, sizeof(bool)); break;
 	}
 	case Variable::Int: {
 		int value = var.toInt();
-		out.write((const char *)&value,sizeof(int)); break;
+		out.write((const char *)&value, sizeof(int)); break;
 	}
 	case Variable::Double: {
 		double value = var.toDouble();
-		out.write((const char *)&value,sizeof(double)); break;
+		out.write((const char *)&value, sizeof(double)); break;
 	}
 	case Variable::Char: {
 		char value = var.toChar();
-		out.write((const char *)&value,sizeof(char)); break;
+		out.write((const char *)&value, sizeof(char)); break;
 	}
 	case Variable::String: {
 			std::string s = var.toString();
@@ -368,7 +368,58 @@ std::ostream &operator <<(std::ostream &out, const Variable &var)
 	return out;
 }
 
+std::string variableReadString(std::istream &in)
+{
+	std::string result;
+	char c[2] = { '\0', '\0'};
+	for(;;) {
+		in.read(c, sizeof(char));
+		if( c != '\0') result.append(c);
+		else break;
+	}
+
+	return result;
+}
+
 std::istream &operator >>(std::istream &in, Variable &var)
 {
+	Variable::Type type = Variable::Invalid;
+	in.read((char *)&type, sizeof(Variable::Type));
+
+	if(type == Variable::Invalid)
+	{
+		var = Variable();
+		return in;
+	}
+
+	std::string name = variableReadString(in);
+	switch (type)
+	{
+	case Variable::Invalid: break;
+	case Variable::Bool: {
+		bool value;
+		in.read((char *)&value, sizeof(bool)); break;
+		var = Variable(name, value);
+	}
+	case Variable::Int: {
+		int value;
+		in.read((char *)&value, sizeof(int)); break;
+		var = Variable(name, value);
+	}
+	case Variable::Double: {
+		double value;
+		in.read((char *)&value, sizeof(double)); break;
+		var = Variable(name, value);
+	}
+	case Variable::Char: {
+		char value;
+		in.read((char *)&value, sizeof(char)); break;
+		var = Variable(name, value);
+	}
+	case Variable::String: {
+			var = Variable(name, variableReadString(in));
+		} break;
+	}
+
 	return in;
 }
