@@ -45,10 +45,10 @@ void FramesHUD::update(float deltaTime)
 	m_timeCount += deltaTime;
 	if(m_timeCount > m_displayTime)
 	{
-		float currentFramesToDisplay  = float(m_framesCount) * m_displayTimeInv;
-		float timesHappenedDisplayTime = floor(m_timeCount * m_displayTimeInv);
+		float currentFramesToDisplay  = (float) m_framesCount * m_displayTimeInv;
+		float timesHappenedDisplayTime = floorf(m_timeCount * m_displayTimeInv);
 		currentFramesToDisplay /= timesHappenedDisplayTime;
-		m_framesToDisplay = currentFramesToDisplay*0.8 + m_framesToDisplay*0.2;
+		m_framesToDisplay = currentFramesToDisplay*0.8f + m_framesToDisplay*0.2f;
 
 		m_timeCount -= timesHappenedDisplayTime * m_displayTime;
 		m_framesCount = 0;
@@ -70,7 +70,10 @@ void FramesHUD::draw()
 		ss.precision(5);
 		ss << m_framesToDisplay;
 
-		m_font.draw2D(ss.str().c_str(), math::vec2f(w, h), m_color);
+		m_font.draw2D(
+			ss.str().c_str(),
+			math::vec2f((float) w, (float) h),
+			m_color);
 	}
 }
 

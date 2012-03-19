@@ -170,7 +170,7 @@ bool SpriteLibrary::ReadSPRITESHEET(int &currentSpritesheet, std::string &line, 
 	std::map<std::string, int>::iterator it = spritesheetIndex.find(spritesheetFilename);
 	if (it == spritesheetIndex.end())
 	{
-		currentSpritesheet = spritesheetFilenames.size();
+		currentSpritesheet = (int) spritesheetFilenames.size();
 		spritesheetFilenames.push_back(spritesheetFilename);
 		spritesheetIndex[spritesheetFilename] = currentSpritesheet;
 	}
@@ -186,7 +186,7 @@ bool SpriteLibrary::ReadFRAME(int currentSpritesheet, std::string &line, int lin
 {
 		//TODO CHECK ERRORS
 		std::stringstream sline(line);
-		int begin = sline.tellg();
+		int begin = (int) sline.tellg();
 
 		SpriteFrame frame;
 		frame.filename = currentSpritesheet;
@@ -232,7 +232,7 @@ bool SpriteLibrary::ReadFRAME(int currentSpritesheet, std::string &line, int lin
 		else
 		{
 			frames.push_back(frame);
-			frameNames[framename] = frames.size()-1;
+			frameNames[framename] = (int) frames.size()-1;
 		}
 
 		return true;

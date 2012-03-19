@@ -28,7 +28,7 @@ bool Font::load(const char* path, int point_size, int dpi)
 		return NULL;
 	}
 
-	this->pt = point_size;
+	this->pt = (float) point_size;
 
 	glGenTextures(1, &(this->font_texture));
 
@@ -102,15 +102,15 @@ bool Font::load(const char* path, int point_size, int dpi)
 			}
 		}
 
-		this->advance[c] = (float)(slot->advance.x >> 6);
-		this->tex_x1[c] = (float)bitmap_offset_x / (float) font_tex_width;
-		this->tex_x2[c] = (float)(bitmap_offset_x + bmp.width) / (float)font_tex_width;
-		this->tex_y1[c] = (float)bitmap_offset_y / (float) font_tex_height;
-		this->tex_y2[c] = (float)(bitmap_offset_y + bmp.rows) / (float)font_tex_height;
-		this->width[c] = bmp.width;
-		this->height[c] = bmp.rows;
-		this->offset_x[c] = (float)slot->bitmap_left;
-		this->offset_y[c] =  (float)((slot->metrics.horiBearingY-face->glyph->metrics.height) >> 6);
+		this->advance[c]  = (float) (slot->advance.x >> 6);
+		this->tex_x1[c]   = (float) bitmap_offset_x / (float) font_tex_width;
+		this->tex_x2[c]   = (float)(bitmap_offset_x + bmp.width) / (float)font_tex_width;
+		this->tex_y1[c]   = (float) bitmap_offset_y / (float) font_tex_height;
+		this->tex_y2[c]   = (float)(bitmap_offset_y + bmp.rows) / (float)font_tex_height;
+		this->width[c]    = (float) bmp.width;
+		this->height[c]   = (float) bmp.rows;
+		this->offset_x[c] = (float) slot->bitmap_left;
+		this->offset_y[c] = (float)((slot->metrics.horiBearingY-face->glyph->metrics.height) >> 6);
 	}
 
 	glBindTexture(GL_TEXTURE_2D, this->font_texture);
@@ -130,32 +130,32 @@ bool Font::load(const char* path, int point_size, int dpi)
 
 math::vec2f Font::measure(const char* msg)
 {
-	math::vec2f measure(0,0);
+	math::vec2f result(0,0);
 
 	if (!this->initialized) {
 		fprintf(stderr, "Font has not been loaded\n");
-		return measure;
+		return result;
 	}
 
-	if (!msg) return measure;
-	const int msg_len = strlen(msg);
+	if (!msg) return result;
+	const unsigned int msg_len = (unsigned int) strlen(msg);
 
 	//Width of a text rectangle is a sum advances for every glyph in a string
-	for(int i = 0; i < msg_len; ++i) {
+	for(unsigned int i = 0; i < msg_len; ++i) {
 		int c = msg[i];
-		measure.x += this->advance[c];
+		result.x += this->advance[c];
 	}
 
 	//Height of a text rectangle is a high of a tallest glyph in a string
-	for(int i = 0; i < msg_len; ++i) {
+	for(unsigned int i = 0; i < msg_len; ++i) {
 		int c = msg[i];
 
-		if (measure.y < this->height[c]) {
-			measure.y = this->height[c];
+		if (result.y < this->height[c]) {
+			result.y = this->height[c];
 		}
 	}
 
-	return measure;
+	return result;
 }
 
 void Font::draw2D(const char* msg, float x, float y, float r, float g, float b, float a) {
@@ -163,7 +163,10 @@ void Font::draw2D(const char* msg, float x, float y, float r, float g, float b, 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-	glLoadMatrixf(math::mat4f::fromOrtho(viewport[0], viewport[2], viewport[1], viewport[3], 1, -1).v);
+	glLoadMatrixf(
+		math::mat4f::fromOrtho(
+			(float) viewport[0], (float) viewport[2],
+			(float) viewport[1], (float) viewport[3],1, -1).v);
 	draw(msg, x, y, r, g, b, a);
 
 	glMatrixMode(GL_PROJECTION);
@@ -196,14 +199,14 @@ void Font::draw(const char* msg, float x, float y, float r, float g, float b, fl
 		return;
 	}
 
-	const int msg_len = strlen(msg);
+	const unsigned int msg_len = (unsigned int) strlen(msg);
 
 	vertices = (GLfloat*) malloc(sizeof(GLfloat) * 8 * msg_len);
 	texture_coords = (GLfloat*) malloc(sizeof(GLfloat) * 8 * msg_len);
 
 	indices = (GLshort*) malloc(sizeof(GLfloat) * 6 * msg_len);
 
-	for(i = 0; i < msg_len; ++i) {
+	for(i = 0; i < (int) msg_len; ++i) {
 		c = msg[i];
 
 		vertices[8 * i + 0] = x + pen_x + this->offset_x[c];
@@ -224,12 +227,12 @@ void Font::draw(const char* msg, float x, float y, float r, float g, float b, fl
 		texture_coords[8 * i + 6] = this->tex_x2[c];
 		texture_coords[8 * i + 7] = this->tex_y1[c];
 
-		indices[i * 6 + 0] = 4 * i + 0;
-		indices[i * 6 + 1] = 4 * i + 1;
-		indices[i * 6 + 2] = 4 * i + 2;
-		indices[i * 6 + 3] = 4 * i + 2;
-		indices[i * 6 + 4] = 4 * i + 1;
-		indices[i * 6 + 5] = 4 * i + 3;
+		indices[i * 6 + 0] = (GLshort) (4 * i + 0);
+		indices[i * 6 + 1] = (GLshort) (4 * i + 1);
+		indices[i * 6 + 2] = (GLshort) (4 * i + 2);
+		indices[i * 6 + 3] = (GLshort) (4 * i + 2);
+		indices[i * 6 + 4] = (GLshort) (4 * i + 1);
+		indices[i * 6 + 5] = (GLshort) (4 * i + 3);
 
 		//Assume we are only working with typewriter fonts
 		pen_x += this->advance[c];

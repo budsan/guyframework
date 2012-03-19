@@ -62,7 +62,7 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
 	float size = ((parent.m_z0*weight) + (parent.m_z1*(1.0f-weight)))*0.5f;
 
-	int indBase = vertcoords.size();
+	unsigned int indBase = (unsigned int) vertcoords.size();
 
 	texcoords.push_back(math::vec2f(0,0));
 	texcoords.push_back(math::vec2f(1,0));

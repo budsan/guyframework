@@ -39,7 +39,7 @@ bool Shader::load(const char *filename)
 
 	// get length of file
 	is.seekg(0, std::ios::end);
-	length = is.tellg();
+	length = (int) is.tellg();
 	is.seekg(0, std::ios::beg);
 
 	// allocate memory:

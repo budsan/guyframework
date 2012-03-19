@@ -329,7 +329,7 @@ void Screen::resetViewport()
 
 	if ( screen_ratio > m_ratio)
 	{
-		int weight = int((m_ratio/screen_ratio)*(float)m_selectedMode.w);
+		int weight = (int) ((m_ratio/screen_ratio) * (float) m_selectedMode.w);
 		int x = (m_selectedMode.w - weight)/2;
 		glViewport(x,0,weight,m_selectedMode.h);
 		//glScissor (x,0,weight,m_selectedMode.h);
@@ -337,7 +337,7 @@ void Screen::resetViewport()
 	}
 	else if ( screen_ratio < m_ratio)
 	{
-		int height = int((screen_ratio/m_ratio)*(float)m_selectedMode.h);
+		int height = (int) ((screen_ratio/m_ratio) * (float) m_selectedMode.h);
 		int y = (m_selectedMode.h - height)/2;
 		glViewport(0,y,m_selectedMode.w,height);
 		//glScissor (0,y,m_selectedMode.w,height);

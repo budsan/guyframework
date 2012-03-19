@@ -4,6 +4,8 @@
 #include <math.h>
 #include <iostream>
 
+#define M_PI_2F ( (float) M_PI_2 )
+
 //-TRANSITION----------------------------------------------------------------//
 Transition::Transition() {
 	m_fPos = 0;
@@ -80,7 +82,7 @@ void TransitionSinus::update(float _deltaTime)
 {
 	if(m_fSinPos < M_PI)
 	{
-		float fPercent = ((float)cos(m_fSinPos)+1.0f)/2.0f;
+		float fPercent = (cosf(m_fSinPos)+1.0f)/2.0f;
 		m_fPos =
 			m_fInitPos * (     fPercent) +
 			m_fPosToGo * (1.0f-fPercent);
@@ -97,7 +99,7 @@ void TransitionSinus::update(float _deltaTime)
 void TransitionSinusFadeIn::setPos(float _fPos)
 {
 	Transition::setPos(_fPos);
-	m_fSinPos = (float)M_PI/2.0f;
+	m_fSinPos = M_PI_2F;
 }
 
 void TransitionSinusFadeIn::goPos(float _fPos)
@@ -109,16 +111,16 @@ void TransitionSinusFadeIn::goPos(float _fPos)
 
 void TransitionSinusFadeIn::update(float _deltaTime)
 {
-	if(m_fSinPos < M_PI/2)
+	if(m_fSinPos < M_PI_2F)
 	{
-		float fPercent = (float) cos(m_fSinPos);
+		float fPercent = cosf(m_fSinPos);
 		m_fPos =
 			m_fInitPos * (     fPercent) +
 			m_fPosToGo * (1.0f-fPercent);
-		m_fSinPos += (float)(M_PI/2)/m_fVel*_deltaTime;
+		m_fSinPos += M_PI_2F/m_fVel*_deltaTime;
 
-		if(m_fSinPos > M_PI/2) {
-			m_fSinPos = (float)M_PI/2;
+		if(m_fSinPos > M_PI_2F) {
+			m_fSinPos = M_PI_2F;
 			m_fPos = m_fPosToGo;
 		}
 	}
@@ -128,7 +130,7 @@ void TransitionSinusFadeIn::update(float _deltaTime)
 void TransitionSinusFadeOut::setPos(float _fPos)
 {
 	Transition::setPos(_fPos);
-	m_fSinPos = (float)M_PI/2;
+	m_fSinPos = (float) M_PI_2;
 }
 
 void TransitionSinusFadeOut::goPos(float _fPos)
@@ -141,16 +143,16 @@ void TransitionSinusFadeOut::goPos(float _fPos)
 
 void TransitionSinusFadeOut::update(float _deltaTime)
 {
-	if(m_fSinPos < M_PI/2)
+	if(m_fSinPos < M_PI_2F)
 	{
-		float fPercent = (float)sin(m_fSinPos);
+		float fPercent = sinf(m_fSinPos);
 		m_fPos =
 			m_fInitPos * (1.0f-fPercent) +
 			m_fPosToGo * (     fPercent);
-		m_fSinPos += (float)(M_PI/2)/m_fVel*_deltaTime;
+		m_fSinPos += M_PI_2F/m_fVel*_deltaTime;
 
-		if(m_fSinPos > M_PI/2) {
-			m_fSinPos = (float)M_PI/2;
+		if(m_fSinPos >  M_PI_2F) {
+			m_fSinPos = M_PI_2F;
 			m_fPos = m_fPosToGo;
 		}
 	}

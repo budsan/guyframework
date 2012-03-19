@@ -14,12 +14,12 @@
 #include "graphics/graphics.h"
 #include "graphics/texturemanager.h"
 
-ParticleEmitter::ParticleEmitter() : m_random(time(0))
+ParticleEmitter::ParticleEmitter() : m_random(unsigned(time(0)))
 {
 	restart();
 }
 
-ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : m_random(time(0))
+ParticleEmitter::ParticleEmitter(const ParticleEmitter &other) : m_random(unsigned(time(0)))
 {
 	m_pos = other.m_pos;
 	m_dir = other.m_dir;
@@ -169,7 +169,7 @@ void ParticleEmitter::newParticle()
 	float live  = (m_l0*weight0) + (m_l1*(1-weight0));
 	float speed = (m_s0*weight1) + (m_s1*(1-weight1));
 	float angle = ((m_angle * weight2)-(m_angle/2))+m_dir;
-	vel.x = cos(angle)*speed; vel.y = sin(angle)*speed;
+	vel.x = cosf(angle)*speed; vel.y = sinf(angle)*speed;
 
 	m_particles.push_back(Particle(pos, vel, live));
 }
@@ -181,7 +181,7 @@ void ParticleEmitter::setPosition(const vec2f &pos)
 
 void ParticleEmitter::setDirection(const vec2f &dir)
 {
-	m_dir = atan2(dir.y, dir.x);
+	m_dir = atan2f(dir.y, dir.x);
 }
 
 void ParticleEmitter::setDirection(float dir)

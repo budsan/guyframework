@@ -103,7 +103,7 @@ void FrameBuffer::attachTexture(GLenum iformat, GLint filter)
 		throw std::out_of_range("FrameBuffer::AttachTexture - GL_MAX_COLOR_ATTACHMENTS exceeded");
 	}
 
-	attachment = GL_COLOR_ATTACHMENT0_EXT + m_texId.size(); // common attachment for color textures
+	attachment = GL_COLOR_ATTACHMENT0_EXT + (GLenum) m_texId.size(); // common attachment for color textures
 	if (iformat == GL_RGBA16F_ARB || iformat == GL_RGBA32F_ARB) {
 		format = GL_RGBA;
 		type = GL_FLOAT;
@@ -208,7 +208,7 @@ void FrameBuffer::bindOutput() throw(std::domain_error)
 		glDrawBuffer(m_buffers[0]);
 	}
 	else {
-		glDrawBuffers(m_texId.size(), m_buffers);
+		glDrawBuffers((GLsizei) m_texId.size(), m_buffers);
 	}
 }
 

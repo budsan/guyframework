@@ -47,7 +47,10 @@ void TextHUD::draw()
 		unsigned int w = viewport[2];
 		unsigned int h = viewport[3];
 
-        m_font->draw2D(m_displayText.c_str(), math::vec2f(m_clampedPos.x*w, m_clampedPos.y*h), m_color);
+		m_font->draw2D(
+			m_displayText.c_str(),
+			math::vec2f(m_clampedPos.x * (float) w, m_clampedPos.y * (float) h),
+			m_color);
 	}
 }
 
