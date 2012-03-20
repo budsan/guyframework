@@ -372,8 +372,7 @@ std::string variableReadString(std::istream &in)
 {
 	std::string result;
 	char c[2] = { '\0', '\0'};
-	for(;;) {
-		in.read(c, sizeof(char));
+	while(in.read(c, sizeof(char))) {
 		if( c != '\0') result.append(c);
 		else break;
 	}
