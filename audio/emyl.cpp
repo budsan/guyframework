@@ -497,7 +497,7 @@ bool stream::load(const std::string &_filename)
 		return false;
 	}
 
-	bool success = load_generic((void *) sndfile, &callbacks_mem);
+    bool success = load_generic((void *) sndfile, &callbacks);
 	if(!success) fclose(sndfile);
 	return success;
 }
