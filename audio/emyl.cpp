@@ -41,6 +41,127 @@ ov_callbacks callbacks = {
 	(long (*)(void *)) ftell
 };
 
+/*-file-memory---------------------------------------------------------------*/
+
+struct file_mem
+{
+	unsigned char *begin;
+	unsigned char *curr;
+	unsigned char *end;
+};
+
+file_mem *fopen_mem (const char* filename)
+{
+	int r;
+
+	FILE* f = fopen(filename, "rb");
+	if (f == NULL) return NULL;
+
+	r = fseek(f, 0, SEEK_END);
+	if (r)
+	{
+		fclose(f);
+		return NULL;
+	}
+
+	long size = ftell(f);
+
+	r = fseek(f, 0, SEEK_SET);
+	if (r)
+	{
+		fclose(f);
+		return NULL;
+	}
+
+	unsigned char *data = (unsigned char*) malloc(size);
+
+	size_t remain = (size_t) size;
+	unsigned char *curr = data;
+	while(remain)
+	{
+		size_t c = fread ( (void *) curr, 1, remain, f);
+		if (c != remain && ferror(f))
+		{
+			free(data);
+			fclose(f);
+			return NULL;
+		}
+		else
+		{
+			remain -= c;
+			curr   += c;
+		}
+	}
+
+	file_mem *fm = (file_mem*) malloc(sizeof(file_mem));
+	fm->begin = data;
+	fm->curr  = data;
+	fm->end   = data + size;
+
+	return fm;
+}
+
+size_t fread_mem ( void * ptr, size_t size, size_t count, file_mem * stream )
+{
+	size_t total = size * count;
+	size_t bytes = 0;
+	unsigned char *ptr8 = (unsigned char*) ptr;
+	while(bytes < total && stream->curr != stream->end)
+	{
+		*ptr8++ = *stream->curr++;
+		bytes++;
+	}
+
+	return bytes;
+}
+
+int fseek_mem ( file_mem * stream, long int offset, int origin )
+{
+	switch(origin)
+	{
+	case SEEK_SET:
+		stream->curr = stream->begin + offset; break;
+	case SEEK_CUR:
+		stream->curr = stream->curr + offset; break;
+	case SEEK_END:
+		stream->curr = stream->end  + offset; break;
+	default:
+		return -1;
+	}
+
+	if ((unsigned long) stream->curr > (unsigned long) stream->end ) stream->curr = stream->end;
+	if ((unsigned long) stream->curr < (unsigned long) stream->begin) stream->curr = stream->begin;
+
+	return 0;
+}
+
+int fclose_mem ( file_mem * stream )
+{
+	if (stream == NULL) return EOF;
+
+	free(stream->begin);
+	free(stream);
+
+	return 0;
+}
+
+long int ftell_mem ( file_mem * stream )
+{
+	return (long int) stream->curr - (long int)stream->begin;
+}
+
+static int _fseek64_wrap_ram(file_mem *f, ogg_int64_t off, int whence){
+	if(f==NULL) return(-1);
+	return fseek_mem(f,off,whence);
+}
+
+ov_callbacks callbacks_mem = {
+	(size_t (*) (void *, size_t, size_t, void *)) fread_mem,
+	(int (*)(void *, ogg_int64_t, int)) _fseek64_wrap_ram,
+	(int (*)(void *)) fclose_mem,
+	(long (*)(void *)) ftell_mem
+};
+
 /*---------------------------------------------------------------------------*/
 /*-manager-------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -366,7 +487,37 @@ stream::~stream()
 
 /*---------------------------------------------------------------------------*/
 
-bool stream::load(std::string _filename)
+bool stream::load(const std::string &_filename)
+{
+	const char *filename = _filename.c_str();
+	FILE *sndfile = fopen(filename, "rb");
+	if (sndfile == NULL)
+	{
+		SetError("File error: File doesn't exist.\n");
+		return false;
+	}
+
+	bool success = load_generic((void *) sndfile, &callbacks_mem);
+	if(!success) fclose(sndfile);
+	return success;
+}
+
+bool stream::load_mem(const std::string &_filename)
+{
+	const char *filename = _filename.c_str();
+	file_mem *sndfile = fopen_mem(filename);
+	if (sndfile == NULL)
+	{
+		SetError("File error: File doesn't exist.\n");
+		return false;
+	}
+
+	bool success = load_generic((void *) sndfile, &callbacks_mem);
+	if(!success) fclose_mem(sndfile);
+	return success;
+}
+
+bool stream::load_generic(void *sndfile, ov_callbacks *ptr_callbacks)
 {
 	if(!(m_uiFlags & STREAM_OGG_INIT))
 	{
@@ -387,22 +538,13 @@ bool stream::load(std::string _filename)
 		return false;
 	}
 
-	const char *filename = _filename.c_str();
-
-	FILE *sndfile = fopen(filename, "rb");
-	if (sndfile == NULL)
-	{
-		SetError("File error: File doesn't exist.\n");
-		return false;
-	}
 	OggVorbis_File vf;
-	if (ov_open_callbacks(sndfile, &vf, NULL, 0, callbacks) < 0 ) {
-		fclose(sndfile);
+	if (ov_open_callbacks(sndfile, &vf, NULL, 0, *ptr_callbacks) < 0 ) {
 		SetError("Ogg error: File doesn't seem to be OGG file.\n");
 		return false;
 	}
 
-	vorbis_info *vi = ov_info(&vf, -1);	
+	vorbis_info *vi = ov_info(&vf, -1);
 
 	if(vi->channels == 1) m_eformat = AL_FORMAT_MONO16;
 	else                  m_eformat = AL_FORMAT_STEREO16;
@@ -412,7 +554,7 @@ bool stream::load(std::string _filename)
 	if(m_uiFlags & STREAM_OGG_LOADED) ov_clear(&m_ogg);
 	memcpy(&m_ogg, &vf, sizeof(OggVorbis_File));
 	m_uiFlags |= STREAM_OGG_LOADED;
-	
+
 	return true;
 }
 

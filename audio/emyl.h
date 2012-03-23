@@ -36,7 +36,9 @@ public:
 	 stream();
 	~stream();
 
-	bool   load(std::string _filename);
+	bool   load    (const std::string &_filename);
+	bool   load_mem(const std::string &_filename);
+	bool   load_generic(void *sndfile, ov_callbacks *ptr_callbacks);
 
 	bool   set_source();
 	bool   set_source(ALuint _source);
