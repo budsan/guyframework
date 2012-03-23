@@ -17,13 +17,29 @@ bool TextHUD::loadFont(const char *filename)
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	unsigned int h = viewport[3] - viewport[1];
 
-    m_font = boost::shared_ptr<Font>(new Font());
-    if (m_font->load(filename, h/32))
+	m_font = boost::shared_ptr<Font>(new Font());
+	if (m_font->load(filename, h/32))
 	{
-        m_font->setAlignment(Font::LEFT);
+		m_font->setAlignment(Font::LEFT);
 		return true;
 	}
-    else m_font.reset();
+	else m_font.reset();
+
+	return false;
+}
+
+bool TextHUD::loadFont(const char *filename, unsigned int h)
+{
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	m_font = boost::shared_ptr<Font>(new Font());
+	if (m_font->load(filename, h))
+	{
+		m_font->setAlignment(Font::LEFT);
+		return true;
+	}
+	else m_font.reset();
 
 	return false;
 }

@@ -12,6 +12,7 @@ class TextHUD
  public:
 	TextHUD();
 	bool loadFont(const char *filename);
+	bool loadFont(const char *filename, unsigned int h);
 	void setColor(const rgba &color);
 
 	void update(float deltaTime);
