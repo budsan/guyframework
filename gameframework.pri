@@ -1,7 +1,8 @@
 
 LIBS += -lSDL -lGL -lGLU -lGLEW -lpng -lopenal -lvorbis -logg -lvorbisfile -lfreetype
 
-QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow
+QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow -pg
+QMAKE_LDFLAGS += -pg
 
 INCLUDEPATH += $$PWD/ /usr/include/freetype2/
 

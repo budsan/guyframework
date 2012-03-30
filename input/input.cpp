@@ -21,6 +21,7 @@ Input::Input()
 	m_doExit = false;
 	m_settings = Settings::pInstance();
 	m_time = 0;
+	m_appState = None;
 	m_state.clear();
 }
 
@@ -47,6 +48,22 @@ void Input::update()
 	for (unsigned int j = 0; j < m_state.size(); j++)
 	{
 		m_state[j].resetEvents();
+	}
+
+	unsigned char lastAppState = m_appState;
+
+	if (st)
+	Uint8 state = SDL_GetAppState();
+	if (state & SDL_APPACTIVE) {
+		if ( m_appState & SDL_APPINPUTFOCUS ) m_appState = GainedFocus;
+		else m_appState = LostFocus;
+	}
+	else m_appState = Minimized;
+
+	if (lastAppState != m_appState)
+	{
+		static char *stateNames[] = { "None",  "Minimized",  "LostFocus", "GainedFocus" };
+		std::cerr << "Changed " << stateNames[lastAppState] << " to " << stateNames[m_appState] << std::endl;
 	}
 
 	SDL_Event event;
@@ -95,6 +112,17 @@ void Input::update()
 		  case SDL_QUIT:
 			m_doExit = true;
 			break;
+		  case SDL_ACTIVEEVENT:
+		  {
+			std::string action = event.active.gain ? "gains" : "loses";
+			if (event.active.state & SDL_APPMOUSEFOCUS)
+				std::cerr << "App " << action << " mouse focus." << std::endl;
+			if (event.active.state & SDL_APPINPUTFOCUS)
+				std::cerr << "App " << action << " input focus." << std::endl;
+			if (event.active.state & SDL_APPACTIVE)
+				std::cerr << "App " << action << " focus." << std::endl;
+			break;
+		  }
 		  default:
 			break;
 		}
