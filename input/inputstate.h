@@ -22,7 +22,7 @@ public:
 	bool isAnyKeyDown()  const;
 	bool isAnyKeyUp()    const;
 
-	void resetEvents();
+	void resetKeys();
 	void reset();
 private:
 	unsigned int m_actions;

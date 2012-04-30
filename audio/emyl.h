@@ -145,6 +145,9 @@ public:
 	void set_orientation (ALfloat _fDX, ALfloat _fDY, ALfloat _fDZ,
 	                      ALfloat _fUX, ALfloat _fUY, ALfloat _fUZ);
 
+	void   sleep();
+	void unsleep();
+
 private:
 
 	friend class stream;
@@ -165,6 +168,7 @@ private:
 
 	ALuint                        m_vSources[NUM_SOURCES];
 	bool                          m_vSourcesReserved[NUM_SOURCES];
+	bool                          m_vSourcesSleeped[NUM_SOURCES];
 
 	std::map<std::string, ALuint> m_mSounds;
 	

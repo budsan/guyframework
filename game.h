@@ -10,7 +10,7 @@
 #include "audio/emyl.h"
 
 class GameState;
-class Game
+class Game : protected Input::FocusObserver
 {
 public:
 	 Game();
@@ -40,16 +40,21 @@ protected:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
-        virtual const char *getName() {return "Game";}
-        virtual const char *getVersion() {return "Undefined";}
+	virtual const char *getName() {return "Game";}
+	virtual const char *getVersion() {return "Undefined";}
+
+	void Pause();
+	void Resume();
 
 private:
-	GameState* m_State;
-	GameState* m_NextState;
-	bool       m_Exit;
+	GameState* m_state;
+	GameState* m_nextState;
+	bool       m_exit;
 
-	unsigned short m_FramesPerSecond;
-	float          m_SecondsPerFrame;
+	unsigned short m_framesPerSecond;
+	float          m_secondsPerFrame;
+
+	bool m_pause;
 
 	//-GAMELOOP-BEHAVIOR-------------------------------------------------//
 
@@ -58,6 +63,7 @@ private:
 	public:
 		GameLoop(Game* parent);
 		virtual void loopIteration() = 0;
+		virtual void ignoreNextDeltaTime() = 0;
 	protected:
 		Game* m_parent;
 	};
@@ -67,6 +73,7 @@ private:
 	public:
 		VariableLoop(Game* parent);
 		void loopIteration();
+		void ignoreNextDeltaTime();
 	private:
 		float m_now;
 	};
@@ -76,6 +83,7 @@ private:
 	public:
 		StableLoop(Game* parent);
 		void loopIteration();
+		void ignoreNextDeltaTime();
 	private:
 		float m_now;
 		float m_accumTime;
@@ -86,6 +94,7 @@ private:
 	public:
 		StableSkipLoop(Game* parent);
 		void loopIteration();
+		void ignoreNextDeltaTime();
 	private:
 		float m_now;
 		float m_accumTime;

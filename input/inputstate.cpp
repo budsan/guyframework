@@ -43,7 +43,7 @@ InputState InputState::operator+(const InputState &in) const
 	return response;
 }
 
-void InputState::resetEvents()
+void InputState::resetKeys()
 {
 	m_keyDown.assign(m_actions, false);
 	m_keyUp  .assign(m_actions, false);

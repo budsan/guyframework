@@ -1,6 +1,7 @@
 #include "emyl.h"
 
 #include <vector>
+#include <set>
 #include <map>
 #include <string>
 #include <iostream>
@@ -258,8 +259,10 @@ bool manager::init()
 		return false;
 	}
 
-	for(int i = 0; i < NUM_SOURCES; i++)
+	for(int i = 0; i < NUM_SOURCES; i++) {
 		m_vSourcesReserved[i] = false;
+		m_vSourcesSleeped[i] = false;
+	}
 
 	set_position   (0.0,0.0,0.0);
 	set_velocity   (0.0,0.0,0.0);
@@ -458,12 +461,43 @@ void manager::SetError(std::string _sErr)
 #endif
 }
 
+void manager::sleep()
+{
+	for ( unsigned int i = 0; i < NUM_SOURCES; i++)
+	{
+		if (m_vSourcesReserved[i])
+		{
+			ALuint uiSource = m_vSources[i]; ALint state;
+			alGetSourcei(uiSource, AL_SOURCE_STATE, &state);
+			if (state == AL_PLAYING)
+			{
+				alSourcePause(uiSource);
+				m_vSourcesSleeped[i] = true;
+			}
+
+		}
+	}
+}
+
+void manager::unsleep()
+{
+	for ( unsigned int i = 0; i < NUM_SOURCES; i++)
+	{
+		if (m_vSourcesReserved[i] && m_vSourcesSleeped[i])
+		{
+			alSourcePlay(m_vSources[i]);
+			m_vSourcesSleeped[i] = false;
+
+		}
+	}
+}
+
 
 /*---------------------------------------------------------------------------*/
 /*-stream--------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-static std::list<stream*> s_Instances;
+static std::set<stream*> s_instances;
 
 stream::stream()
 {
@@ -639,7 +673,7 @@ void stream::play()
 	}
 
 	//Lo aadimos
-	s_Instances.push_front(this);
+	s_instances.insert(this);
 
 	m_uiFlags |= STREAM_OGG_PLAYING;
 }
@@ -649,10 +683,7 @@ void stream::stop()
 	if(m_uiFlags&STREAM_OGG_PLAYING)
 	{
 		m_uiFlags &= ~(STREAM_OGG_PLAYING|STREAM_OGG_PAUSE);
-
-		std::list<stream*>::iterator iter = s_Instances.begin();
-		while(iter != s_Instances.end() && *iter != this) iter++;
-		if(*iter == this) s_Instances.erase(iter);
+		s_instances.erase(this);
 	}
 }
 
@@ -702,12 +733,9 @@ void stream::update()
 
 void stream::updateAll()
 {
-	if ( !s_Instances.empty() )
-	{
-		std::list<stream*>::iterator iter = s_Instances.begin();
-		for(iter = s_Instances.begin(); iter != s_Instances.end(); iter++) 
-			(*iter)->update();
-	}
+	std::set<stream*>::iterator iter = s_instances.begin();
+	for(iter = s_instances.begin(); iter != s_instances.end(); iter++)
+		(*iter)->update();
 }
 
 /*---------------------------------------------------------------------------*/
