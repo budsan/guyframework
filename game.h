@@ -37,8 +37,11 @@ protected:
 	virtual void   load();
 	virtual void unload();
 
-	virtual void update(float deltaTime);
-	virtual void draw();
+    virtual void preUpdate(float deltaTime);
+    virtual void preDraw();
+
+    virtual void postUpdate(float deltaTime);
+    virtual void postDraw();
 
 	virtual const char *getName() {return "Game";}
 	virtual const char *getVersion() {return "Undefined";}
@@ -55,6 +58,10 @@ private:
 	float          m_secondsPerFrame;
 
 	bool m_pause;
+    bool m_ignoreNextDeltaTime;
+
+    void updateInternal(float deltaTime);
+    void drawInternal();
 
 	//-GAMELOOP-BEHAVIOR-------------------------------------------------//
 
@@ -62,8 +69,7 @@ private:
 	{
 	public:
 		GameLoop(Game* parent);
-		virtual void loopIteration() = 0;
-		virtual void ignoreNextDeltaTime() = 0;
+        virtual void loopIteration() = 0;
 	protected:
 		Game* m_parent;
 	};
@@ -72,8 +78,7 @@ private:
 	{
 	public:
 		VariableLoop(Game* parent);
-		void loopIteration();
-		void ignoreNextDeltaTime();
+        void loopIteration();
 	private:
 		float m_now;
 	};
@@ -82,8 +87,7 @@ private:
 	{
 	public:
 		StableLoop(Game* parent);
-		void loopIteration();
-		void ignoreNextDeltaTime();
+        void loopIteration();
 	private:
 		float m_now;
 		float m_accumTime;
@@ -93,8 +97,7 @@ private:
 	{
 	public:
 		StableSkipLoop(Game* parent);
-		void loopIteration();
-		void ignoreNextDeltaTime();
+        void loopIteration();
 	private:
 		float m_now;
 		float m_accumTime;

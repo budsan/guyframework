@@ -34,6 +34,7 @@ Game::Game() : m_state(NULL), m_nextState(NULL), m_framesPerSecond(0), m_gameLoo
 #endif
 	m_exit = false;
 	m_pause = false;
+	m_ignoreNextDeltaTime = false;
 }
 
 Game::~Game()
@@ -140,8 +141,12 @@ void Game::setStableDeltaTime(bool enable, bool autoframeskip)
 	else changeGameLoop<VariableLoop>();
 }
 
-void Game::update(float deltaTime) {}
-void Game::draw() {}
+void Game::preUpdate(float deltaTime) {}
+void Game::postUpdate(float deltaTime) {}
+
+void Game::preDraw() {}
+void Game::postDraw() {}
+
 void Game::load() {}
 void Game::unload() {}
 
@@ -175,9 +180,10 @@ void Game::run()
 		if (m_pause)
 		{
 			m_audio->sleep();
-			while (m_pause) m_input->waitEvent();
+			while (!m_input->exit() && m_pause) m_input->waitEvent();
 			m_audio->unsleep();
-			m_gameLoop->ignoreNextDeltaTime();
+
+			m_ignoreNextDeltaTime = true;
 		}
 
 		m_input->update();
@@ -229,13 +235,8 @@ void Game::loopVariable(float &now)
 	}
 
 	//UPDATE&DRAW
-	update(deltaTime);
-	if(m_state != NULL)
-	{
-		m_state->update(deltaTime);
-		m_state->draw();
-	}
-	draw();
+	updateInternal(m_secondsPerFrame);
+	drawInternal();
 }
 
 void Game::loopStable(float &now, float &accumTime)
@@ -260,13 +261,8 @@ void Game::loopStable(float &now, float &accumTime)
 	accumTime -= m_secondsPerFrame;
 
 	//UPDATE&DRAW
-	update(m_secondsPerFrame);
-	if(m_state != NULL)
-	{
-		m_state->update(m_secondsPerFrame);
-		m_state->draw();
-	}
-	draw();
+	updateInternal(m_secondsPerFrame);
+	drawInternal();
 }
 
 void Game::loopStableSkip(float &now, float &accumTime)
@@ -292,28 +288,40 @@ void Game::loopStableSkip(float &now, float &accumTime)
 	//UPDATE&DRAW
 	while(accumTime >= m_secondsPerFrame)
 	{
-		update(m_secondsPerFrame);
-		m_state->update(m_secondsPerFrame);
+		updateInternal(m_secondsPerFrame);
 		accumTime -= m_secondsPerFrame;
 	}
 
+	drawInternal();
+}
+
+void Game::updateInternal(float deltaTime)
+{
+	if (m_ignoreNextDeltaTime) m_ignoreNextDeltaTime = false;
+	else {
+		preUpdate(m_secondsPerFrame);
+		if(m_state != NULL) m_state->update(m_secondsPerFrame);
+		postUpdate(m_secondsPerFrame);
+	}
+}
+
+void Game::drawInternal()
+{
+	preDraw();
 	if(m_state != NULL) m_state->draw();
-	draw();
+	postDraw();
 }
 
 Game::GameLoop::GameLoop(Game* parent) : m_parent(parent){}
 
 Game::VariableLoop::VariableLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
 void Game::VariableLoop::loopIteration() {m_parent->loopVariable(m_now);}
-void Game::VariableLoop::ignoreNextDeltaTime() {m_now = m_parent->m_input->getTimeRaw();}
 
 Game::StableLoop::StableLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
 void Game::StableLoop::loopIteration() {m_parent->loopStable(m_now, m_accumTime);}
-void Game::StableLoop::ignoreNextDeltaTime() {m_now = m_parent->m_input->getTimeRaw();}
 
 Game::StableSkipLoop::StableSkipLoop(Game* parent) : GameLoop(parent), m_now(-1) {}
 void Game::StableSkipLoop::loopIteration() {m_parent->loopStableSkip(m_now, m_accumTime);}
-void Game::StableSkipLoop::ignoreNextDeltaTime() {m_now = m_parent->m_input->getTimeRaw();}
 
 void emylErrorCallback(const std::string &error)
 {
