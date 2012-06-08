@@ -355,14 +355,14 @@ ALuint manager::get_buffer(std::string _filename)
 	if(alGetError() != AL_NO_ERROR)
 	{
 		SetError("OpenAL Error: Buffer could not be generated.\n");
-		delete data;
+		delete[] data;
 		return -1;
 	}
 	
 	alGetError();
 	alBufferData(newbuffer, AL_FORMAT_MONO16, data, samples * (int) sizeof(short), rate);
 
-	delete data;
+	delete[] data;
 
 	if(alGetError() != AL_NO_ERROR)
 	{
@@ -450,7 +450,7 @@ void manager::set_orientation(ALfloat _fDX, ALfloat _fDY, ALfloat _fDZ,
 
 void manager::SetError(std::string _sErr)
 {
-	delete m_sLastError;
+	delete[] m_sLastError;
 	m_sLastError = new char[_sErr.size() + 1];
 
 	strcpy(m_sLastError, _sErr.c_str());

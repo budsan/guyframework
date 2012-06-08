@@ -125,11 +125,11 @@ void Screen::fillWithColor(const rgba &color)
 	glLoadIdentity();
 
 	glBegin(GL_QUADS);
-	 glColor(color);
-	 glVertex3f(-1,  1, 0);
-	 glVertex3f( 1,  1, 0);
-	 glVertex3f( 1, -1, 0);
-	 glVertex3f(-1, -1, 0);
+	glColor(color);
+	glVertex3f(-1,  1, 0);
+	glVertex3f( 1,  1, 0);
+	glVertex3f( 1, -1, 0);
+	glVertex3f(-1, -1, 0);
 	glEnd();
 
 	glPopAttrib();
@@ -198,11 +198,11 @@ bool Screen::setVideoMode()
 	m_selectedMode.bpp = ScreenBpp;
 
 	unsigned int flags =
-		SDL_OPENGL |
-		SDL_GL_DOUBLEBUFFER |
-		SDL_HWPALETTE |
-		SDL_HWSURFACE |
-		SDL_HWACCEL;
+			SDL_OPENGL |
+			SDL_GL_DOUBLEBUFFER |
+			SDL_HWPALETTE |
+			SDL_HWSURFACE |
+			SDL_HWACCEL;
 
 	if (Fullscreen) flags |= SDL_FULLSCREEN;
 
@@ -229,10 +229,10 @@ bool Screen::setVideoMode()
 	if (m_selectedMode.w != 0 || m_selectedMode.h != 0)
 	{
 		screen = SDL_SetVideoMode (
-			m_selectedMode.w,
-			m_selectedMode.h,
-			m_selectedMode.bpp,
-			flags);
+				 m_selectedMode.w,
+				 m_selectedMode.h,
+				 m_selectedMode.bpp,
+				 flags);
 	}
 
 	//select current desktop video-mode
@@ -241,10 +241,10 @@ bool Screen::setVideoMode()
 		m_selectedMode.w = videoinfo->current_w;
 		m_selectedMode.h = videoinfo->current_h;
 		screen = SDL_SetVideoMode (
-			m_selectedMode.w,
-			m_selectedMode.h,
-			m_selectedMode.bpp,
-			flags);
+				 m_selectedMode.w,
+				 m_selectedMode.h,
+				 m_selectedMode.bpp,
+				 flags);
 	}
 
 	//select one of compatible video-mode
@@ -254,10 +254,10 @@ bool Screen::setVideoMode()
 		m_selectedMode.h = m_videoModes[i].h;
 		
 		screen = SDL_SetVideoMode (
-			m_selectedMode.w,
-			m_selectedMode.h,
-			m_selectedMode.bpp,
-			flags);
+				 m_selectedMode.w,
+				 m_selectedMode.h,
+				 m_selectedMode.bpp,
+				 flags);
 	}
 
 	if (screen == NULL) return false;
