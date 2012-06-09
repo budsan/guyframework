@@ -235,7 +235,7 @@ void Game::loopVariable(float &now)
 	}
 
 	//UPDATE&DRAW
-	updateInternal(m_secondsPerFrame);
+	updateInternal(deltaTime);
 	drawInternal();
 }
 
@@ -299,9 +299,9 @@ void Game::updateInternal(float deltaTime)
 {
 	if (m_ignoreNextDeltaTime) m_ignoreNextDeltaTime = false;
 	else {
-		preUpdate(m_secondsPerFrame);
-		if(m_state != NULL) m_state->update(m_secondsPerFrame);
-		postUpdate(m_secondsPerFrame);
+		preUpdate(deltaTime);
+		if(m_state != NULL) m_state->update(deltaTime);
+		postUpdate(deltaTime);
 	}
 }
 
