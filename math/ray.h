@@ -1,8 +1,7 @@
 #ifndef _MATH_RAY_DEFINED_
 #define _MATH_RAY_DEFINED_
 
-#include "vec2.h"
-#include "vec3.h"
+#include "algebra3.h"
 
 namespace math {
 

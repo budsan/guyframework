@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graphics.h"
-#include "math/mat4.h"
+#include "math/algebra3.h"
 
 class Camera
 {

@@ -1,7 +1,5 @@
-#ifndef INPUTSTATE_H
-#define INPUTSTATE_H
+#pragma once
 
-#include "settings.h"
 #include <vector>
 
 class InputState
@@ -32,5 +30,3 @@ private:
 	std::vector<bool> m_keyDown;
 	friend class Input;
 };
-
-#endif // INPUTSTATE_H

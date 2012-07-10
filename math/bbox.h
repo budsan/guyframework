@@ -4,8 +4,7 @@
 #include <climits>
 #include <cfloat>
 
-#include "vec2.h"
-#include "vec3.h"
+#include "algebra3.h"
 
 namespace math {
 

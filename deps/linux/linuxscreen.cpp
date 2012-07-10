@@ -1,15 +1,10 @@
-#include "screen.h"
-#include "texturemanager.h"
-
-#ifdef _WINDOWS
-#include <windows.h>
-#endif
+#include "linuxscreen.h"
+#include "graphics/texturemanager.h"
 
 #include <GL/glew.h>
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <png.h>
 
 #include <stdlib.h>
 #include <iostream>
@@ -18,50 +13,21 @@
 #include <string>
 
 #include "log.h"
-#include "settings.h"
-
 
 //---------------------------------------------------------------------------//
 
-Screen* Screen::m_instance = 0;
-bool Screen::m_isInstanced = false;
-
-Screen& Screen::instance()
-{
-	return *ptrInstance();
-}
-
-Screen* Screen::ptrInstance()
-{
-	if (Screen::m_instance == 0)
-	{
-		m_instance = new Screen();
-	}
-	
-	return m_instance;
-}
-
-//---------------------------------------------------------------------------//
-
-Screen:: Screen()
+LinuxScreen::LinuxScreen()
 {
 	m_ratio = 0;
 	m_videoModesSize = 0;
 	m_videoModes = NULL;
 	m_screen = NULL;
-
-	if (!m_isInstanced) {
-		atexit(Screen::deleteInstance);
-		m_isInstanced = true;
-	}
 }
 
 //---------------------------------------------------------------------------//
 
-Screen::~Screen()
+LinuxScreen::~LinuxScreen()
 {
-	m_instance = NULL;
-
 	if (SDL_WasInit(SDL_INIT_VIDEO)) {
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	}
@@ -75,7 +41,7 @@ Screen::~Screen()
 
 //---------------------------------------------------------------------------//
 
-bool Screen::init()
+bool LinuxScreen::init()
 {
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
@@ -92,7 +58,7 @@ bool Screen::init()
 	if (GLEW_OK != err)
 	{
 		/* Problem: glewInit failed, something is seriously wrong. */
-		LOG << "Error: " << glewGetErrorString(err) << std::endl;
+		printLog("Error: %s\n", glewGetErrorString(err));
 		return false;
 	}
 
@@ -101,14 +67,14 @@ bool Screen::init()
 
 //---------------------------------------------------------------------------//
 
-void Screen::flip()
+void LinuxScreen::flip()
 {
 	SDL_GL_SwapBuffers();
 }
 
 //---------------------------------------------------------------------------//
 
-void Screen::fillWithColor(const rgba &color)
+void LinuxScreen::fillWithColor(const rgba &color)
 {
 	glPushAttrib(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT|GL_ENABLE_BIT);
 	glDisable(GL_TEXTURE_2D);
@@ -137,23 +103,23 @@ void Screen::fillWithColor(const rgba &color)
 
 //---------------------------------------------------------------------------//
 
-const Screen::vmode* Screen::getVideoModeList(unsigned int &size)
+const LinuxScreen::vmode* LinuxScreen::getVideoModeList(unsigned int &size)
 {
 	size = m_videoModesSize;
 	if(!size) return NULL;
-	
+
 	return m_videoModes;
 }
 //---------------------------------------------------------------------------//
 
-const Screen::vmode* Screen::getCurrentVideoMode()
+const LinuxScreen::vmode* LinuxScreen::getCurrentVideoMode()
 {
 	return &m_selectedMode;
 }
 
 //---------------------------------------------------------------------------//
 
-float Screen::getRatio()
+float LinuxScreen::getRatio()
 {
 	if (m_ratio != 0.0f) return m_ratio;
 	if (m_selectedMode.h == 0.0f) return 0.0f;
@@ -162,7 +128,7 @@ float Screen::getRatio()
 
 //---------------------------------------------------------------------------//
 
-void Screen::setRatio(float ratio)
+void LinuxScreen::setRatio(float ratio)
 {
 	if (ratio == m_ratio) return;
 	m_ratio = ratio;
@@ -171,31 +137,31 @@ void Screen::setRatio(float ratio)
 
 //---------------------------------------------------------------------------//
 
-bool Screen::setVideoMode()
+bool LinuxScreen::setVideoMode()
 {
-	Settings *config = Settings::pInstance();
+	PersistenceLayer *config = PersistenceLayer::pInstance();
 
-	unsigned int ScreenWidth  = (unsigned int) config->get("ScreenWidth")->toInt();
-	unsigned int ScreenHeight = (unsigned int) config->get("ScreenHeight")->toInt();
-	unsigned int ScreenBpp    = (unsigned int) config->get("ScreenBpp")->toInt();
+	unsigned int LinuxScreenWidth  = (unsigned int) config->get("LinuxScreenWidth")->toInt();
+	unsigned int LinuxScreenHeight = (unsigned int) config->get("LinuxScreenHeight")->toInt();
+	unsigned int LinuxScreenBpp    = (unsigned int) config->get("LinuxScreenBpp")->toInt();
 	bool Fullscreen  = config->get("Fullscreen")->toBool();
 
 	if (m_screen != NULL)
 	{
-		if (m_selectedMode.w  == ScreenWidth &&
-		    m_selectedMode.h  == ScreenHeight)
+		if (m_selectedMode.w  == LinuxScreenWidth &&
+		    m_selectedMode.h  == LinuxScreenHeight)
 		{
 			if (Fullscreen != m_isFullscreen)
-				SDL_WM_ToggleFullScreen(m_screen);
+				SDL_WM_ToggleFullLinuxScreen(m_screen);
 
 			return true;
 		}
 		else unloadContent();
 	}
 
-	m_selectedMode.w   = ScreenWidth;
-	m_selectedMode.h   = ScreenHeight;
-	m_selectedMode.bpp = ScreenBpp;
+	m_selectedMode.w   = LinuxScreenWidth;
+	m_selectedMode.h   = LinuxScreenHeight;
+	m_selectedMode.bpp = LinuxScreenBpp;
 
 	unsigned int flags =
 			SDL_OPENGL |
@@ -214,17 +180,17 @@ bool Screen::setVideoMode()
 	if (modes_available == (SDL_Rect **) 0) return NULL;
 	unsigned int nModes;
 	for (nModes = 0; modes_available[nModes]; nModes++) {}
-	
+
 	m_videoModesSize = nModes;
 	m_videoModes = new vmode[nModes];
 	for(nModes = 0; modes_available[nModes]; nModes++)
 	{
 		m_videoModes[nModes].w = modes_available[nModes]->w;
 		m_videoModes[nModes].h = modes_available[nModes]->h;
-		m_videoModes[nModes].bpp = ScreenBpp;
+		m_videoModes[nModes].bpp = LinuxScreenBpp;
 	}
 	qsort( m_videoModes, nModes, sizeof(vmode), compareModes);
-	
+
 	//select settings video-mode if exists
 	if (m_selectedMode.w != 0 || m_selectedMode.h != 0)
 	{
@@ -252,7 +218,7 @@ bool Screen::setVideoMode()
 	{
 		m_selectedMode.w = m_videoModes[i].w;
 		m_selectedMode.h = m_videoModes[i].h;
-		
+
 		screen = SDL_SetVideoMode (
 				 m_selectedMode.w,
 				 m_selectedMode.h,
@@ -262,9 +228,9 @@ bool Screen::setVideoMode()
 
 	if (screen == NULL) return false;
 
-	ScreenWidth  = m_selectedMode.w;
-	ScreenHeight = m_selectedMode.h;
-	ScreenBpp    = m_selectedMode.bpp;
+	LinuxScreenWidth  = m_selectedMode.w;
+	LinuxScreenHeight = m_selectedMode.h;
+	LinuxScreenBpp    = m_selectedMode.bpp;
 	m_isFullscreen = Fullscreen;
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -282,7 +248,7 @@ bool Screen::setVideoMode()
 }
 
 //---------------------------------------------------------------------------//
-void Screen::unloadContent()
+void LinuxScreen::unloadContent()
 {
 	//Añade los unloads de todos los gestores aqui
 	TextureManager::instance().unloadTextures();
@@ -290,18 +256,18 @@ void Screen::unloadContent()
 
 //---------------------------------------------------------------------------//
 
-void Screen::setCaption(const char* GameName)
+void LinuxScreen::setCaption(const char* GameName)
 {
 	SDL_WM_SetCaption(GameName, GameName);
 }
 
 //---------------------------------------------------------------------------//
 
-void Screen::initGL()
+void LinuxScreen::initGL()
 {
 	glShadeModel(GL_SMOOTH);
 	glClearDepth( 1.0f );
-	
+
 	//glDisable(GL_TEXTURE_2D);
 	//glDisable(GL_DEPTH_TEST);
 	//glDisable(GL_BLEND);
@@ -315,7 +281,7 @@ void Screen::initGL()
 
 //---------------------------------------------------------------------------//
 
-void Screen::resetViewport()
+void LinuxScreen::resetViewport()
 {
 	if ( m_ratio == 0 )
 	{
@@ -323,7 +289,7 @@ void Screen::resetViewport()
 		//glDisable(GL_SCISSOR_TEST);
 		return;
 	}
-	
+
 	if (m_selectedMode.h == 0.0f) return;
 	float screen_ratio = float(m_selectedMode.w)/float(m_selectedMode.h);
 
@@ -352,7 +318,7 @@ void Screen::resetViewport()
 
 //---------------------------------------------------------------------------//
 
-int Screen::compareModes(const void *a, const void *b)
+int LinuxScreen::compareModes(const void *a, const void *b)
 {
 	vmode* A = (vmode*)a;
 	vmode* B = (vmode*)b;
@@ -360,10 +326,4 @@ int Screen::compareModes(const void *a, const void *b)
 	return (A->w * A->h) < (B->w * B->h); //SORTED GREATER-->SMALLER
 }
 
-//---------------------------------------------------------------------------//
-
-void Screen::deleteInstance()
-{
-	if (m_instance) delete m_instance;
-}
 

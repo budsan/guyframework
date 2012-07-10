@@ -7,7 +7,6 @@
 #include <string>
 
 #include "graphics.h"
-#include "settings.h"
 #include "log.h"
 
 #define NULL_TEXTURE ""
@@ -81,9 +80,7 @@ const Texture& TextureManager::getTexture(std::string _filename)
 		std::ifstream f(path.c_str());
 		if (!f.is_open())
 		{
-#ifdef _DEBUG
-			LOG << "Unable to load " << path.c_str() << std::endl;
-#endif
+			dbgPrintLog("Unable to load %s\n", path.c_str());
 			continue;
 		}
 		valid = i;

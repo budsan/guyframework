@@ -1,123 +1,22 @@
 #pragma once
 
-#ifdef _WINDOWS
-#include <windows.h>
-#endif
+#include "environment.h"
 
-#include "settings.h"
-#include "input/input.h"
-#include "graphics/screen.h"
-#include "audio/emyl.h"
-
-class GameState;
-class Game : protected Input::FocusObserver
+class Game
 {
 public:
-	 Game();
+	Game();
 	~Game();
 
-	bool init();
-	void run();
+	virtual void init() {}
+	virtual void load() {}
 
-	void changeState(GameState* next);
-	void exit();
+	virtual void update(float deltaTime) {deltaTime = 0;}
+	virtual void draw() {}
 
-protected:
-	Screen*        m_screen; //graphics
-	emyl::manager* m_audio; //sound
-	Input*         m_input; //input
-	Settings*      m_settings;
-
-	//CONFIGURABLE SETTINGS
-	void setFramesPerSecond(unsigned short frames); //Default 0
-	void setStableDeltaTime(bool enable, bool autoframeskip = false); //Default false
-
-	virtual void configure() = 0;
-
-	virtual void   load();
-	virtual void unload();
-
-    virtual void preUpdate(float deltaTime);
-    virtual void preDraw();
-
-    virtual void postUpdate(float deltaTime);
-    virtual void postDraw();
+	virtual void unload() {}
 
 	virtual const char *getName() {return "Game";}
 	virtual const char *getVersion() {return "Undefined";}
-
-	void Pause();
-	void Resume();
-
-private:
-	GameState* m_state;
-	GameState* m_nextState;
-	bool       m_exit;
-
-	unsigned short m_framesPerSecond;
-	float          m_secondsPerFrame;
-
-	bool m_pause;
-    bool m_ignoreNextDeltaTime;
-
-    void updateInternal(float deltaTime);
-    void drawInternal();
-
-	//-GAMELOOP-BEHAVIOR-------------------------------------------------//
-
-	class GameLoop
-	{
-	public:
-		GameLoop(Game* parent);
-        virtual void loopIteration() = 0;
-	protected:
-		Game* m_parent;
-	};
-
-	class VariableLoop : public GameLoop
-	{
-	public:
-		VariableLoop(Game* parent);
-        void loopIteration();
-	private:
-		float m_now;
-	};
-
-	class StableLoop : public GameLoop
-	{
-	public:
-		StableLoop(Game* parent);
-        void loopIteration();
-	private:
-		float m_now;
-		float m_accumTime;
-	};
-
-	class StableSkipLoop : public GameLoop
-	{
-	public:
-		StableSkipLoop(Game* parent);
-        void loopIteration();
-	private:
-		float m_now;
-		float m_accumTime;
-	};
-
-	template <class T>
-	void changeGameLoop()
-	{
-		if (m_gameLoop == NULL) m_gameLoop = new T(this);
-		else
-		{
-			T* pointer = dynamic_cast<T*>(m_gameLoop);
-			if (pointer == NULL) m_gameLoop = new T(this);
-		}
-	}
-
-	void loopVariable(float &Now);
-	void loopStable(float &Now, float &AcumTime);
-	void loopStableSkip(float &Now, float &AcumTime);
-
-	GameLoop*      m_gameLoop;
 };
 

@@ -1,8 +1,7 @@
 #ifndef _MATH_SEG_DEFINED_
 #define _MATH_SEG_DEFINED_
 
-#include "vec2.h"
-#include "vec3.h"
+#include "algebra3.h"
 #include "bbox.h"
 
 namespace math {

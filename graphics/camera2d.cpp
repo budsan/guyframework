@@ -1,4 +1,6 @@
 #include "camera2d.h"
+
+#include "environment.h"
 #include "graphics.h"
 #include "screen.h"
 #include "log.h"
@@ -16,7 +18,7 @@ Camera2D::Camera2D()
 
 void Camera2D::init()
 {
-	const Screen::vmode* vmode = Screen::instance().getCurrentVideoMode();
+	const Screen::vmode* vmode = Environment::instance().getScreenManager().getCurrentVideoMode();
 	resizeScreen(vmode->w, vmode->h);
 }
 
@@ -61,7 +63,7 @@ void Camera2D::resizeScreen(int w, int h)
 
 void Camera2D::resizeScreen(int h)
 {
-	Screen &screen = Screen::instance();
+	Screen &screen = Environment::instance().getScreenManager();
 	float ratio = screen.getRatio();
 	if (ratio == 0)
 	{

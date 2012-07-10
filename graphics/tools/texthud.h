@@ -5,7 +5,7 @@
 
 #include "graphics/font.h"
 #include "graphics/color.h"
-#include "math/vec2.h"
+#include "math/algebra3.h"
 
 class TextHUD
 {

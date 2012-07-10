@@ -1,10 +1,8 @@
 #include "inputstate.h"
 #include <string.h>
 
-#include "settings.h"
-
 InputState::InputState()
-	: m_actions(Settings::pInstance()->getKeybinds().getAccionCount())
+	: m_actions(0)
 {
 	reset();
 }

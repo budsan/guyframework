@@ -83,7 +83,7 @@ bool SpriteLibrary::load(const char* filename)
 
 	if (in.fail())
 	{
-		LOG << "Error: " << filename << " doesn't exist." << std::endl;
+		dbgPrintLog("Error: %s doesn't exist.\n", filename);
 		return false;
 	}
 
@@ -110,7 +110,7 @@ bool SpriteLibrary::load(const char* filename)
 			ReadSPRITESHEET(currentSpritesheet, line, lineNum);
 		}
 		else if (currentSpritesheet == -1) {
-			LOG << "Error "<<lineNum<<": spritesheet filename undefined yet." << std::endl;
+			dbgPrintLog("Error %d: spritesheet filename undefined yet.\n", lineNum);
 		}
 		else {
 			ReadFRAME(currentSpritesheet, line, lineNum);
@@ -126,7 +126,7 @@ bool SpriteLibrary::Save(const char* filename)
 
 	if (!out.is_open())
 	{
-		LOG<<"Error: Cannot open for save filename " << filename << std::endl;
+		dbgPrintLog("Error: Cannot open for save filename %s\n", filename);
 		return false;
 	}
 
@@ -155,14 +155,14 @@ bool SpriteLibrary::ReadSPRITESHEET(int &currentSpritesheet, std::string &line, 
 
 	quoteStart = line.find('\"', quoteEnd);
 	if (quoteStart == std::string::npos) {
-		LOG<<"Error "<< lineNum <<": SPRITESHEET filename not found. Skipping line."<<std::endl;
+		dbgPrintLog("Error %d: SPRITESHEET filename not found. Skipping line.\n", lineNum);
 		return false;
 	}
 	quoteStart++;
 
 	quoteEnd = line.find('\"', quoteStart);
 	if (quoteEnd == std::string::npos) {
-		LOG<<"Error "<< lineNum <<": SPRITESHEET filename incomplete. Skipping line."<<std::endl;
+		dbgPrintLog("Error %d: SPRITESHEET filename incomplete. Skipping line.\n", lineNum);
 		return false;
 	}
 
@@ -201,7 +201,7 @@ bool SpriteLibrary::ReadFRAME(int currentSpritesheet, std::string &line, int lin
 		{
 			if (!(sline >> *info[i])) 
 			{
-				LOG<<"Error "<< lineNum <<": FRAME incorrect or incomplete. Skipping line."<<std::endl;
+				dbgPrintLog("Error %d: FRAME incorrect or incomplete. Skipping line.", lineNum);
 				return false;
 			}
 		}
@@ -211,14 +211,14 @@ bool SpriteLibrary::ReadFRAME(int currentSpritesheet, std::string &line, int lin
 
 		quoteStart = line.find('\"', quoteEnd);
 		if (quoteStart == std::string::npos) {
-			LOG<<"Error "<< lineNum <<": FRAME name not found. Skipping line."<<std::endl;
+			dbgPrintLog("Error %d: FRAME name not found. Skipping line.\n", lineNum);
 			return false;
 		}
 		quoteStart++;
 
 		quoteEnd = line.find('\"', quoteStart);
 		if (quoteEnd == std::string::npos) {
-			LOG<<"Error "<< lineNum <<": FRAME name incomplete. Skipping line."<<std::endl;
+			dbgPrintLog("Error %d: FRAME name incomplete. Skipping line.\n", lineNum);
 			return false;
 		}
 
@@ -226,7 +226,7 @@ bool SpriteLibrary::ReadFRAME(int currentSpritesheet, std::string &line, int lin
 		std::map<std::string, int>::iterator it = frameNames.find(framename);
 		if ( it != frameNames.end() ) //EXISTS
 		{
-			LOG<<"Warning "<< lineNum <<": FRAME name redefined. Overriding attributes."<<std::endl;
+			dbgPrintLog("Warning %d: FRAME name redefined. Overriding attributes.\n", lineNum);
 			frames[it->second] = frame;
 		}
 		else

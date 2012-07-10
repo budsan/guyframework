@@ -1,33 +1,19 @@
 #pragma once
 
+#include "keybind.h"
 #include "inputstate.h"
-#include <vector>
 
-#define TICKS_PER_SECOND 1000
+#include <set>
 
-union SDL_Event;
 class Input
 {
 public:
-	static Input& Instance();
-	static Input* ptrInstance();
-	~Input();
+	void setKeybinds(const Keybinds &keys);
+	const Keybinds &getKeybinds() const;
+	const InputState &getInputState(int player = 0);
 
-	void update();
-	bool exit();
-
-	void delay(unsigned int ms);
-
-	float getTime();
-	float getTimeRaw();
-	void getKeyFromSettings();
-
-	const InputState &getInputState(int player = 0) const {return m_state[player];}
-
-	void pollEvents();
-	void waitEvent();
-
-	struct FocusObserver {
+	struct FocusListener
+	{
 		virtual void onGainDrawFocus() { }
 		virtual void onLoseDrawFocus() { }
 
@@ -37,24 +23,22 @@ public:
 		virtual void onGainMouseFocus() { }
 		virtual void onLoseMouseFocus() { }
 	};
-	void setFocusObserver(FocusObserver *observer) { m_focusObserver = observer;}
 
-	enum FocusStateType { DRAW = 1, INPUT = 2, MOUSE = 4 };
-	int getFocusState() { return (int) m_focusState; }
+	//Must be added FocusListeners manually in Game->init.
+	virtual void addFocusListener(FocusListener *listener);
+	virtual void removeFocusListener(FocusListener *listener);
 
-private:
-	static Input *m_instance;
-	Settings* m_settings;
-	Input();
+	// FocusStateType enums are bitmasks
+	enum FocusStateType {
+		DRAW  = (1<<0),
+		INPUT = (1<<1),
+		MOUSE = (1<<2)
+	};
 
-	void handleEvent(const SDL_Event &event);
+	//use FocusStateType mask to extract the return value
+	virtual int getFocusState() = 0;
+protected:
 
-	float m_time;
-	bool  m_doExit;
-	unsigned char m_focusState;
-	bool m_waitUntilResumeIsCalled;
-	FocusObserver* m_focusObserver;
-
-	std::vector<InputState> m_state;
+	std::set<FocusListener*> m_FocusListeners;
 };
 

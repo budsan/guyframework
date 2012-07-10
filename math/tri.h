@@ -4,8 +4,7 @@
 #include <vector>
 #include <list>
 
-#include "vec2.h"
-#include "vec3.h"
+#include "algebra3.h"
 #include "poly2.h"
 
 namespace math {

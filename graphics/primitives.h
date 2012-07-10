@@ -2,7 +2,7 @@
 #define PRIMITIVES_H
 
 #include "graphics.h"
-#include "math/vec2.h"
+#include "math/algebra3.h"
 #include "math/bbox.h"
 
 /*

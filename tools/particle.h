@@ -2,7 +2,7 @@
 #define PARTICLE_H
 
 #include <vector>
-#include "math/vec2.h"
+#include "math/algebra3.h"
 #include "graphics/color.h"
 using math::vec2f;
 
