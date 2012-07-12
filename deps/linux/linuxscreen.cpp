@@ -12,15 +12,23 @@
 #include <vector>
 #include <string>
 
+#include <algorithm>
+
 #include "log.h"
+
+static const unsigned int SDL_INIT_FLAGS =
+		SDL_OPENGL |
+		SDL_GL_DOUBLEBUFFER |
+		SDL_HWPALETTE |
+		SDL_HWSURFACE |
+		SDL_HWACCEL;
+
+static const int DEFAULT_BPP = 32;
 
 //---------------------------------------------------------------------------//
 
 LinuxScreen::LinuxScreen()
 {
-	m_ratio = 0;
-	m_videoModesSize = 0;
-	m_videoModes = NULL;
 	m_screen = NULL;
 }
 
@@ -41,7 +49,7 @@ LinuxScreen::~LinuxScreen()
 
 //---------------------------------------------------------------------------//
 
-bool LinuxScreen::init()
+bool LinuxScreen::preinit()
 {
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
@@ -49,7 +57,28 @@ bool LinuxScreen::init()
 		}
 	}
 
-	if(!setVideoMode()) return false;
+	//GET AVAILABLE VIDEO MODES
+	SDL_Rect **modes_available = SDL_ListModes(NULL, SDL_INIT_FLAGS|SDL_FULLSCREEN);
+	const SDL_VideoInfo* videoinfo = SDL_GetVideoInfo();
+	if (modes_available == (SDL_Rect **) 0) return NULL;
+	unsigned int nModes;
+	for (nModes = 0; modes_available[nModes]; nModes++) {}
+
+	m_videoModes.reserve(nModes);
+	for(nModes = 0; modes_available[nModes]; nModes++) {
+		m_videoModes.push_back(Mode(modes_available[nModes]->w, modes_available[nModes]->h));
+	}
+	std::sort( m_videoModes.begin(), m_videoModes.end());
+
+	return true;
+}
+
+bool LinuxScreen::init()
+{
+	if (m_screen == NULL) {
+		if(!setMode(Mode(), true)) return false;
+	}
+
 	SDL_ShowCursor(0);
 //	const char *titol = title.c_str();
 //	SDL_WM_SetCaption(titol, NULL);
@@ -103,135 +132,44 @@ void LinuxScreen::fillWithColor(const rgba &color)
 
 //---------------------------------------------------------------------------//
 
-const LinuxScreen::vmode* LinuxScreen::getVideoModeList(unsigned int &size)
+bool LinuxScreen::setMode(const Mode& mode, bool fullscreen)
 {
-	size = m_videoModesSize;
-	if(!size) return NULL;
-
-	return m_videoModes;
-}
-//---------------------------------------------------------------------------//
-
-const LinuxScreen::vmode* LinuxScreen::getCurrentVideoMode()
-{
-	return &m_selectedMode;
-}
-
-//---------------------------------------------------------------------------//
-
-float LinuxScreen::getRatio()
-{
-	if (m_ratio != 0.0f) return m_ratio;
-	if (m_selectedMode.h == 0.0f) return 0.0f;
-	return float(m_selectedMode.w)/float(m_selectedMode.h);
-}
-
-//---------------------------------------------------------------------------//
-
-void LinuxScreen::setRatio(float ratio)
-{
-	if (ratio == m_ratio) return;
-	m_ratio = ratio;
-	resetViewport();
-}
-
-//---------------------------------------------------------------------------//
-
-bool LinuxScreen::setVideoMode()
-{
-	PersistenceLayer *config = PersistenceLayer::pInstance();
-
-	unsigned int LinuxScreenWidth  = (unsigned int) config->get("LinuxScreenWidth")->toInt();
-	unsigned int LinuxScreenHeight = (unsigned int) config->get("LinuxScreenHeight")->toInt();
-	unsigned int LinuxScreenBpp    = (unsigned int) config->get("LinuxScreenBpp")->toInt();
-	bool Fullscreen  = config->get("Fullscreen")->toBool();
-
 	if (m_screen != NULL)
 	{
-		if (m_selectedMode.w  == LinuxScreenWidth &&
-		    m_selectedMode.h  == LinuxScreenHeight)
+		if (m_selectedMode.w  == mode.w &&
+		    m_selectedMode.h  == mode.h)
 		{
-			if (Fullscreen != m_isFullscreen)
-				SDL_WM_ToggleFullLinuxScreen(m_screen);
+			if (fullscreen != m_isFullscreen)
+				SDL_WM_ToggleFullScreen(m_screen);
 
 			return true;
 		}
 		else unloadContent();
 	}
 
-	m_selectedMode.w   = LinuxScreenWidth;
-	m_selectedMode.h   = LinuxScreenHeight;
-	m_selectedMode.bpp = LinuxScreenBpp;
-
-	unsigned int flags =
-			SDL_OPENGL |
-			SDL_GL_DOUBLEBUFFER |
-			SDL_HWPALETTE |
-			SDL_HWSURFACE |
-			SDL_HWACCEL;
-
-	if (Fullscreen) flags |= SDL_FULLSCREEN;
+	unsigned int flags = SDL_INIT_FLAGS;
+	if (fullscreen) flags |= SDL_FULLSCREEN;
 
 	SDL_Surface* screen = NULL;
 
-	//GET AVAILABLE VIDEO MODES
-	SDL_Rect **modes_available = SDL_ListModes(NULL, flags|SDL_FULLSCREEN);
-	const SDL_VideoInfo* videoinfo = SDL_GetVideoInfo();
-	if (modes_available == (SDL_Rect **) 0) return NULL;
-	unsigned int nModes;
-	for (nModes = 0; modes_available[nModes]; nModes++) {}
-
-	m_videoModesSize = nModes;
-	m_videoModes = new vmode[nModes];
-	for(nModes = 0; modes_available[nModes]; nModes++)
-	{
-		m_videoModes[nModes].w = modes_available[nModes]->w;
-		m_videoModes[nModes].h = modes_available[nModes]->h;
-		m_videoModes[nModes].bpp = LinuxScreenBpp;
-	}
-	qsort( m_videoModes, nModes, sizeof(vmode), compareModes);
-
 	//select settings video-mode if exists
-	if (m_selectedMode.w != 0 || m_selectedMode.h != 0)
+	if (mode.w != 0 || mode.h != 0)
 	{
-		screen = SDL_SetVideoMode (
-				 m_selectedMode.w,
-				 m_selectedMode.h,
-				 m_selectedMode.bpp,
-				 flags);
+		mode = m_videoModes[0];
+		screen = SDL_SetVideoMode (mode.w, mode.h, DEFAULT_BPP, flags);
 	}
 
 	//select current desktop video-mode
 	if (screen == NULL)
 	{
-		m_selectedMode.w = videoinfo->current_w;
-		m_selectedMode.h = videoinfo->current_h;
-		screen = SDL_SetVideoMode (
-				 m_selectedMode.w,
-				 m_selectedMode.h,
-				 m_selectedMode.bpp,
-				 flags);
-	}
-
-	//select one of compatible video-mode
-	for(unsigned int i = 0; i < nModes && screen == NULL; i++)
-	{
-		m_selectedMode.w = m_videoModes[i].w;
-		m_selectedMode.h = m_videoModes[i].h;
-
-		screen = SDL_SetVideoMode (
-				 m_selectedMode.w,
-				 m_selectedMode.h,
-				 m_selectedMode.bpp,
-				 flags);
+		screen = SDL_SetVideoMode (mode.w, mode.h, DEFAULT_BPP, flags);
 	}
 
 	if (screen == NULL) return false;
 
-	LinuxScreenWidth  = m_selectedMode.w;
-	LinuxScreenHeight = m_selectedMode.h;
-	LinuxScreenBpp    = m_selectedMode.bpp;
-	m_isFullscreen = Fullscreen;
+	m_selectedMode.w = mode.w;
+	m_selectedMode.h = mode.h;
+	m_isFullscreen = fullscreen;
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -242,9 +180,18 @@ bool LinuxScreen::setVideoMode()
 	initGL();
 
 	m_screen = screen;
-
-
 	return true;
+}
+
+const std::vector<Screen::Mode> &LinuxScreen::getAvailableModes(unsigned int &size)
+{
+	return m_videoModes;
+}
+//---------------------------------------------------------------------------//
+
+const Screen::Mode& LinuxScreen::getCurrentMode()
+{
+	return m_selectedMode;
 }
 
 //---------------------------------------------------------------------------//
@@ -283,13 +230,14 @@ void LinuxScreen::initGL()
 
 void LinuxScreen::resetViewport()
 {
-	if ( m_ratio == 0 )
-	{
+//	if ( m_ratio == 0 )
+//	{
 		glViewport(0,0,m_selectedMode.w,m_selectedMode.h);
 		//glDisable(GL_SCISSOR_TEST);
 		return;
-	}
+//	}
 
+	/*
 	if (m_selectedMode.h == 0.0f) return;
 	float screen_ratio = float(m_selectedMode.w)/float(m_selectedMode.h);
 
@@ -314,16 +262,7 @@ void LinuxScreen::resetViewport()
 		glViewport(0,0,m_selectedMode.w,m_selectedMode.h);
 		//glDisable(GL_SCISSOR_TEST);
 	}
-}
-
-//---------------------------------------------------------------------------//
-
-int LinuxScreen::compareModes(const void *a, const void *b)
-{
-	vmode* A = (vmode*)a;
-	vmode* B = (vmode*)b;
-
-	return (A->w * A->h) < (B->w * B->h); //SORTED GREATER-->SMALLER
+	*/
 }
 
 

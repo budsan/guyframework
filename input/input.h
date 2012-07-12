@@ -1,16 +1,15 @@
 #pragma once
 
-#include "keybind.h"
-#include "inputstate.h"
-
 #include <set>
+
+#include "keyboard.h"
 
 class Input
 {
 public:
-	void setKeybinds(const Keybinds &keys);
-	const Keybinds &getKeybinds() const;
-	const InputState &getInputState(int player = 0);
+
+	virtual int       getKeyboardCount()     = 0;
+	virtual Keyboard& getKeyboard(int i = 0) = 0;
 
 	struct FocusListener
 	{

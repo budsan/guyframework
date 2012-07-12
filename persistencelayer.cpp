@@ -42,12 +42,3 @@ Variable *PersistenceLayer::get(const std::string &name)
 	return v;
 }
 
-void PersistenceLayer::setKeybinds(const Keybinds &keys)
-{
-	m_keybinds = keys;
-}
-
-const Keybinds &PersistenceLayer::getKeybinds() const
-{
-	return m_keybinds;
-}

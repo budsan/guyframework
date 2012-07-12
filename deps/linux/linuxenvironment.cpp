@@ -45,6 +45,12 @@ bool LinuxEnvironment::init(Game *game)
 	SDL_Init(0);
 
 	m_screen   = new LinuxScreen();
+	if (!m_screen->preinit())
+	{
+		printLog("ERROR: Couldn't init screen.\n");
+		return false;
+	}
+
 	m_audio    = emyl::manager::get_instance();
 	m_input    = new LinuxInput();
 	m_persistenceLayer = new LinuxPersistenceLayer();
@@ -52,12 +58,6 @@ bool LinuxEnvironment::init(Game *game)
 	setFramesPerSecond(0, false, false);
 	m_persistenceLayer->load("data/game.cfg");
 	m_game->init();
-
-	if (!m_input->init())
-	{
-		printLog("ERROR: Couldn't init input.\n");
-		return false;
-	}
 
 	if (!m_screen->init())
 	{
@@ -105,18 +105,15 @@ void LinuxEnvironment::run()
 		if (m_pause)
 		{
 			m_audio->sleep();
-			while (!m_input->exit() && m_pause) m_input->waitEvent();
+			while (!m_exit && m_pause) m_input->waitEvent();
 			m_audio->unsleep();
 			m_before = SDL_GetTicks();
 		}
 
-		m_input->update();
+		m_input->pollEvents();
 
 		//EXIT CASE
-		if(m_input->exit()) {
-			m_exit = true;
-			continue;
-		}
+		if(m_exit) continue;
 
 		//UPDATES AND DRAWS
 		m_gameLoop();

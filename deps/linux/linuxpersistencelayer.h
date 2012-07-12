@@ -17,14 +17,9 @@ public:
 	//get variable, returns void variable if not exists
 	Variable *get(std::string name);
 
-	void setKeybinds(const Keybinds &keys);
-	const Keybinds &getKeybinds() const;
-
 	bool load(const char *filename);
 	bool save();
 private:
 	std::map<std::string, Variable> m_vars;
-	Keybinds m_keybinds;
-
 	std::string m_filepath;
 };

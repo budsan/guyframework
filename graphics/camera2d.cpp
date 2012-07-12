@@ -18,8 +18,8 @@ Camera2D::Camera2D()
 
 void Camera2D::init()
 {
-	const Screen::vmode* vmode = Environment::instance().getScreenManager().getCurrentVideoMode();
-	resizeScreen(vmode->w, vmode->h);
+	const Screen::Mode& mode = Environment::instance().getScreenManager().getCurrentMode();
+	resizeScreen(mode.w, mode.h);
 }
 
 math::bbox2f Camera2D::getBounding()
@@ -64,11 +64,11 @@ void Camera2D::resizeScreen(int w, int h)
 void Camera2D::resizeScreen(int h)
 {
 	Screen &screen = Environment::instance().getScreenManager();
-	float ratio = screen.getRatio();
+	float ratio = screen.getCurrentMode().getRatio();
 	if (ratio == 0)
 	{
-		const Screen::vmode* vmode = screen.getCurrentVideoMode();
-		m_aspect = float(vmode->w) / float(vmode->h);
+		const Screen::Mode& mode = screen.getCurrentMode();
+		m_aspect = float(mode.w) / float(mode.h);
 		m_w = (int)(float(h) * m_aspect);
 		m_h = h;
 		m_init = true;

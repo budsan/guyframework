@@ -8,22 +8,22 @@ public:
 	 LinuxScreen();
 	~LinuxScreen();
 
+	bool preinit();
 	bool init();
-	void flip();
+	void resetViewport();
+
+
+	void unloadContent();
+	void setCaption(const char* GameName);
+
+	bool setMode(const Mode& mode, bool fullscreen = true);
+	const std::vector<Mode>& getAvailableModes(unsigned int &size);
+	const Mode& getCurrentMode();
 
 	//Clear with alpha blending
 	void fillWithColor(const rgba &color);
 
-	bool setVideoMode();
-	void unloadContent();
-	void setCaption(const char* GameName);
-
-	//TOOLS
-	float        getRatio();
-	void         setRatio(float);
-	const vmode* getVideoModeList(unsigned int &size);
-	const vmode* getCurrentVideoMode();
-	void resetViewport();
+	void flip();
 
 protected:
 	void initGL();
@@ -33,9 +33,7 @@ protected:
 
 	//ATRIBS
 	SDL_Surface* m_screen;
-	vmode m_selectedMode;
-	vmode *m_videoModes;
-	unsigned int m_videoModesSize;
-	float m_ratio;
+	Mode m_selectedMode;
+	std::vector<Mode> m_videoModes;
 	bool m_isFullscreen;
 };

@@ -4,7 +4,6 @@
 #include <string>
 
 #include "variable.h"
-#include "input/keybind.h"
 
 class PersistenceLayer
 {
@@ -20,9 +19,6 @@ public:
 	//get variable, returns void variable if not exists
 	virtual Variable *get(const std::string& name);
 
-	void setKeybinds(const Keybinds &keys);
-	const Keybinds &getKeybinds() const;
 private:
 	std::map<std::string, Variable> m_vars;
-	Keybinds m_keybinds;
 };

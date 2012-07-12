@@ -60,10 +60,10 @@ bool LinuxPersistenceLayer::save()
 	if (m_filepath.empty()) return false;
 
 	std::fstream file;
-	file.open(filename, std::fstream::out | std::fstream::binary | std::fstream::trunc);
+	file.open(m_filepath.c_str(), std::fstream::out | std::fstream::binary | std::fstream::trunc);
 
-	std::map<std::string, Variable>::iterator it = m_settings.begin();
-	for(;it != m_settings.end(); ++it)
+	std::map<std::string, Variable>::iterator it = m_vars.begin();
+	for(;it != m_vars.end(); ++it)
 	{
 		file << it->second;
 	}

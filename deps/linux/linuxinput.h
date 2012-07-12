@@ -1,7 +1,6 @@
 #pragma once
 
 #include "input/input.h"
-#include "input/inputstate.h"
 
 #include <vector>
 #include <set>
@@ -10,28 +9,25 @@
 class LinuxInput : public Input
 {
 public:
-	 LinuxInput();
+	LinuxInput();
 	~LinuxInput();
-
-	bool init();
-
-	void update();
-	bool exit();
-
-	const InputState &getInputState(int player = 0) const {return m_state[player];}
 
 	void pollEvents();
 	void waitEvent();
 
-	virtual int getFocusState() {return m_focusState;}
+	virtual int       getKeyboardCount();
+	virtual Keyboard& getKeyboard(int i = 0);
+
+	virtual int getFocusState();
 
 private:
+	static void SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod);
+
 	void handleEvent(const SDL_Event &event);
 
-	bool  m_doExit;
+	Keyboard *m_keyboard;
+
 	unsigned char m_focusState;
 	bool m_waitUntilResumeIsCalled;
-
-	std::vector<InputState> m_state;
 };
 
