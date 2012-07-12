@@ -1,8 +1,7 @@
-#ifndef _TEXTURE_INCLUDED_
-#define _TEXTURE_INCLUDED_
+#pragma once
 
-#include <stdexcept>
 #include "graphics.h"
+#include <stdexcept>
 
 /// Texture class
 class Texture
@@ -91,6 +90,4 @@ private:
 
 	friend class Texture;
 };
-#endif
-
 #endif

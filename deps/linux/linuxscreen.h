@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/screen.h"
+#include <SDL/SDL.h>
 
 class LinuxScreen : public Screen
 {

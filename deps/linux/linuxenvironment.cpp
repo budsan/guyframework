@@ -15,22 +15,12 @@ void emylErrorCallback(const std::string &error)
 }
 
 LinuxEnvironment::LinuxEnvironment()
-	: m_game(NULL), m_framesPerSecond(0)
+	: m_exit(false), m_framesPerSecond(0), m_pause(false)
 {
-	m_exit = false;
-	m_pause = false;
 }
 
 LinuxEnvironment::~LinuxEnvironment()
 {
-	m_game = NULL;
-
-	delete m_screen;
-	delete m_audio;
-
-	m_persistenceLayer->persist();
-
-	SDL_Quit();
 }
 
 bool LinuxEnvironment::init(Game *game)
@@ -74,6 +64,18 @@ bool LinuxEnvironment::init(Game *game)
 
 	m_game->load();
 	return true;
+}
+
+void LinuxEnvironment::destroy()
+{
+	m_game = NULL;
+
+	delete m_screen;
+	delete m_audio;
+
+	m_persistenceLayer->persist();
+
+	SDL_Quit();
 }
 
 void LinuxEnvironment::setFramesPerSecond(unsigned short frames, bool stable, bool dropFrames)

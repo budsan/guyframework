@@ -1,5 +1,6 @@
 #include "sprite.h"
-#include "graphics.h"
+
+#include "environment.h"
 #include "texturemanager.h"
 #include "screen.h"
 #include "color.h"

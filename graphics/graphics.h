@@ -1,18 +1,7 @@
 #pragma once
 
-#ifndef INCLUDED_FROM_QT
-
-#ifdef _WINDOWS
-#include <windows.h>
-#endif
-
-#include <GL/glew.h>
-#include <SDL/SDL.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-
-#else
-
-#include <QtOpenGL/qgl.h>
-
+#if defined(__GAME_FRAMEWORK_USE_LINUX)
+#include "deps/linux/graphics.h"
+#elif defined(__GAME_FRAMEWORK_USE_BB10)
+#include "deps/bb10/graphics.h"
 #endif

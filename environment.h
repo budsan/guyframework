@@ -13,11 +13,15 @@ public:
 	static Environment* ptrInstance();
 
 	virtual bool init(Game *game);
+	virtual void destroy();
+
 	virtual void run() = 0;
 
 	virtual void pause() = 0;
 	virtual void resume() = 0;
 	virtual void exit() = 0;
+
+	Game& getGame();
 
 	//frames 0 -> as fast as posible, stable true -> delta time fixed
 	virtual void setFramesPerSecond(unsigned short frames = 0,

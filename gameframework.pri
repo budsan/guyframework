@@ -12,8 +12,9 @@ SOURCES += \
     $$PWD/environment.cpp \
     $$PWD/game.cpp \
     $$PWD/persistencelayer.cpp \
-    $$PWD/gamestate.cpp \
+    $$PWD/variable.cpp \
     $$PWD/content/content.cpp \
+    $$PWD/graphics/screen.cpp \
     $$PWD/graphics/texture.cpp \
     $$PWD/graphics/sprite.cpp \
     $$PWD/graphics/spriteanim.cpp \
@@ -21,12 +22,14 @@ SOURCES += \
     $$PWD/graphics/shaderprogram.cpp \
     $$PWD/graphics/shader.cpp \
     $$PWD/graphics/framebuffer.cpp \
-    $$PWD/graphics/color.cpp \
-    $$PWD/input/input.cpp \
-    $$PWD/tools/transition.cpp \
-    $$PWD/math/hit.cpp \
     $$PWD/graphics/camera2d.cpp \
     $$PWD/graphics/primitives.cpp \
+    $$PWD/graphics/color.cpp \
+    $$PWD/input/input.cpp \
+    $$PWD/input/keyboard.cpp \
+    $$PWD/input/gamepad.cpp \
+    $$PWD/tools/transition.cpp \
+    $$PWD/math/hit.cpp \
     $$PWD/audio/emyl.cpp \
     $$PWD/graphics/tools/frameshud.cpp \
     $$PWD/graphics/tools/texthud.cpp \
@@ -34,21 +37,18 @@ SOURCES += \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
     $$PWD/graphics/spritestatic.cpp \
-    $$PWD/variable.cpp \
     $$PWD/deps/linux/linuxenvironment.cpp \
     $$PWD/deps/linux/linuxlog.cpp \
     $$PWD/deps/linux/linuxinput.cpp \
     $$PWD/deps/linux/linuxpersistencelayer.cpp \
     $$PWD/deps/linux/linuxscreen.cpp \
-    gameframework/input/keyboard.cpp \
-    gameframework/input/gamepad.cpp \
-    gameframework/graphics/screen.cpp
+    gameframework/input/controller.cpp
+
 
     
 HEADERS += \
     $$PWD/environment.h \
     $$PWD/game.h \
-    $$PWD/gamestate.h \
     $$PWD/persistencelayer.h \
     $$PWD/log.h \
     $$PWD/content/content.h \
@@ -57,12 +57,16 @@ HEADERS += \
     $$PWD/graphics/sprite.h \
     $$PWD/graphics/spriteanim.h \
     $$PWD/graphics/color.h \
-    $$PWD/graphics/graphics.h \
     $$PWD/graphics/texturemanager.h \
     $$PWD/graphics/shaderprogram.h \
     $$PWD/graphics/shader.h \
     $$PWD/graphics/framebuffer.h \
     $$PWD/input/input.h \
+    $$PWD/input/keyboard.h \
+    $$PWD/input/gamepad.h \
+    $$PWD/input/keyboardlistener.h \
+    $$PWD/input/controller.h \
+    $$PWD/input/gamepadlistener.h \
     $$PWD/tools/transition.h \
     $$PWD/math/bbox.h \
     $$PWD/math/poly2.h \
@@ -86,9 +90,6 @@ HEADERS += \
     $$PWD/deps/linux/linuxinput.h \
     $$PWD/deps/linux/linuxpersistencelayer.h \
     $$PWD/deps/linux/linuxscreen.h \
-    gameframework/input/keyboard.h \
-    gameframework/input/gamepad.h \
-    gameframework/input/keyboardlistener.h \
-    gameframework/input/controller.h
-
+    gameframework/deps/linux/graphics.h \
+    gameframework/graphics/graphics.h
 

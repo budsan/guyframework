@@ -2,6 +2,7 @@
 
 #include <fstream>
 
+
 void LinuxPersistenceLayer::persist()
 {
 	this->save();
@@ -48,7 +49,7 @@ bool LinuxPersistenceLayer::load(const char *filename)
 	Variable var;
 	while(file >> var)
 	{
-		add(var);
+		this->add(var);
 	}
 
 	m_filepath = std::string(filename);

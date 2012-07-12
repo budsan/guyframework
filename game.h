@@ -8,15 +8,15 @@ public:
 	Game();
 	~Game();
 
-	virtual void init() {}
-	virtual void load() {}
+	virtual void init();
+	virtual void load();
 
-	virtual void update(float deltaTime) {deltaTime = 0;}
-	virtual void draw() {}
+	virtual void update(float deltaTime) = 0;
+	virtual void draw() = 0;
 
-	virtual void unload() {}
+	virtual void unload();
 
-	virtual const char *getName() {return "Game";}
-	virtual const char *getVersion() {return "Undefined";}
+	virtual const char *getName();
+	virtual const char *getVersion();
 };
 

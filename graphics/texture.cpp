@@ -1,7 +1,7 @@
 #include "texture.h"
-#include "graphics.h"
 
 #include <string>
+#include <stdlib.h>
 #include <stdexcept>
 
 #ifdef INCLUDED_FROM_QT

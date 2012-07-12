@@ -1,5 +1,5 @@
 #include "texthud.h"
-#include "graphics/screen.h"
+#include "graphics/graphics.h"
 
 TextHUD::TextHUD() : m_font()
 {

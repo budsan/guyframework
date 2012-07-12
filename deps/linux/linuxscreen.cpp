@@ -134,10 +134,12 @@ void LinuxScreen::fillWithColor(const rgba &color)
 
 bool LinuxScreen::setMode(const Mode& mode, bool fullscreen)
 {
+	Mode selected = mode;
+
 	if (m_screen != NULL)
 	{
-		if (m_selectedMode.w  == mode.w &&
-		    m_selectedMode.h  == mode.h)
+		if (m_selectedMode.w  == selected.w &&
+		    m_selectedMode.h  == selected.h)
 		{
 			if (fullscreen != m_isFullscreen)
 				SDL_WM_ToggleFullScreen(m_screen);
@@ -153,22 +155,22 @@ bool LinuxScreen::setMode(const Mode& mode, bool fullscreen)
 	SDL_Surface* screen = NULL;
 
 	//select settings video-mode if exists
-	if (mode.w != 0 || mode.h != 0)
+	if (selected.w == 0 || selected.h == 0)
 	{
-		mode = m_videoModes[0];
-		screen = SDL_SetVideoMode (mode.w, mode.h, DEFAULT_BPP, flags);
+		selected = m_videoModes[0];
+		screen = SDL_SetVideoMode (selected.w, selected.h, DEFAULT_BPP, flags);
 	}
 
 	//select current desktop video-mode
 	if (screen == NULL)
 	{
-		screen = SDL_SetVideoMode (mode.w, mode.h, DEFAULT_BPP, flags);
+		screen = SDL_SetVideoMode (selected.w, selected.h, DEFAULT_BPP, flags);
 	}
 
 	if (screen == NULL) return false;
 
-	m_selectedMode.w = mode.w;
-	m_selectedMode.h = mode.h;
+	m_selectedMode.w = selected.w;
+	m_selectedMode.h = selected.h;
 	m_isFullscreen = fullscreen;
 
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);

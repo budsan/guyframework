@@ -112,7 +112,7 @@ public:
 		Key_F15, ///< The F15 key
 		Key_Pause, ///< The Pause key
 
-		Key_KeyCount ///< Keep last -- the total number of keyboard keys
+		Key_Count ///< Keep last -- the total number of keyboard keys
 	};
 
 	enum Mod

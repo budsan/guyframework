@@ -16,6 +16,14 @@
 
 Environment *Environment::s_instance = &sEnvironment;
 
+Environment::Environment()
+{
+}
+
+Environment::~Environment()
+{
+}
+
 Environment& Environment::instance()
 {
 	assert(s_instance != NULL);
@@ -28,9 +36,20 @@ Environment* Environment::ptrInstance()
 	return s_instance;
 }
 
-bool Environment::init(Game *game) {
+bool Environment::init(Game *game)
+{
 	m_game = game;
 	return true;
+}
+
+void Environment::destroy()
+{
+
+}
+
+Game& Environment::getGame()
+{
+	return *m_game;
 }
 
 

@@ -1,4 +1,5 @@
 #include "font.h"
+#include "graphics.h"
 
 #define USING_GL11
 

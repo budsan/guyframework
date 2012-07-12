@@ -13,7 +13,7 @@ public:
 		Mode(unsigned int w, unsigned int h);
 
 		float getRatio() const;
-		void operator= (const Mode& other) const;
+		void operator= (const Mode& other);
 		bool operator==(const Mode& other) const;
 		bool operator< (const Mode& other) const;
 

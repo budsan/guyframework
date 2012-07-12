@@ -19,6 +19,8 @@ public:
 	virtual ~LinuxEnvironment();
 
 	virtual bool init(Game *game);
+	virtual void destroy();
+
 	virtual void run();
 	virtual void pause();
 	virtual void resume();
@@ -37,7 +39,6 @@ private:
 	LinuxInput*            m_input; //input
 	LinuxPersistenceLayer* m_persistenceLayer;
 
-	Game* m_game;
 	bool  m_exit;
 
 	unsigned short m_framesPerSecond;

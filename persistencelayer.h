@@ -8,7 +8,7 @@
 class PersistenceLayer
 {
 public:
-	virtual void persist();
+	virtual void persist() = 0;
 
 	//create vars and sets value if it doesn't exists
 	virtual void add(const Variable &var, bool overwrite = false, bool persist = false);

@@ -1,7 +1,4 @@
-#ifndef crgbaRGBA_H
-#define crgbaRGBA_H
-
-#include "graphics.h"
+#pragma once
 
 struct rgb
 {
@@ -110,5 +107,3 @@ void glColor(const rgba *c);
 
 void glClearColor(const rgba *c);
 void glClearColor(const rgba &c);
-
-#endif // crgbaRGBA_H

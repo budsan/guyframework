@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <cassert>
 
+#include "environment.h"
+#include "gamepadlistener.h"
+
 GamePad::GamePad(int id)
 {
 	mId = id;
@@ -36,7 +39,7 @@ void GamePad::fireDownEvent(Button button)
 		int numListeners = (int)mListeners.size();
 		for (int i=0 ; i<numListeners ; i++)
 		{
-			mListeners[i]->gamePadButtonDown(this,button);
+			mListeners[i]->onGamePadButtonDown(this,button);
 		}
 	}
 }
@@ -49,7 +52,7 @@ void GamePad::fireUpEvent(Button button)
 		int numListeners = (int)mListeners.size();
 		for (int i=0 ; i<numListeners ; i++)
 		{
-			mListeners[i]->gamePadButtonUp(this,button);
+			mListeners[i]->onGamePadButtonUp(this,button);
 		}
 	}
 }
@@ -60,7 +63,8 @@ void GamePad::setEnabled(bool enabled)
 }
 
 void GamePad::setConnected(bool connected) 
-{ 
+{
+	/*
 	// if there's no change, return:
 	if (connected == isConnected())
 	{
@@ -73,12 +77,13 @@ void GamePad::setConnected(bool connected)
 	// fire notification:
 	if (connected)
 	{
-		Environment::instance()->fireGamePadAdded(mId);
+		Environment::instance().fireGamePadAdded(mId);
 	}
 	else
 	{
-		Environment::instance()->fireGamePadRemoved(mId);
+		Environment::instance().fireGamePadRemoved(mId);
 	}
+	*/
 }
 
 float GamePad::getTriggerL()

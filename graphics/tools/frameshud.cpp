@@ -1,5 +1,5 @@
 #include "frameshud.h"
-#include "graphics/screen.h"
+#include "graphics/graphics.h"
 
 #include <sstream>
 #include <math.h>

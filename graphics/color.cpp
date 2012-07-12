@@ -1,4 +1,5 @@
 #include "color.h"
+#include "graphics.h"
 
 rgb::rgb() : r(0), g(0), b(0)
 {
