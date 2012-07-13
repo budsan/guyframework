@@ -5,6 +5,8 @@
 #include "graphics/screen.h"
 #include "audio/emyl.h"
 
+namespace Guy {
+
 class Game;
 class Environment
 {
@@ -44,3 +46,5 @@ private:
 	static Environment *s_instance;
 
 };
+
+} //namespace Guy

@@ -1,9 +1,11 @@
-#ifndef PARTICLE_H
-#define PARTICLE_H
+#pragma once
 
 #include <vector>
 #include "math/algebra3.h"
 #include "graphics/color.h"
+
+namespace Guy {
+
 using math::vec2f;
 
 class ParticleEmitter;
@@ -33,4 +35,4 @@ protected:
 	friend class ParticleEmitter;
 };
 
-#endif // PARTICLE_H
+} // namespace Guy

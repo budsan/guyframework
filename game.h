@@ -2,6 +2,8 @@
 
 #include "environment.h"
 
+namespace Guy {
+
 class Game
 {
 public:
@@ -19,4 +21,6 @@ public:
 	virtual const char *getName();
 	virtual const char *getVersion();
 };
+
+} //namespace Guy
 

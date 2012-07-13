@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Guy {
+
 struct rgb
 {
 public:
@@ -100,10 +102,14 @@ crgb operator*(float num, const crgb &a) const;
 crgb operator/(float num, const crgb &a) const;
 */
 
-void glColor(const rgb &c);
-void glColor(const rgb *c);
-void glColor(const rgba &c);
-void glColor(const rgba *c);
+} //namespace Guy
 
-void glClearColor(const rgba *c);
-void glClearColor(const rgba &c);
+void glColor(const Guy::rgb &c);
+void glColor(const Guy::rgb *c);
+void glColor(const Guy::rgba &c);
+void glColor(const Guy::rgba *c);
+
+void glClearColor(const Guy::rgba *c);
+void glClearColor(const Guy::rgba &c);
+
+

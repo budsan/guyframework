@@ -5,6 +5,9 @@
 #include "shader.h"
 
 #include <iostream> // only for debug
+
+namespace Guy {
+
 ShaderProgram::ShaderProgram()
 {
 	m_id = glCreateProgram();
@@ -213,3 +216,5 @@ void ShaderProgram::printInfoLog()
 		delete[] infoLog;
 	}
 }
+
+} //namespace Guy

@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <assert.h>
 
+namespace Guy {
+
 Keyboard::Keyboard()
 {
 }
@@ -51,3 +53,5 @@ void Keyboard::fireKeyUpEvent(wchar_t unicode, Key key, Mod mods)
 		}
 	}
 }
+
+} // namespace Guy

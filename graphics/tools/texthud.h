@@ -7,6 +7,8 @@
 #include "graphics/color.h"
 #include "math/algebra3.h"
 
+namespace Guy {
+
 class TextHUD
 {
  public:
@@ -30,3 +32,5 @@ protected:
 	std::string m_displayText;
 	math::vec2f m_clampedPos;
 };
+
+} // namespace Guy

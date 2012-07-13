@@ -6,6 +6,8 @@
 #include "deps/bb10/qnxenvironment.h"
 #endif
 
+namespace Guy {
+
 #if defined(__GAME_FRAMEWORK_USE_LINUX)
 	static LinuxEnvironment sEnvironment;
 #elif defined(__GAME_FRAMEWORK_USE_BB10)
@@ -51,5 +53,7 @@ Game& Environment::getGame()
 {
 	return *m_game;
 }
+
+} // namespace Guy
 
 

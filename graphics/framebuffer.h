@@ -1,10 +1,11 @@
-#ifndef _FRAME_BUFFER_INCLUDED_
-#define _FRAME_BUFFER_INCLUDED_
+#pragma once
 
 #include "graphics.h"
 
 #include <stdexcept>
 #include <vector>
+
+namespace Guy {
 
 /// Frame Buffer Object class
 class FrameBuffer
@@ -51,4 +52,4 @@ class FrameBuffer
 		static void unbind();
 };
 
-#endif
+} // namespace Guy

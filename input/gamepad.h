@@ -5,9 +5,9 @@
 #include "controller.h"
 #include <vector>
 
+namespace Guy {
 
 class GamePadListener;
-
 class GamePad : public Controller
 {
 public:
@@ -75,3 +75,4 @@ protected:
 	bool mIsButtonDown[BUTTON_COUNT];
 };
 
+} // namespace Guy

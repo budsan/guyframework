@@ -4,6 +4,8 @@
 #include <cassert>
 #include <algorithm>
 
+namespace Guy {
+
 void Input::addFocusListener(FocusListener *listener)
 {
 	assert(std::find(m_FocusListeners.begin(),m_FocusListeners.end(),listener) == m_FocusListeners.end());
@@ -16,4 +18,5 @@ void Input::removeFocusListener(FocusListener *listener)
 	m_FocusListeners.erase(listener);
 }
 
+} // namespace Guy
 

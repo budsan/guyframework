@@ -1,5 +1,7 @@
 #include "screen.h"
 
+namespace Guy {
+
 Screen::Mode::Mode()
 	: w(0), h(0)
 {
@@ -35,3 +37,5 @@ bool Screen::Mode::operator< (const Mode& other) const
 	unsigned int pixelCountB = (other.w * other.h);
 	return pixelCountA < pixelCountB; //SORTED GREATER-->SMALLER
 }
+
+} //namespace Guy

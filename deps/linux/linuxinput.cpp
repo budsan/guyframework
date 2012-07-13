@@ -6,7 +6,7 @@
 #include <SDL/SDL.h>
 #include <cassert>
 
-//---------------------------------------------------------------------------//
+namespace Guy {
 
 LinuxInput::LinuxInput() :
     m_focusState(0)
@@ -243,3 +243,5 @@ void LinuxInput::SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard
 
 	mod = (Keyboard::Mod) keysym.mod;
 }
+
+} // namespace Guy

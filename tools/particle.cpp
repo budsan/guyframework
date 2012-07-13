@@ -4,6 +4,8 @@
 #include "math/bbox.h"
 #include "graphics/graphics.h"
 
+namespace Guy {
+
 Particle::Particle(const vec2f &_pos, const vec2f &_vel, float live):
 	m_pos0(_pos), m_pos (_pos), m_vel0(_vel), m_live(live), m_time(0)
 {
@@ -119,3 +121,5 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	indices[4] = indBase + 2;
 	indices[5] = indBase + 3;
 }
+
+} // namespace Guy

@@ -1,11 +1,11 @@
+#include "framebuffer.h"
+#include "graphics.h"
+
 #include <stdexcept>
 #include <vector>
-#include <GL/glew.h>
-#include <GL/gl.h>
-
-#include "framebuffer.h"
 #include <iostream>
 
+namespace Guy {
 
 FrameBuffer::FrameBuffer() : m_width(0), m_height(0), m_frameId(0), m_depthId(0), m_stencilId(0), m_buffers(0)
 {
@@ -273,3 +273,5 @@ void FrameBuffer::unbind()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glDrawBuffer(GL_BACK);
 }
+
+} //namespace Guy

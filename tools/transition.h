@@ -1,5 +1,6 @@
-#ifndef TRANSITION_H_
-#define TRANSITION_H_
+#pragma once
+
+namespace Guy {
 
 //-TRANSITION-(ABSTRACT-CLASS)-----------------------------------------------//
 class Transition {
@@ -151,4 +152,6 @@ protected:
 	float m_fAcc;
 	float m_fVelMax;
 };
-#endif /* TRANSITION_H_ */
+
+
+} // namespace Guy

@@ -2,6 +2,8 @@
 
 #include "gamepad.h"
 
+namespace Guy {
+
 class GamePadListener
 {
 public:
@@ -13,4 +15,6 @@ public:
 	virtual void onGamePadButtonUp(GamePad *pad, GamePad::Button button) = 0;
 
 };
+
+} // namespace Guy
 

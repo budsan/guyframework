@@ -3,6 +3,8 @@
 #include "controller.h"
 #include <vector>
 
+namespace Guy {
+
 class KeyboardListener;
 class Keyboard : public Controller
 {
@@ -160,3 +162,4 @@ protected:
 
 };
 
+} // namespace Guy

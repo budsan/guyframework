@@ -1,8 +1,7 @@
-#ifndef _SHADER_INCLUDED_
-#define _SHADER_INCLUDED_
-
+#pragma once
 #include "graphics.h"
 
+namespace Guy {
 
 class Shader
 {
@@ -18,5 +17,5 @@ class Shader
 		void printInfoLog() const;
 };
 
-#endif
+} // namespace Guy
 

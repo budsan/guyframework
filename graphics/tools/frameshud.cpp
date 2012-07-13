@@ -4,6 +4,8 @@
 #include <sstream>
 #include <math.h>
 
+namespace Guy {
+
 FramesHUD::FramesHUD()
 {
 	setColor(rgba(1,0,1,1));
@@ -83,3 +85,5 @@ void FramesHUD::reset()
 	m_framesToDisplay = 0;
 	m_framesCount = 0;
 }
+
+} // namespace Guy

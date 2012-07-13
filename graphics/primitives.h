@@ -1,5 +1,4 @@
-#ifndef PRIMITIVES_H
-#define PRIMITIVES_H
+#pragma once
 
 #include "graphics.h"
 #include "math/algebra3.h"
@@ -23,6 +22,8 @@ void glVertex2(double x, double y);
 void glVertex3(float  x, float  y, float  z);
 void glVertex3(double x, double y, double z);
 
+namespace Guy {
+
 template <typename T>
 void draw(math::bbox<math::vec2<T> > quad)
 {
@@ -38,5 +39,5 @@ void draw(math::bbox<math::vec2<T> > quad)
 	glEnd();
 }
 
+} // namespace Guy
 
-#endif // PRIMITIVES_H

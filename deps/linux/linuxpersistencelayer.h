@@ -3,6 +3,8 @@
 
 #include <string>
 
+namespace Guy {
+
 class LinuxPersistenceLayer : public PersistenceLayer
 {
 public:
@@ -14,3 +16,5 @@ private:
 	std::map<std::string, Variable> m_vars;
 	std::string m_filepath;
 };
+
+} // namespace Guy

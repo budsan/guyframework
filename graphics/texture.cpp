@@ -12,6 +12,8 @@
 #include <png.h>
 #endif
 
+namespace Guy {
+
 Texture::Texture() : m_id(0), m_width(0), m_height(0)
 {
 	//glGenTextures(1, &id);
@@ -33,7 +35,7 @@ bool Texture::load(std::string filename)
 }
 
 // El operador igualdad para hacer copias esta PROHIBIDO.
-const ::Texture& Texture::operator=(const Texture& other)
+const Texture& Texture::operator=(const Texture& other)
 {
 	if (other.m_id != 0)
 	{
@@ -427,3 +429,5 @@ bool TexturePNGLoader::LoadPNG(const char *fname, Texture &t)
 }
 
 #endif
+
+} //namespace Guy

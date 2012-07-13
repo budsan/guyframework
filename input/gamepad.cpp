@@ -6,6 +6,8 @@
 #include "environment.h"
 #include "gamepadlistener.h"
 
+namespace Guy {
+
 GamePad::GamePad(int id)
 {
 	mId = id;
@@ -147,3 +149,5 @@ void GamePad::setAnalogR(float x, float y)
 	mAnalogR.x = x;
 	mAnalogR.y = y;
 }
+
+} // namespace Guy

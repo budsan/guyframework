@@ -7,6 +7,8 @@
 
 #include "log.h"
 
+namespace Guy {
+
 SpriteStatic::SpriteStatic() : Sprite(), m_data()
 {
 	m_frameSelected  = 0;
@@ -242,3 +244,5 @@ bool SpriteLibrary::Empty()
 {
 	return frames.size() == 0;
 }
+
+} // namespace Guy

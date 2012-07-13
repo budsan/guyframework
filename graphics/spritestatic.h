@@ -8,6 +8,8 @@
 
 #include "sprite.h"
 
+namespace Guy {
+
 struct SpriteFrame {
 	short x, y, w, h; //Rect
 	short cx, cy; // Centro del sprite
@@ -51,3 +53,5 @@ class SpriteStatic : public Sprite {
 	boost::shared_ptr<SpriteLibrary> m_data;
 	int m_frameSelected;
 };
+
+} // namespace Guy

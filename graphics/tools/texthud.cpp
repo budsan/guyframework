@@ -1,6 +1,8 @@
 #include "texthud.h"
 #include "graphics/graphics.h"
 
+namespace Guy {
+
 TextHUD::TextHUD() : m_font()
 {
 	setColor(rgba(1,0,1,1));
@@ -74,4 +76,6 @@ void TextHUD::reset()
 {
 
 }
+
+} // namespace Guy
 

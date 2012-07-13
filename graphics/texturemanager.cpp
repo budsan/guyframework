@@ -9,6 +9,8 @@
 #include "graphics.h"
 #include "log.h"
 
+namespace Guy {
+
 #define NULL_TEXTURE ""
 
 //---------------------------------------------------------------------------//
@@ -150,4 +152,6 @@ std::vector<std::string> TextureManager::getPosibleDataPath(std::string filename
 
 	return pathOpts;
 }
+
+} //namespace Guy
 

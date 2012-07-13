@@ -1,10 +1,11 @@
-#ifndef CAMERA2D_H
-#define CAMERA2D_H
+#pragma once
 
 #include "camera.h"
 
 #include "math/algebra3.h"
 #include "math/bbox.h"
+
+namespace Guy {
 
 class Camera2D : public Camera
 {
@@ -38,4 +39,5 @@ private:
 	int m_w, m_h;
 };
 
-#endif // CAMERA2D_H
+} //namespace Guy
+

@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <time.h>
 
+namespace Guy {
+
 #define LOG_FILE "debug.txt"
 static FILE* sLogFile = NULL;
 
@@ -34,6 +36,8 @@ void printLog(const char *fmt, ...)
 		va_end(ap2);
 		fflush(sLogFile);
 	}
+}
+
 }
 
 

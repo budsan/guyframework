@@ -1,11 +1,11 @@
+#include "shader.h"
+#include "graphics.h"
+
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-
-#include "shader.h"
+namespace Guy {
 
 Shader::Shader(GLenum type)
 {
@@ -78,3 +78,5 @@ void Shader::printInfoLog() const
 		delete[] infoLog;
 	}
 }
+
+} //namespace Guy

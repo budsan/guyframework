@@ -10,6 +10,8 @@
 #undef max
 #endif
 
+namespace Guy {
+
 Camera2D::Camera2D()
 {
 	m_init = false;
@@ -91,3 +93,5 @@ void Camera2D::setZoom(float _zoom)
 {
 	m_zoom = _zoom;
 }
+
+} //namespace Guy

@@ -2,6 +2,8 @@
 
 #include "math/algebra3.h"
 
+namespace Guy {
+
 class Sprite
 {
  public:
@@ -42,3 +44,5 @@ class Sprite
 
 	math::vec2f m_pos;
 };
+
+} // namespace Guy

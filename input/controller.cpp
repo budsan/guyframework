@@ -1,5 +1,7 @@
 #include "controller.h"
 
+namespace Guy {
+
 Controller::Controller()
 {
     m_isEnabled = true;
@@ -29,3 +31,5 @@ bool Controller::isEnabled()
 { 
     return m_isEnabled && m_isConnected;
 }
+
+} // namespace Guy

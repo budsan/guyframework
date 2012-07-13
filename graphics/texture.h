@@ -3,6 +3,8 @@
 #include "graphics.h"
 #include <stdexcept>
 
+namespace Guy {
+
 /// Texture class
 class Texture
 {
@@ -91,3 +93,5 @@ private:
 	friend class Texture;
 };
 #endif
+
+} // namespace Guy

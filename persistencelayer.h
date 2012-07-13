@@ -5,6 +5,8 @@
 
 #include "variable.h"
 
+namespace Guy {
+
 class PersistenceLayer
 {
 public:
@@ -22,3 +24,5 @@ public:
 private:
 	std::map<std::string, Variable> m_vars;
 };
+
+} //namespace Guy

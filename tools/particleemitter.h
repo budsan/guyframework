@@ -1,5 +1,4 @@
-#ifndef PARTICLEEMITER_H
-#define PARTICLEEMITER_H
+#pragma once
 
 #include <list>
 #include <fstream>
@@ -8,6 +7,8 @@
 #include "math/algebra3.h"
 #include "graphics/color.h"
 #include "particle.h"
+
+namespace Guy {
 
 class ParticleEmitter
 {
@@ -105,4 +106,4 @@ protected:
 	boost::mt19937 m_random;
 };
 
-#endif // PARTICLEEMITER_H
+} // namespace Guy

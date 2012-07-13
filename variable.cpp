@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+namespace Guy {
+
 //Buffer for number conversions to ascii
 char tmp[128];
 
@@ -169,13 +171,13 @@ void Variable::set(bool val)
 	switch (m_type)
 	{
 	case Variable::Invalid: break;
-	case Variable::Bool: m_curVal.asBool = ::toBool(val); break;
-	case Variable::Int: m_curVal.asInt = ::toInt(val); break;
-	case Variable::Double: m_curVal.asDouble = ::toDouble(val); break;
-	case Variable::Char: m_curVal.asChar = ::toChar(val); break;
+	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
+	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
+	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
+	case Variable::Char: m_curVal.asChar = Guy::toChar(val); break;
 	case Variable::String:
 		delete m_curVal.asString;
-		m_curVal.asString = ::toString(val); break;
+		m_curVal.asString = Guy::toString(val); break;
 	}
 }
 
@@ -184,13 +186,13 @@ void Variable::set(int val)
 	switch (m_type)
 	{
 	case Variable::Invalid: break;
-	case Variable::Bool: m_curVal.asBool = ::toBool(val); break;
-	case Variable::Int: m_curVal.asInt = ::toInt(val); break;
-	case Variable::Double: m_curVal.asDouble = ::toDouble(val); break;
-	case Variable::Char: m_curVal.asChar = ::toChar(val); break;
+	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
+	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
+	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
+	case Variable::Char: m_curVal.asChar = Guy::toChar(val); break;
 	case Variable::String:
 		delete m_curVal.asString;
-		m_curVal.asString = ::toString(val); break;
+		m_curVal.asString = Guy::toString(val); break;
 	}
 }
 
@@ -199,13 +201,13 @@ void Variable::set(double val)
 	switch (m_type)
 	{
 	case Variable::Invalid: break;
-	case Variable::Bool: m_curVal.asBool = ::toBool(val); break;
-	case Variable::Int: m_curVal.asInt = ::toInt(val); break;
-	case Variable::Double: m_curVal.asDouble = ::toDouble(val); break;
-	case Variable::Char: m_curVal.asChar = ::toChar(val); break;
+	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
+	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
+	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
+	case Variable::Char: m_curVal.asChar = Guy::toChar(val); break;
 	case Variable::String:
 		delete m_curVal.asString;
-		m_curVal.asString = ::toString(val); break;
+		m_curVal.asString = Guy::toString(val); break;
 	}
 }
 
@@ -214,13 +216,13 @@ void Variable::set(char val)
 	switch (m_type)
 	{
 	case Variable::Invalid: break;
-	case Variable::Bool: m_curVal.asBool = ::toBool(val); break;
-	case Variable::Int: m_curVal.asInt = ::toInt(val); break;
-	case Variable::Double: m_curVal.asDouble = ::toDouble(val); break;
-	case Variable::Char: m_curVal.asChar = ::toChar(val); break;
+	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
+	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
+	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
+	case Variable::Char: m_curVal.asChar = Guy::toChar(val); break;
 	case Variable::String:
 		delete m_curVal.asString;
-		m_curVal.asString = ::toString(val); break;
+		m_curVal.asString = Guy::toString(val); break;
 	}
 }
 
@@ -230,13 +232,13 @@ void Variable::set(std::string _val)
 	switch (m_type)
 	{
 	case Variable::Invalid: break;
-	case Variable::Bool: m_curVal.asBool = ::toBool(val); break;
-	case Variable::Int: m_curVal.asInt = ::toInt(val); break;
-	case Variable::Double: m_curVal.asDouble = ::toDouble(val); break;
-	case Variable::Char: m_curVal.asChar = ::toChar(val); break;
+	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
+	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
+	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
+	case Variable::Char: m_curVal.asChar = Guy::toChar(val); break;
 	case Variable::String:
 		delete m_curVal.asString;
-		m_curVal.asString = ::toString(val); break;
+		m_curVal.asString = Guy::toString(val); break;
 	}
 }
 
@@ -260,11 +262,11 @@ bool Variable::toBool() const
 	switch (m_type)
 	{
 	case Variable::Invalid: return false;
-	case Variable::Bool: return ::toBool(m_curVal.asBool);
-	case Variable::Int: return ::toBool(m_curVal.asInt);
-	case Variable::Double: return ::toBool(m_curVal.asDouble);
-	case Variable::Char: return ::toBool(m_curVal.asChar);
-	case Variable::String: return ::toBool(m_curVal.asString);
+	case Variable::Bool: return Guy::toBool(m_curVal.asBool);
+	case Variable::Int: return Guy::toBool(m_curVal.asInt);
+	case Variable::Double: return Guy::toBool(m_curVal.asDouble);
+	case Variable::Char: return Guy::toBool(m_curVal.asChar);
+	case Variable::String: return Guy::toBool(m_curVal.asString);
 	}
 
 	return false;
@@ -275,11 +277,11 @@ int Variable::toInt() const
 	switch (m_type)
 	{
 	case Variable::Invalid: return 0;
-	case Variable::Bool: return ::toInt(m_curVal.asBool);
-	case Variable::Int: return ::toInt(m_curVal.asInt);
-	case Variable::Double: return ::toInt(m_curVal.asDouble);
-	case Variable::Char: return ::toInt(m_curVal.asChar);
-	case Variable::String: return ::toInt(m_curVal.asString);
+	case Variable::Bool: return Guy::toInt(m_curVal.asBool);
+	case Variable::Int: return Guy::toInt(m_curVal.asInt);
+	case Variable::Double: return Guy::toInt(m_curVal.asDouble);
+	case Variable::Char: return Guy::toInt(m_curVal.asChar);
+	case Variable::String: return Guy::toInt(m_curVal.asString);
 	}
 
 	return 0;
@@ -290,11 +292,11 @@ double Variable::toDouble() const
 	switch (m_type)
 	{
 	case Variable::Invalid: return 0;
-	case Variable::Bool: return ::toDouble(m_curVal.asBool);
-	case Variable::Int: return ::toDouble(m_curVal.asInt);
-	case Variable::Double: return ::toDouble(m_curVal.asDouble);
-	case Variable::Char: return ::toDouble(m_curVal.asChar);
-	case Variable::String: return ::toDouble(m_curVal.asString);
+	case Variable::Bool: return Guy::toDouble(m_curVal.asBool);
+	case Variable::Int: return Guy::toDouble(m_curVal.asInt);
+	case Variable::Double: return Guy::toDouble(m_curVal.asDouble);
+	case Variable::Char: return Guy::toDouble(m_curVal.asChar);
+	case Variable::String: return Guy::toDouble(m_curVal.asString);
 	}
 
 	return 0;
@@ -305,11 +307,11 @@ char Variable::toChar() const
 	switch (m_type)
 	{
 	case Variable::Invalid: return 0;
-	case Variable::Bool: return ::toBool(m_curVal.asBool);
-	case Variable::Int: return ::toBool(m_curVal.asInt);
-	case Variable::Double: return ::toBool(m_curVal.asDouble);
-	case Variable::Char: return ::toBool(m_curVal.asChar);
-	case Variable::String: return ::toBool(m_curVal.asString);
+	case Variable::Bool: return Guy::toBool(m_curVal.asBool);
+	case Variable::Int: return Guy::toBool(m_curVal.asInt);
+	case Variable::Double: return Guy::toBool(m_curVal.asDouble);
+	case Variable::Char: return Guy::toBool(m_curVal.asChar);
+	case Variable::String: return Guy::toBool(m_curVal.asString);
 	}
 
 	return 0;
@@ -321,12 +323,12 @@ std::string Variable::toString() const
 	switch (m_type)
 	{
 	case Variable::Invalid: std::string();
-	case Variable::Bool: c_ret = ::toString(m_curVal.asBool); break;
-	case Variable::Int: c_ret = ::toString(m_curVal.asInt); break;
-	case Variable::Double: c_ret = ::toString(m_curVal.asDouble); break;
-	case Variable::Char: c_ret = ::toString(m_curVal.asChar); break;
-	case Variable::String: c_ret = ::toString(m_curVal.asString); break;
-	default: c_ret = ::toString("");
+	case Variable::Bool: c_ret = Guy::toString(m_curVal.asBool); break;
+	case Variable::Int: c_ret = Guy::toString(m_curVal.asInt); break;
+	case Variable::Double: c_ret = Guy::toString(m_curVal.asDouble); break;
+	case Variable::Char: c_ret = Guy::toString(m_curVal.asChar); break;
+	case Variable::String: c_ret = Guy::toString(m_curVal.asString); break;
+	default: c_ret = Guy::toString("");
 	}
 
 	std::string ret(c_ret); delete c_ret;
@@ -422,3 +424,5 @@ std::istream &operator >>(std::istream &in, Variable &var)
 
 	return in;
 }
+
+} // namespace Guy

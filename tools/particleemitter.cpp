@@ -14,6 +14,8 @@
 #include "graphics/graphics.h"
 #include "graphics/texturemanager.h"
 
+namespace Guy {
+
 ParticleEmitter::ParticleEmitter() : m_random(unsigned(time(0)))
 {
 	restart();
@@ -351,3 +353,5 @@ void ParticleEmitter::write(std::ofstream &file, const rgba &c)
 	file.write((char*)&c.b,sizeof(float));
 	file.write((char*)&c.a,sizeof(float));
 }
+
+} // namespace Guy

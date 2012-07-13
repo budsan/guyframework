@@ -1,6 +1,8 @@
 #include "font.h"
 #include "graphics.h"
 
+namespace Guy {
+
 #define USING_GL11
 
 bool Font::load(const char* path, int point_size, int dpi)
@@ -418,3 +420,5 @@ void Font::draw(const char* msg, float x, float y, float r, float g, float b, fl
 	free(texture_coords);
 	free(indices);
 }
+
+} // namespace Guy

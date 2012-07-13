@@ -8,6 +8,8 @@
 #include <iostream>
 #include <cmath>
 
+namespace Guy {
+
 float Sprite::s_globalUnitsPerPixel = 1.0f;
 
 Sprite::Sprite()
@@ -130,3 +132,5 @@ void Sprite::draw()
 
 void Sprite::preDrawing() {}
 void Sprite::postDrawing(){}
+
+} //namespace Guy

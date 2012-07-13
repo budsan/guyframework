@@ -8,6 +8,8 @@
 
 #include "log.h"
 
+namespace Guy {
+
 SpriteAnim::SpriteAnim() : Sprite(), m_data()
 {
 	m_animSelected  = 0;
@@ -321,3 +323,5 @@ void SpriteAnimData::getContentFilename(std::set<std::string> &contentFilename)
 		contentFilename.insert(it->spritesheetFilename);
 	}
 }
+
+} //namespace Guy

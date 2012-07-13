@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Guy {
+
 class Controller
 {
 public:
@@ -19,3 +21,4 @@ private:
 	bool m_isConnected;
 };
 
+} // namespace Guy

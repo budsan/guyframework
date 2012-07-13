@@ -9,6 +9,8 @@
 #include <boost/bind.hpp>
 #include <SDL/SDL.h>
 
+namespace Guy {
+
 void emylErrorCallback(const std::string &error)
 {
 	printLog("emyl error: %s\n", error.c_str());
@@ -238,3 +240,5 @@ void LinuxEnvironment::loopStableDrop()
 
 	m_game->draw();
 }
+
+} // namespace Guy

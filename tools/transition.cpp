@@ -6,6 +6,8 @@
 
 #define M_PI_2F ( (float) M_PI_2 )
 
+namespace Guy {
+
 //-TRANSITION----------------------------------------------------------------//
 Transition::Transition() {
 	m_fPos = 0;
@@ -219,3 +221,5 @@ void TransitionInertial::update(float fTime)
 		m_fPos = m_fPosToGo; m_fVel = 0;
 	}
 }
+
+} // namespace Guy

@@ -1,6 +1,8 @@
 #include "persistencelayer.h"
 #include "log.h"
 
+namespace Guy {
+
 void PersistenceLayer::add(const Variable &var, bool overwrite, bool persist)
 {
 	if (var.type() == Variable::Invalid) return;
@@ -42,3 +44,4 @@ Variable *PersistenceLayer::get(const std::string &name)
 	return v;
 }
 
+} // namespace Guy

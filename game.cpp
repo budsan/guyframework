@@ -1,5 +1,7 @@
 #include "game.h"
 
+namespace Guy {
+
 Game::Game()
 {
 
@@ -34,3 +36,5 @@ const char *Game::getVersion()
 {
 	return "Undefined";
 }
+
+} // namespace Guy

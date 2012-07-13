@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 
+namespace Guy {
+
 class TextureManager
 {
 public:
@@ -31,3 +33,5 @@ protected:
 	std::map<std::string, Texture> m_textures;
 	std::string m_dataPath;
 };
+
+} // namespace Guy

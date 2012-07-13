@@ -1,6 +1,8 @@
 #include "color.h"
 #include "graphics.h"
 
+namespace Guy {
+
 rgb::rgb() : r(0), g(0), b(0)
 {
 
@@ -365,32 +367,34 @@ void rgba::clamp()
 	else if ( a < 0.0f) a = 0.0f;
 }
 
-void glColor(const rgb *c)
+} // namespace Guy
+
+void glColor(const Guy::rgb *c)
 {
 	glColor3fv(c->raw());
 }
 
-void glColor(const rgb &c)
+void glColor(const Guy::rgb &c)
 {
 	glColor3fv(c.raw());
 }
 
-void glColor(const rgba *c)
+void glColor(const Guy::rgba *c)
 {
 	glColor4fv(c->raw());
 }
 
-void glColor(const rgba &c)
+void glColor(const Guy::rgba &c)
 {
 	glColor4fv(c.raw());
 }
 
-void glClearColor(const rgba *c)
+void glClearColor(const Guy::rgba *c)
 {
 	glClearColor(c->r, c->g, c->b, c->a);
 }
 
-void glClearColor(const rgba &c)
+void glClearColor(const Guy::rgba &c)
 {
 	glClearColor(c.r, c.g, c.b, c.a);
 }

@@ -42,7 +42,7 @@ SOURCES += \
     $$PWD/deps/linux/linuxinput.cpp \
     $$PWD/deps/linux/linuxpersistencelayer.cpp \
     $$PWD/deps/linux/linuxscreen.cpp \
-    gameframework/input/controller.cpp
+    $$PWD/input/controller.cpp
 
 
     
@@ -52,6 +52,7 @@ HEADERS += \
     $$PWD/persistencelayer.h \
     $$PWD/log.h \
     $$PWD/content/content.h \
+    $$PWD/graphics/graphics.h \
     $$PWD/graphics/screen.h \
     $$PWD/graphics/texture.h \
     $$PWD/graphics/sprite.h \
@@ -61,6 +62,8 @@ HEADERS += \
     $$PWD/graphics/shaderprogram.h \
     $$PWD/graphics/shader.h \
     $$PWD/graphics/framebuffer.h \
+    $$PWD/graphics/camera2d.h \
+    $$PWD/graphics/primitives.h \
     $$PWD/input/input.h \
     $$PWD/input/keyboard.h \
     $$PWD/input/gamepad.h \
@@ -75,8 +78,6 @@ HEADERS += \
     $$PWD/math/tri.h \
     $$PWD/math/algebra3.h \
     $$PWD/math/algebra3_cpp11.h \
-    $$PWD/graphics/camera2d.h \
-    $$PWD/graphics/primitives.h \
     $$PWD/audio/emyl.h \
     $$PWD/graphics/tools/frameshud.h \
     $$PWD/graphics/tools/texthud.h \
@@ -90,6 +91,7 @@ HEADERS += \
     $$PWD/deps/linux/linuxinput.h \
     $$PWD/deps/linux/linuxpersistencelayer.h \
     $$PWD/deps/linux/linuxscreen.h \
-    gameframework/deps/linux/graphics.h \
-    gameframework/graphics/graphics.h
+    $$PWD/deps/linux/graphics.h \
+    guyframework/input/focuslistener.h
+
 

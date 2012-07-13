@@ -3,6 +3,8 @@
 #include "graphics/screen.h"
 #include <SDL/SDL.h>
 
+namespace Guy {
+
 class LinuxScreen : public Screen
 {
 public:
@@ -38,3 +40,5 @@ protected:
 	std::vector<Mode> m_videoModes;
 	bool m_isFullscreen;
 };
+
+} // namespace Guy

@@ -3,6 +3,9 @@
 #include <set>
 
 #include "keyboard.h"
+#include "focuslistener.h"
+
+namespace Guy {
 
 class Input
 {
@@ -10,18 +13,6 @@ public:
 
 	virtual int       getKeyboardCount()     = 0;
 	virtual Keyboard& getKeyboard(int i = 0) = 0;
-
-	struct FocusListener
-	{
-		virtual void onGainDrawFocus() { }
-		virtual void onLoseDrawFocus() { }
-
-		virtual void onGainInputFocus() { }
-		virtual void onLoseInputFocus() { }
-
-		virtual void onGainMouseFocus() { }
-		virtual void onLoseMouseFocus() { }
-	};
 
 	//Must be added FocusListeners manually in Game->init.
 	virtual void addFocusListener(FocusListener *listener);
@@ -40,4 +31,6 @@ protected:
 
 	std::set<FocusListener*> m_FocusListeners;
 };
+
+} // namespace Guy
 

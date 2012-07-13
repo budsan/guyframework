@@ -1,8 +1,9 @@
-#ifndef VARIABLE_H
-#define VARIABLE_H
+#pragma once
 
 #include <string>
 #include <iostream>
+
+namespace Guy {
 
 class Variable
 {
@@ -65,4 +66,4 @@ private:
 std::ostream &operator <<(std::ostream &out, const Variable &var);
 std::istream &operator >>(std::istream &in, Variable &var);
 
-#endif // VARIABLE_H
+} //namespace Guy

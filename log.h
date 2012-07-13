@@ -1,6 +1,4 @@
-#ifndef _LOG_INCLUDED_
-#define _LOG_INCLUDED_
-
+#pragma once
 #include <cstdio>
 
 #if defined(_DEBUG)
@@ -17,7 +15,9 @@
 	#define dbgPrintLog(format, args...) do {} while(0);
 #endif
 
+namespace Guy {
+
 void openLogFile();
 void printLog(const char *fmt, ...);
 
-#endif
+} //namespace Guy

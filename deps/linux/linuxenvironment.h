@@ -12,6 +12,8 @@
 
 #include <SDL/SDL.h>
 
+namespace Guy {
+
 class LinuxEnvironment : public Environment
 {
 public:
@@ -59,4 +61,4 @@ private:
 	Uint32 m_accumTime;
 };
 
-
+} // namespace Guy

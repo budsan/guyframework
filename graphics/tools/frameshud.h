@@ -3,6 +3,8 @@
 #include "graphics/font.h"
 #include "graphics/color.h"
 
+namespace Guy {
+
 class FramesHUD
 {
  public:
@@ -24,3 +26,5 @@ protected:
 	unsigned short m_framesCount;
 	bool m_isFontLoaded;
 };
+
+} // namespace Guy

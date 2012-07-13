@@ -6,11 +6,13 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+namespace Guy {
+
 class Font
 {
 public:
 
-    Font() : m_alignment(LEFT), initialized(0) {}
+	Font() : m_alignment(LEFT), initialized(0) {}
 
 	bool load(const char* path, int point_size, int dpi = 96);
 	math::vec2f measure(const char* msg);
@@ -69,3 +71,5 @@ private:
 	float offset_y[128];
 	int initialized;
 };
+
+} //namespace Guy

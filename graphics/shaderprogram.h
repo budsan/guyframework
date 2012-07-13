@@ -1,8 +1,9 @@
-#ifndef _SHADER_PROGRAM_INCLUDED_
-#define _SHADER_PROGRAM_INCLUDED_
+#pragma once
 
 #include <vector>
 #include "shader.h"
+
+namespace Guy {
 
 /// ShaderProgram class
 class ShaderProgram
@@ -30,5 +31,4 @@ class ShaderProgram
 		void printInfoLog();
 };
 
-#endif
-
+} // namespace Guy

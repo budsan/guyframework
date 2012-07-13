@@ -2,6 +2,7 @@
 
 #include <fstream>
 
+namespace Guy {
 
 void LinuxPersistenceLayer::persist()
 {
@@ -71,3 +72,5 @@ bool LinuxPersistenceLayer::save()
 
 	return true;
 }
+
+} // namespace Guy

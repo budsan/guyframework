@@ -16,14 +16,16 @@
 
 #include "log.h"
 
-static const unsigned int SDL_INIT_FLAGS =
+using namespace Guy ;
+
+static const unsigned int GUY_SDL_SURFACE_FLAGS =
 		SDL_OPENGL |
 		SDL_GL_DOUBLEBUFFER |
 		SDL_HWPALETTE |
 		SDL_HWSURFACE |
 		SDL_HWACCEL;
 
-static const int DEFAULT_BPP = 32;
+static const int GUY_DEFAULT_BPP = 32;
 
 //---------------------------------------------------------------------------//
 
@@ -58,7 +60,7 @@ bool LinuxScreen::preinit()
 	}
 
 	//GET AVAILABLE VIDEO MODES
-	SDL_Rect **modes_available = SDL_ListModes(NULL, SDL_INIT_FLAGS|SDL_FULLSCREEN);
+	SDL_Rect **modes_available = SDL_ListModes(NULL, GUY_SDL_SURFACE_FLAGS|SDL_FULLSCREEN);
 	const SDL_VideoInfo* videoinfo = SDL_GetVideoInfo();
 	if (modes_available == (SDL_Rect **) 0) return NULL;
 	unsigned int nModes;
@@ -149,7 +151,7 @@ bool LinuxScreen::setMode(const Mode& mode, bool fullscreen)
 		else unloadContent();
 	}
 
-	unsigned int flags = SDL_INIT_FLAGS;
+	unsigned int flags = GUY_SDL_SURFACE_FLAGS;
 	if (fullscreen) flags |= SDL_FULLSCREEN;
 
 	SDL_Surface* screen = NULL;
@@ -158,13 +160,13 @@ bool LinuxScreen::setMode(const Mode& mode, bool fullscreen)
 	if (selected.w == 0 || selected.h == 0)
 	{
 		selected = m_videoModes[0];
-		screen = SDL_SetVideoMode (selected.w, selected.h, DEFAULT_BPP, flags);
+		screen = SDL_SetVideoMode (selected.w, selected.h, GUY_DEFAULT_BPP, flags);
 	}
 
 	//select current desktop video-mode
 	if (screen == NULL)
 	{
-		screen = SDL_SetVideoMode (selected.w, selected.h, DEFAULT_BPP, flags);
+		screen = SDL_SetVideoMode (selected.w, selected.h, GUY_DEFAULT_BPP, flags);
 	}
 
 	if (screen == NULL) return false;

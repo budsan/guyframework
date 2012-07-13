@@ -6,6 +6,8 @@
 #include <set>
 #include <SDL/SDL.h>
 
+namespace Guy {
+
 class LinuxInput : public Input
 {
 public:
@@ -30,4 +32,6 @@ private:
 	unsigned char m_focusState;
 	bool m_waitUntilResumeIsCalled;
 };
+
+} // namespace Guy
 

@@ -1,8 +1,9 @@
 #pragma once
-
 #include <vector>
 
 #include "color.h"
+
+namespace Guy {
 
 class Screen
 {
@@ -28,4 +29,6 @@ public:
 	virtual void fillWithColor(const rgba &color) = 0;
 	virtual void flip() = 0;
 };
+
+} // namespace Guy
 

@@ -8,6 +8,8 @@
 
 #include "sprite.h"
 
+namespace Guy {
+
 struct SpriteAnimFrame {
 	short x, y, w, h; //Rect
 	short cx, cy; // Centro del sprite
@@ -64,3 +66,5 @@ class SpriteAnim : public Sprite {
 
 	void nextFrame();
 };
+
+} // namespace Guy
