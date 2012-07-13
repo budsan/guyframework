@@ -30,9 +30,9 @@ bool LinuxEnvironment::init(Game *game)
 	Environment::init(game);
 
 	openLogFile();
-	printLog("--------------------------------------------------------------------------------\n");
-	printLog("%s - %s\n", m_game->getName(), m_game->getVersion());
-	printLog("--------------------------------------------------------------------------------\n");
+	printLog("--------------------------------------------------------\n");
+	printLog(" %s - %s\n", m_game->getName(), m_game->getVersion());
+	printLog("--------------------------------------------------------\n");
 
 	SDL_Init(0);
 
