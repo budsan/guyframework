@@ -16,6 +16,11 @@ SDLInput::SDLInput() :
 	m_keyboard->setEnabled(true);
 }
 
+SDLInput::~SDLInput()
+{
+
+}
+
 void SDLInput::pollEvents()
 {
 	SDL_Event event;

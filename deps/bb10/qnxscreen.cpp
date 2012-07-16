@@ -3,6 +3,9 @@
 
 #include "graphics.h"
 
+#include "graphics/primitives.h"
+#include "math/algebra3.h"
+
 #include <stdlib.h>
 #include <iostream>
 #include <map>
@@ -13,7 +16,7 @@
 
 #include "log.h"
 
-using namespace Guy ;
+namespace Guy {
 
 //---------------------------------------------------------------------------//
 
@@ -144,24 +147,6 @@ void QNXScreen::unloadContent()
 
 //---------------------------------------------------------------------------//
 
-void QNXScreen::initGL()
-{
-	glShadeModel(GL_SMOOTH);
-	glClearDepth( 1.0f );
-
-	//glDisable(GL_TEXTURE_2D);
-	//glDisable(GL_DEPTH_TEST);
-	//glDisable(GL_BLEND);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
-
-	glLineWidth(1.0);
-	resetViewport();
-}
-
-//---------------------------------------------------------------------------//
-
 void QNXScreen::resetViewport()
 {
 	//	if ( m_ratio == 0 )
@@ -199,4 +184,4 @@ void QNXScreen::resetViewport()
 	 */
 }
 
-
+} //namespace Guy

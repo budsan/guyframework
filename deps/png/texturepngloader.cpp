@@ -5,6 +5,13 @@
 
 namespace Guy {
 
+int NextPowerOfTwo ( int a )
+{
+	int rval=1;
+	while(rval<a) rval<<=1;
+	return rval;
+}
+
 void TexturePNGLoader::getPNGTextureInfo (int color_type, gl_texture_t *texinfo)
 {
 	switch (color_type)
@@ -174,27 +181,57 @@ bool TexturePNGLoader::LoadPNG(const char *fname, Texture &t)
 
 	if (png_tex && png_tex->texels)
 	{
+		glGetError();
+
 		/* generate texture */
 		glGenTextures (1, &png_tex->id);
 		glBindTexture (GL_TEXTURE_2D, png_tex->id);
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
 		/* setup some parameters for texture filters and mipmapping */
 		//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
-		gluBuild2DMipmaps (GL_TEXTURE_2D, png_tex->internalFormat,
-				   png_tex->width, png_tex->height,
-				   png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
+		int tex_width = NextPowerOfTwo(png_tex->width);
+		int tex_height = NextPowerOfTwo(png_tex->height);
 
-		t.m_id     = png_tex->id;
-		t.m_width  = png_tex->width;
-		t.m_height = png_tex->height;
-
+		if ((tex_width != png_tex->width) || (tex_height != png_tex->height) ) {
+			glTexImage2D(GL_TEXTURE_2D, 0, png_tex->format,
+					png_tex->width, png_tex->height, 0,
+					png_tex->format, GL_UNSIGNED_BYTE, NULL);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
+					png_tex->width, png_tex->height,
+					png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
+		} else {
+			glTexImage2D(GL_TEXTURE_2D, 0, png_tex->format,
+					png_tex->width, png_tex->height, 0,
+					png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
+		}
+		/*
+			glTexImage2D (GL_TEXTURE_2D, 0, png_tex->internalFormat,
+					   png_tex->width, png_tex->height, 0,
+					   png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
+		 */
 		/* OpenGL has its own copy of texture data */
 		free (png_tex->texels);
-		free (png_tex);
 
-		return true;
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+		GLint err = glGetError();
+		if (err != 0)
+		{
+			fprintf(stderr, "GL error %i \n", err);
+			free (png_tex);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+			t.m_id     = png_tex->id;
+			t.m_width  = png_tex->width;
+			t.m_height = png_tex->height;
+
+			free (png_tex);
+			return true;
+		}
 	}
 
 	return false;

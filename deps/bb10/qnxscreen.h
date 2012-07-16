@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/screen.h"
+#include "graphics.h"
 
 #include <bps/navigator.h>
 #include <bps/bps.h>

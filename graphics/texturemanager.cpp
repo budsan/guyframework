@@ -1,6 +1,6 @@
 #include "texturemanager.h"
 
-#include <cstdlib>
+#include <stdlib.h>
 #include <fstream>
 #include <map>
 #include <vector>

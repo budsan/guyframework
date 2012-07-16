@@ -22,8 +22,7 @@ public:
 	~Texture();
 
 	bool load(std::string filename);
-	bool load(GLenum iformat, int width, int height, GLfloat *pixels);
-	bool load(GLenum iformat, int width, int height, GLubyte *pixels);
+	//bool load(GLenum iformat, int width, int height, GLubyte *pixels);
 	bool load(const Texture &other); //TODO
 	bool loadNullTexture();
 

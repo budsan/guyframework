@@ -224,7 +224,7 @@ void SDLEnvironment::loopStableDrop()
 
 	while(m_accumTime >= m_ticksPerFrame)
 	{
-		m_game->update(m_ticksPerFrame);
+		m_game->update(m_ticksPerFrame/1000.f);
 		m_accumTime -= m_ticksPerFrame;
 	}
 

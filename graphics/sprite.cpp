@@ -80,8 +80,8 @@ void Sprite::draw()
 
 	const Texture &tex = texman->getTexture(params.filename);
 	tex.setFiltering(GL_NEAREST);
-	tex.setWrap(GL_CLAMP_TO_BORDER);
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, rgba(0,0,0,0).raw());
+	tex.setWrap(GL_CLAMP_TO_EDGE);
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_ED, rgba(0,0,0,0).raw());
 
 	struct { float x0, y0, x1, y1; } normCoords;
 	normCoords.x0 = float(params.x)/float(tex.w());
@@ -96,12 +96,13 @@ void Sprite::draw()
 		{ normCoords.x1, normCoords.y0 }
 	};
 
-	float h = (float) fabs(params.h), w = (float) fabs(params.w);
+	float h = abs(params.h), w = abs(params.w);
 	struct { float x, y; } vertcoordsArray[4] = {
 		{0, 0},{0,-h},{w,-h},{w, 0}
 	};
 
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	unsigned short indices[] = { 3, 0, 1, 1, 2, 3 };
+
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
@@ -120,12 +121,11 @@ void Sprite::draw()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer  (2, GL_FLOAT, 0, vertcoordsArray);
 	glTexCoordPointer(2, GL_FLOAT, 0, texcoordsArray);
-	glDrawArrays(GL_QUADS, 0, 4);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);	
 
 	glPopMatrix();
-	glPopAttrib();
 
 	postDrawing();
 }

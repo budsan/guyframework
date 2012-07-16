@@ -37,15 +37,15 @@ bool QNXEnvironment::init(Game *game)
 
 	bps_initialize();
 
-	m_screen   = new SDLScreen();
+	m_screen   = new QNXScreen();
 	if (!m_screen->preinit())
 	{
 		printLog("ERROR: Couldn't init screen.\n");
 		return false;
 	}
 
-	m_audio    = emyl::manager::get_instance();
-	m_input    = new SDLInput();
+	m_audio = emyl::manager::get_instance();
+	m_input = new QNXInput();
 
 	setFramesPerSecond(0, false, false);
 	m_game->init();
@@ -55,7 +55,7 @@ bool QNXEnvironment::init(Game *game)
 		printLog("ERROR: Couldn't init screen.\n");
 		return false;
 	}
-	m_screen->setCaption(m_game->getName());
+	//m_screen->setCaption(m_game->getName());
 
 	if (!m_audio-> init())
 	{
@@ -74,16 +74,16 @@ void QNXEnvironment::destroy()
 	delete m_screen;
 	delete m_audio;
 
-	SDL_Quit();
+	bps_shutdown();
 }
 
 void QNXEnvironment::setFramesPerSecond(unsigned short frames, bool stable, bool dropFrames)
 {
 	m_framesPerSecond = frames;
-	if (frames != 0) m_ticksPerFrame = 1000/(Uint32)m_framesPerSecond;
-	else m_ticksPerFrame = 0;
+	if (frames != 0) m_secsPerFrame = 1.0f/(float)m_framesPerSecond;
+	else m_secsPerFrame = 0;
 
-	if (m_ticksPerFrame == 0) m_gameLoop =  boost::bind(&QNXEnvironment::loopVariableFastest, this);
+	if (m_secsPerFrame == 0) m_gameLoop =  boost::bind(&QNXEnvironment::loopVariableFastest, this);
 	else {
 		if (stable) {
 			if (dropFrames) m_gameLoop = boost::bind(&QNXEnvironment::loopStableDrop, this);
@@ -98,7 +98,7 @@ void QNXEnvironment::setFramesPerSecond(unsigned short frames, bool stable, bool
 void QNXEnvironment::run()
 {
 	if (m_game == NULL) return;
-	m_before = SDL_GetTicks();
+	m_before = time();
 
 	//MAIN LOOP
 	while (!m_exit)
@@ -108,7 +108,7 @@ void QNXEnvironment::run()
 			m_audio->sleep();
 			while (!m_exit && m_pause) m_input->waitEvent();
 			m_audio->unsleep();
-			m_before = SDL_GetTicks();
+			m_before = time();
 		}
 
 		m_input->pollEvents();
@@ -158,29 +158,34 @@ Input& QNXEnvironment::getInputManager()
 	return *(Input*)m_input;
 }
 
+PersistenceLayer& QNXEnvironment::getPersitenceLayer()
+{
+	return *(PersistenceLayer*)m_persistenceLayer;
+}
+
 void QNXEnvironment::loopVariableFastest()
 {
-	Uint32 now = SDL_GetTicks();
-	Uint32 uiDeltaTime = now - m_before;
+	float now = time();
+	float fDeltaTime = now - m_before;
 	m_before = now;
 
-	m_game->update(uiDeltaTime/1000.f);
+	m_game->update(fDeltaTime);
 	m_game->draw();
 }
 
 void QNXEnvironment::loopVariable()
 {
-	Uint32 now = SDL_GetTicks();
-	Uint32 uiDeltaTime = now - m_before;
-	if (uiDeltaTime < m_ticksPerFrame)
+	float now = time();
+	float fDeltaTime = now - m_before;
+	if (fDeltaTime < m_secsPerFrame)
 	{
-		SDL_Delay(m_ticksPerFrame - uiDeltaTime);
-		now = SDL_GetTicks();
-		uiDeltaTime = now - m_before;
+		delay(m_secsPerFrame - fDeltaTime);
+		now = time();
+		fDeltaTime = now - m_before;
 	}
 	m_before = now;
 
-	m_game->update(uiDeltaTime/1000.f);
+	m_game->update(fDeltaTime);
 	m_game->draw();
 }
 
@@ -188,21 +193,21 @@ void QNXEnvironment::loopStable()
 {
 	for(;;)
 	{
-		Uint32 now = SDL_GetTicks();
-		Uint32 uiDeltaTime = now - m_before;
-		Uint32 currAccumTime = m_accumTime + uiDeltaTime;
+		float now = time();
+		float fDeltaTime = now - m_before;
+		float currAccumTime = m_accumTime + fDeltaTime;
 
-		if (currAccumTime < m_ticksPerFrame) {
-			SDL_Delay(m_ticksPerFrame - currAccumTime);
+		if (currAccumTime < m_secsPerFrame) {
+			delay(m_secsPerFrame - currAccumTime);
 		}
 		else {
 			m_before = now;
-			m_accumTime = currAccumTime - m_ticksPerFrame;
+			m_accumTime = currAccumTime - m_secsPerFrame;
 			break;
 		}
 	}
 
-	m_game->update(m_ticksPerFrame/1000.f);
+	m_game->update(m_secsPerFrame);
 	m_game->draw();
 }
 
@@ -210,24 +215,24 @@ void QNXEnvironment::loopStableDrop()
 {
 	for(;;)
 	{
-		Uint32 now = SDL_GetTicks();
-		Uint32 uiDeltaTime = now - m_before;
-		Uint32 currAccumTime = m_accumTime + uiDeltaTime;
+		float now = time();
+		float fDeltaTime = now - m_before;
+		float currAccumTime = m_accumTime + fDeltaTime;
 
-		if (currAccumTime < m_ticksPerFrame) {
-			SDL_Delay(m_ticksPerFrame - currAccumTime);
+		if (currAccumTime < m_secsPerFrame) {
+			delay(m_secsPerFrame - currAccumTime);
 		}
 		else {
 			m_before = now;
-			m_accumTime = currAccumTime - m_ticksPerFrame;
+			m_accumTime = currAccumTime - m_secsPerFrame;
 			break;
 		}
 	}
 
-	while(m_accumTime >= m_ticksPerFrame)
+	while(m_accumTime >= m_secsPerFrame)
 	{
-		m_game->update(m_ticksPerFrame);
-		m_accumTime -= m_ticksPerFrame;
+		m_game->update(m_secsPerFrame);
+		m_accumTime -= m_secsPerFrame;
 	}
 
 	m_game->draw();

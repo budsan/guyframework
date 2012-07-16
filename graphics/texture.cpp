@@ -44,7 +44,7 @@ const Texture& Texture::operator=(const Texture& other)
 	return *this;
 }
 
-
+/*
 bool Texture::load(GLenum iformat, int width, int height, GLubyte *pixels)
 {
 	glGenTextures(1, &m_id);
@@ -67,6 +67,7 @@ bool Texture::load(GLenum iformat, int width, int height, GLubyte *pixels)
 	glTexImage2D(GL_TEXTURE_2D, 0, iformat, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
 	return true;
 }
+*/
 
 bool Texture::load(const Texture &other)
 {
@@ -132,7 +133,9 @@ bool Texture::loadNullTexture()
 	glGenTextures (1, &m_id);
 	if (m_id == 0) return false;
 	glBindTexture (GL_TEXTURE_2D, m_id);
-	gluBuild2DMipmaps (GL_TEXTURE_2D, GL_RGBA, wi, he, GL_RGBA, GL_UNSIGNED_BYTE, texels);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w(), h(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texels);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
 
 	m_width  = wi;
 	m_height = he;
