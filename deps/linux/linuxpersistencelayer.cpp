@@ -4,6 +4,11 @@
 
 namespace Guy {
 
+LinuxPersistenceLayer::~LinuxPersistenceLayer()
+{
+
+}
+
 void LinuxPersistenceLayer::persist()
 {
 	this->save();

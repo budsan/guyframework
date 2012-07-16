@@ -2,7 +2,7 @@
 
 #include <list>
 #include <fstream>
-#include "boost/random.hpp"
+#include <boost/random.hpp>
 
 #include "math/algebra3.h"
 #include "graphics/color.h"

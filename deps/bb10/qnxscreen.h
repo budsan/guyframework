@@ -1,23 +1,25 @@
 #pragma once
 
 #include "graphics/screen.h"
-#include <SDL/SDL.h>
+
+#include <bps/navigator.h>
+#include <bps/bps.h>
+#include <bps/event.h>
+#include <bps/screen.h>
 
 namespace Guy {
 
-class SDLScreen : public Screen
+class QNXScreen : public Screen
 {
 public:
-	SDLScreen();
-	virtual ~SDLScreen();
+	QNXScreen();
+	virtual ~QNXScreen();
 
 	bool preinit();
 	bool init();
 	void resetViewport();
 
-
 	void unloadContent();
-	void setCaption(const char* GameName);
 
 	bool setMode(const Mode& mode, bool fullscreen = true);
 	const std::vector<Mode>& getAvailableModes(unsigned int &size);
@@ -29,13 +31,23 @@ public:
 	void flip();
 
 protected:
-	void initGL();
 
-	//ATRIBS
-	SDL_Surface* m_screen;
 	Mode m_selectedMode;
 	std::vector<Mode> m_videoModes;
 	bool m_isFullscreen;
+
+	//ATRIBS
+	EGLDisplay egl_disp;
+	EGLSurface egl_surf;
+
+	EGLConfig egl_conf;
+	EGLContext egl_ctx;
+
+	screen_context_t screen_ctx;
+	screen_window_t screen_win;
+	screen_display_t screen_disp;
+	int nbuffers;
+	int initialized;
 };
 
 } // namespace Guy

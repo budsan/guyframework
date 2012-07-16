@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "boost/smart_ptr.hpp"
+#include <boost/smart_ptr.hpp>
 
 #include "graphics/font.h"
 #include "graphics/color.h"

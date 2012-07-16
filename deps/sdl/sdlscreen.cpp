@@ -82,8 +82,6 @@ bool SDLScreen::init()
 	}
 
 	SDL_ShowCursor(0);
-//	const char *titol = title.c_str();
-//	SDL_WM_SetCaption(titol, NULL);
 
 	GLenum err = glewInit();
 	if (GLEW_OK != err)

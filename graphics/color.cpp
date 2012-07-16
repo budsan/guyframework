@@ -371,22 +371,22 @@ void rgba::clamp()
 
 void glColor(const Guy::rgb *c)
 {
-	glColor3fv(c->raw());
+	glColor4f(c->r, c->g, c->b, 1.0f);
 }
 
 void glColor(const Guy::rgb &c)
 {
-	glColor3fv(c.raw());
+	glColor4f(c.r, c.g, c.b, 1.0f);
 }
 
 void glColor(const Guy::rgba *c)
 {
-	glColor4fv(c->raw());
+	glColor4f(c->r, c->g, c->b, c->a);
 }
 
 void glColor(const Guy::rgba &c)
 {
-	glColor4fv(c.raw());
+	glColor4f(c.r, c.g, c.b, c.a);
 }
 
 void glClearColor(const Guy::rgba *c)

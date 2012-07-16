@@ -5,10 +5,10 @@
 
 namespace Guy {
 
-class LinuxPersistenceLayer : public PersistenceLayer
+class QNXPersistenceLayer : public PersistenceLayer
 {
 public:
-	virtual ~LinuxPersistenceLayer();
+	virtual ~QNXPersistenceLayer();
 
 	virtual void persist();
 

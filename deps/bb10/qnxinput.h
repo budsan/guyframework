@@ -2,15 +2,13 @@
 
 #include "input/input.h"
 
-#include <SDL/SDL.h>
-
 namespace Guy {
 
-class SDLInput : public Input
+class QNXInput : public Input
 {
 public:
-	SDLInput();
-	virtual ~SDLInput();
+	QNXInput();
+	virtual ~QNXInput();
 
 	void pollEvents();
 	void waitEvent();
@@ -21,9 +19,6 @@ public:
 	virtual int getFocusState();
 
 private:
-	static void SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod);
-
-	void handleEvent(const SDL_Event &event);
 
 	Keyboard *m_keyboard;
 

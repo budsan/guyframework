@@ -29,14 +29,16 @@ bool Texture::load(std::string filename)
 	success =  TexturePNGLoader::LoadPNG(filename.c_str(), *this);
 	if (success) return true;
 #endif
+
+	return false;
 }
 
-// El operador igualdad para hacer copias esta PROHIBIDO.
+// Assignment operator for copying instances is FORBIDDEN
 const Texture& Texture::operator=(const Texture& other)
 {
 	if (other.m_id != 0)
 	{
-		throw std::runtime_error("TEXTURE EQUAL OPERATOR FOR COPY IS FORBIDDEN");
+		throw std::runtime_error("TEXTURE ASSIGNMENT OPERATOR FOR COPYING IS FORBIDDEN");
 	}
 
 	return *this;
