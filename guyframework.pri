@@ -41,10 +41,10 @@ SOURCES += \
     $$PWD/deps/linux/linuxlog.cpp \
     $$PWD/deps/linux/linuxpersistencelayer.cpp \
     $$PWD/input/controller.cpp \
-    guyframework/deps/sdl/sdlscreen.cpp \
-    guyframework/deps/sdl/sdlinput.cpp \
-    guyframework/deps/sdl/sdlenvironment.cpp \
-    guyframework/deps/png/texturepngloader.cpp
+    $$PWD/deps/sdl/sdlscreen.cpp \
+    $$PWD/deps/sdl/sdlinput.cpp \
+    $$PWD/deps/sdl/sdlenvironment.cpp \
+    $$PWD/deps/png/texturepngloader.cpp
     
 HEADERS += \
     $$PWD/environment.h \
@@ -90,11 +90,11 @@ HEADERS += \
     $$PWD/deps/linux/linuxenvironment.h \
     $$PWD/deps/linux/linuxpersistencelayer.h \
     $$PWD/deps/linux/graphics.h \
-    guyframework/input/focuslistener.h \
-    guyframework/deps/sdl/sdlscreen.h \
-    guyframework/deps/sdl/sdlinput.h \
-    guyframework/deps/sdl/sdlenvironment.h \
-    guyframework/deps/png/texturepngloader.h
+    $$PWD/input/focuslistener.h \
+    $$PWD/deps/sdl/sdlscreen.h \
+    $$PWD/deps/sdl/sdlinput.h \
+    $$PWD/deps/sdl/sdlenvironment.h \
+    $$PWD/deps/png/texturepngloader.h
 
 # Needed for GUY_USE_QT_DEPS define
 # SOURCES += guyframework/deps/qt/textureqtloader.cpp

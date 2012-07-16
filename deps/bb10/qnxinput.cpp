@@ -14,8 +14,8 @@
 
 namespace Guy {
 
-QNXInput::QNXInput() :
-    m_focusState(0)
+QNXInput::QNXInput()
+	: m_focusState(0)
 {
 	m_keyboard = new Keyboard();
 	m_keyboard->setConnected(true);

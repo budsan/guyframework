@@ -197,15 +197,15 @@ bool TexturePNGLoader::LoadPNG(const char *fname, Texture &t)
 
 		if ((tex_width != png_tex->width) || (tex_height != png_tex->height) ) {
 			glTexImage2D(GL_TEXTURE_2D, 0, png_tex->format,
-					png_tex->width, png_tex->height, 0,
-					png_tex->format, GL_UNSIGNED_BYTE, NULL);
+				     png_tex->width, png_tex->height, 0,
+				     png_tex->format, GL_UNSIGNED_BYTE, NULL);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
 					png_tex->width, png_tex->height,
 					png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
 		} else {
 			glTexImage2D(GL_TEXTURE_2D, 0, png_tex->format,
-					png_tex->width, png_tex->height, 0,
-					png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
+				     png_tex->width, png_tex->height, 0,
+				     png_tex->format, GL_UNSIGNED_BYTE, png_tex->texels);
 		}
 		/*
 			glTexImage2D (GL_TEXTURE_2D, 0, png_tex->internalFormat,
