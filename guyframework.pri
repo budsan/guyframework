@@ -39,10 +39,11 @@ SOURCES += \
     $$PWD/graphics/spritestatic.cpp \
     $$PWD/deps/linux/linuxenvironment.cpp \
     $$PWD/deps/linux/linuxlog.cpp \
-    $$PWD/deps/linux/linuxinput.cpp \
     $$PWD/deps/linux/linuxpersistencelayer.cpp \
-    $$PWD/deps/linux/linuxscreen.cpp \
-    $$PWD/input/controller.cpp
+    $$PWD/input/controller.cpp \
+    guyframework/deps/sdl/sdlscreen.cpp \
+    guyframework/deps/sdl/sdlinput.cpp \
+    guyframework/deps/sdl/sdlenvironment.cpp
 
 
     
@@ -88,10 +89,11 @@ HEADERS += \
     $$PWD/variable.h \
     $$PWD/graphics/camera.h \
     $$PWD/deps/linux/linuxenvironment.h \
-    $$PWD/deps/linux/linuxinput.h \
     $$PWD/deps/linux/linuxpersistencelayer.h \
-    $$PWD/deps/linux/linuxscreen.h \
     $$PWD/deps/linux/graphics.h \
-    guyframework/input/focuslistener.h
+    guyframework/input/focuslistener.h \
+    guyframework/deps/sdl/sdlscreen.h \
+    guyframework/deps/sdl/sdlinput.h \
+    guyframework/deps/sdl/sdlenvironment.h
 
 

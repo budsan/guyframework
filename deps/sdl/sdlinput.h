@@ -8,11 +8,11 @@
 
 namespace Guy {
 
-class LinuxInput : public Input
+class SDLInput : public Input
 {
 public:
-	LinuxInput();
-	~LinuxInput();
+	SDLInput();
+	~SDLInput();
 
 	void pollEvents();
 	void waitEvent();

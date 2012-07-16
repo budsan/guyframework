@@ -5,11 +5,11 @@
 
 namespace Guy {
 
-class LinuxScreen : public Screen
+class SDLScreen : public Screen
 {
 public:
-	 LinuxScreen();
-	~LinuxScreen();
+	 SDLScreen();
+	~SDLScreen();
 
 	bool preinit();
 	bool init();

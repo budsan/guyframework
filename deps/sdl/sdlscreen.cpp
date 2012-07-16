@@ -1,4 +1,4 @@
-#include "linuxscreen.h"
+#include "deps/sdl/sdlscreen.h"
 #include "graphics/texturemanager.h"
 
 #include <GL/glew.h>
@@ -29,14 +29,14 @@ static const int GUY_DEFAULT_BPP = 32;
 
 //---------------------------------------------------------------------------//
 
-LinuxScreen::LinuxScreen()
+SDLScreen::SDLScreen()
 {
 	m_screen = NULL;
 }
 
 //---------------------------------------------------------------------------//
 
-LinuxScreen::~LinuxScreen()
+SDLScreen::~SDLScreen()
 {
 	if (SDL_WasInit(SDL_INIT_VIDEO)) {
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -51,7 +51,7 @@ LinuxScreen::~LinuxScreen()
 
 //---------------------------------------------------------------------------//
 
-bool LinuxScreen::preinit()
+bool SDLScreen::preinit()
 {
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
@@ -75,7 +75,7 @@ bool LinuxScreen::preinit()
 	return true;
 }
 
-bool LinuxScreen::init()
+bool SDLScreen::init()
 {
 	if (m_screen == NULL) {
 		if(!setMode(Mode(), true)) return false;
@@ -98,14 +98,14 @@ bool LinuxScreen::init()
 
 //---------------------------------------------------------------------------//
 
-void LinuxScreen::flip()
+void SDLScreen::flip()
 {
 	SDL_GL_SwapBuffers();
 }
 
 //---------------------------------------------------------------------------//
 
-void LinuxScreen::fillWithColor(const rgba &color)
+void SDLScreen::fillWithColor(const rgba &color)
 {
 	glPushAttrib(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT|GL_ENABLE_BIT);
 	glDisable(GL_TEXTURE_2D);
@@ -134,7 +134,7 @@ void LinuxScreen::fillWithColor(const rgba &color)
 
 //---------------------------------------------------------------------------//
 
-bool LinuxScreen::setMode(const Mode& mode, bool fullscreen)
+bool SDLScreen::setMode(const Mode& mode, bool fullscreen)
 {
 	Mode selected = mode;
 
@@ -187,19 +187,19 @@ bool LinuxScreen::setMode(const Mode& mode, bool fullscreen)
 	return true;
 }
 
-const std::vector<Screen::Mode> &LinuxScreen::getAvailableModes(unsigned int &size)
+const std::vector<Screen::Mode> &SDLScreen::getAvailableModes(unsigned int &size)
 {
 	return m_videoModes;
 }
 //---------------------------------------------------------------------------//
 
-const Screen::Mode& LinuxScreen::getCurrentMode()
+const Screen::Mode& SDLScreen::getCurrentMode()
 {
 	return m_selectedMode;
 }
 
 //---------------------------------------------------------------------------//
-void LinuxScreen::unloadContent()
+void SDLScreen::unloadContent()
 {
 	//Añade los unloads de todos los gestores aqui
 	TextureManager::instance().unloadTextures();
@@ -207,14 +207,14 @@ void LinuxScreen::unloadContent()
 
 //---------------------------------------------------------------------------//
 
-void LinuxScreen::setCaption(const char* GameName)
+void SDLScreen::setCaption(const char* GameName)
 {
 	SDL_WM_SetCaption(GameName, GameName);
 }
 
 //---------------------------------------------------------------------------//
 
-void LinuxScreen::initGL()
+void SDLScreen::initGL()
 {
 	glShadeModel(GL_SMOOTH);
 	glClearDepth( 1.0f );
@@ -232,7 +232,7 @@ void LinuxScreen::initGL()
 
 //---------------------------------------------------------------------------//
 
-void LinuxScreen::resetViewport()
+void SDLScreen::resetViewport()
 {
 //	if ( m_ratio == 0 )
 //	{

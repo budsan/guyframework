@@ -1,4 +1,4 @@
-#include "deps/linux/linuxinput.h"
+#include "deps/sdl/sdlinput.h"
 
 #include "environment.h"
 #include "log.h"
@@ -8,7 +8,7 @@
 
 namespace Guy {
 
-LinuxInput::LinuxInput() :
+SDLInput::SDLInput() :
     m_focusState(0)
 {
 	m_keyboard = new Keyboard();
@@ -16,36 +16,36 @@ LinuxInput::LinuxInput() :
 	m_keyboard->setEnabled(true);
 }
 
-void LinuxInput::pollEvents()
+void SDLInput::pollEvents()
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) handleEvent(event);
 }
 
-void LinuxInput::waitEvent()
+void SDLInput::waitEvent()
 {
 	SDL_Event event;
 	if (SDL_WaitEvent(&event)) handleEvent(event);
 	dbgPrintLog("Error waiting event\n");
 }
 
-int LinuxInput::getKeyboardCount()
+int SDLInput::getKeyboardCount()
 {
 	return 1;
 }
 
-Keyboard& LinuxInput::getKeyboard(int i)
+Keyboard& SDLInput::getKeyboard(int i)
 {
 	assert(i == 0);
 	return *m_keyboard;
 }
 
-int LinuxInput::getFocusState()
+int SDLInput::getFocusState()
 {
 	return m_focusState;
 }
 
-void LinuxInput::handleEvent(const SDL_Event &event)
+void SDLInput::handleEvent(const SDL_Event &event)
 {
 	switch (event.type)
 	{
@@ -132,7 +132,7 @@ void LinuxInput::handleEvent(const SDL_Event &event)
 	}
 }
 
-void LinuxInput::SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod)
+void SDLInput::SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod)
 {
 	unicode = keysym.unicode;
 	switch (keysym.sym)
