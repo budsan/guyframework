@@ -1,4 +1,5 @@
 #pragma once
+#define GUY_TEXTURE_INCLUDED
 
 #include "graphics.h"
 #include <stdexcept>
@@ -44,54 +45,12 @@ public:
 	       void   bind() const;
 	static void unbind();
 
-	// El operador igualdad para hacer copias esta PROHIBIDO.
+	// Assignment operator for copying instances is FORBIDDEN
 	const Texture& operator=(const Texture& other);
 
-	// La razon de esto es por temas de eficiencia. Si simplemente
-	// copiaramos los identificadores, como se crearia un objeto nuevo,
-	// este al salir de su scope llamaria al destructor liberando el
-	// identificador de textura que usa ambas.
-	//
-	// Para hacerlo bien se deberia tener un contador de referencias o crear
-	// un identificador nuevo de textura y copiar la textura en el nuevo
-	// identificador, cosa realmente costosa.
-	// Si realmente lo que se quiere es una de estas dos ultimas soluciones
-	// se puede usar un smart_ptr o usar el load que tiene de parametros de
-	// entrada otra Texture, concienciando al programador que lo que esta
-	// haciendo es costoso en tiempo y en recursos de memoria.
+	// We doing that for efficiency issues. If we just simply copy
+	// opengl texture id throught every instance, it will be freed
+	// when first instance is destroyed, invalidating all copies.
 };
-
-#ifdef INCLUDED_FROM_QT
-class TextureQTLoader
-{
-private:
-	static bool LoadQT(const char *fname, Texture &t);
-	friend class Texture;
-};
-
-#else
-class TexturePNGLoader
-{
-private:
-	struct gl_texture_t
-	{
-		GLsizei width;
-		GLsizei height;
-
-		GLenum format;
-		GLint internalFormat;
-		GLuint id;
-
-		GLubyte *texels;
-
-	};
-
-	static void getPNGTextureInfo (int color_type, gl_texture_t *texinfo);
-	static gl_texture_t *ReadPNGFromFile (const char *fname);
-	static bool LoadPNG(const char *fname, Texture &t);
-
-	friend class Texture;
-};
-#endif
 
 } // namespace Guy

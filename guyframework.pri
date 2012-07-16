@@ -1,5 +1,5 @@
 
-DEFINES += __GAME_FRAMEWORK_USE_LINUX
+DEFINES += GUY_USE_LINUX
 
 LIBS += -lSDL -lGL -lGLU -lGLEW -lpng -lopenal -lvorbis -logg -lvorbisfile -lfreetype
 
@@ -43,9 +43,8 @@ SOURCES += \
     $$PWD/input/controller.cpp \
     guyframework/deps/sdl/sdlscreen.cpp \
     guyframework/deps/sdl/sdlinput.cpp \
-    guyframework/deps/sdl/sdlenvironment.cpp
-
-
+    guyframework/deps/sdl/sdlenvironment.cpp \
+    guyframework/deps/png/texturepngloader.cpp
     
 HEADERS += \
     $$PWD/environment.h \
@@ -94,6 +93,10 @@ HEADERS += \
     guyframework/input/focuslistener.h \
     guyframework/deps/sdl/sdlscreen.h \
     guyframework/deps/sdl/sdlinput.h \
-    guyframework/deps/sdl/sdlenvironment.h
+    guyframework/deps/sdl/sdlenvironment.h \
+    guyframework/deps/png/texturepngloader.h
 
+# Needed for GUY_USE_QT_DEPS define
+# SOURCES += guyframework/deps/qt/textureqtloader.cpp
+# HEADERS  += guyframework/deps/qt/textureqtloader.h
 

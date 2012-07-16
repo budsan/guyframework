@@ -2,7 +2,7 @@
 #include <cstdio>
 
 #if defined(_DEBUG)
-	#if defined(__GAME_FRAMEWORK_USE_LINUX)
+	#if defined(GUY_USE_LINUX)
 		#include <typeinfo>
 		#define _CLASS_NAME_ typeid(*this).name()
 		#define dbgPrintLog(format, args...) printLog("%s " format, _CLASS_NAME_, ## args)

@@ -1,16 +1,16 @@
 #include "environment.h"
 
-#if defined(__GAME_FRAMEWORK_USE_LINUX)
+#if defined(GUY_USE_LINUX)
 #include "deps/linux/linuxenvironment.h"
-#elif defined(__GAME_FRAMEWORK_USE_BB10)
+#elif defined(GUY_USE_BB10)
 #include "deps/bb10/qnxenvironment.h"
 #endif
 
 namespace Guy {
 
-#if defined(__GAME_FRAMEWORK_USE_LINUX)
+#if defined(GUY_USE_LINUX)
 	static LinuxEnvironment sEnvironment;
-#elif defined(__GAME_FRAMEWORK_USE_BB10)
+#elif defined(GUY_USE_BB10)
 	static QNXEnvironment sEnvironment;
 #else
 	#error "unknown platform"
