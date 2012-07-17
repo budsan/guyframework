@@ -3,8 +3,9 @@
 
 #include "graphics.h"
 
-#include "graphics/primitives.h"
 #include "math/algebra3.h"
+#include "math/bbox.h"
+#include "graphics/primitives.h"
 
 #include <stdlib.h>
 #include <iostream>

@@ -1,6 +1,10 @@
 #include "deps/sdl/sdlscreen.h"
 #include "graphics/texturemanager.h"
 
+#include "math/algebra3.h"
+#include "math/bbox.h"
+#include "graphics/primitives.h"
+
 #include <GL/glew.h>
 #include <SDL/SDL.h>
 #include <GL/gl.h>
@@ -16,7 +20,7 @@
 
 #include "log.h"
 
-using namespace Guy ;
+namespace Guy {
 
 static const unsigned int GUY_SDL_SURFACE_FLAGS =
 		SDL_OPENGL |
@@ -105,7 +109,6 @@ void SDLScreen::flip()
 
 void SDLScreen::fillWithColor(const rgba &color)
 {
-	glPushAttrib(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT|GL_ENABLE_BIT);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
@@ -113,21 +116,13 @@ void SDLScreen::fillWithColor(const rgba &color)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho( -1, 1, -1, 1, -1, 1);
+	glLoadMatrixf(math::mat4f::fromOrtho( -1, 1, -1, 1, -1, 1).v);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glLoadMatrixf(math::mat4f::fromIdentity().v);
 
-	glBegin(GL_QUADS);
 	glColor(color);
-	glVertex3f(-1,  1, 0);
-	glVertex3f( 1,  1, 0);
-	glVertex3f( 1, -1, 0);
-	glVertex3f(-1, -1, 0);
-	glEnd();
-
-	glPopAttrib();
+	Guy::draw(math::bbox2f(math::vec2f(-1,-1),math::vec2f( 1, 1)));
 }
 
 //---------------------------------------------------------------------------//
@@ -267,4 +262,4 @@ void SDLScreen::resetViewport()
 	*/
 }
 
-
+}
