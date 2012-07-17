@@ -38,12 +38,11 @@ private:
 	emyl::manager*         m_audio; //sound
 	SDLInput*            m_input; //input
 
-	bool  m_exit;
+	bool m_exit;
+	bool m_pause;
 
 	unsigned short m_framesPerSecond;
 	Uint32         m_ticksPerFrame;
-
-	bool m_pause;
 
 	//-GAMELOOP-BEHAVIOR-------------------------------------------------//
 

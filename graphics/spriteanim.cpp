@@ -132,7 +132,7 @@ bool SpriteAnimData::load(const char* filename)
 
 	if (in.fail())
 	{
-		dbgPrintLog("Error: %s doesn't exist.\n", filename);
+		printLog("Error: %s doesn't exist.\n", filename);
 		return false;
 	}
 
@@ -161,7 +161,7 @@ bool SpriteAnimData::load(const char* filename)
 			readANIM(currentAnimName, currentAnimTrack, line, lineNum);
 		}
 		else if (currentAnimTrack == NULL) {
-			dbgPrintLog("Error %d: Animation name undefined yet.\n", lineNum);
+			printLog("Error %d: Animation name undefined yet.\n", lineNum);
 		}
 		else {
 			readFRAME(currentAnimTrack, line, lineNum);
@@ -171,7 +171,7 @@ bool SpriteAnimData::load(const char* filename)
 	std::vector<SpriteAnimTrack>::iterator it = animations.begin();
 	while(it != animations.end()) {
 		if (it->frames.size() == 0) {
-			dbgPrintLog("Warning: Animation with no frames. Deleting.\n");
+			printLog("Warning: Animation with no frames. Deleting.\n");
 			animations.erase(it);
 		}
 		else ++it;
@@ -179,7 +179,7 @@ bool SpriteAnimData::load(const char* filename)
 
 	if (animations.size() == 0)
 	{
-		dbgPrintLog("Error: Zero valid animations loaded.\n");
+		printLog("Error: Zero valid animations loaded.\n");
 		return false;
 	}
 
@@ -217,14 +217,14 @@ bool SpriteAnimData::readANIM(std::string &currentAnimName, SpriteAnimTrack *&cu
 	//Leemos el nombre de la animacion situado entre comillas.
 	size_t quoteStart = line.find('\"', 0);
 	if (quoteStart == std::string::npos) {
-		dbgPrintLog("Error %d: ANIM name not found.\n", lineNum);
+		printLog("Error %d: ANIM name not found.\n", lineNum);
 		return false;
 	}
 	quoteStart++;
 
 	size_t quoteEnd = line.find('\"', quoteStart);
 	if (quoteEnd == std::string::npos) {
-		dbgPrintLog("Error %d: ANIM name incomplete.\n", lineNum);
+		printLog("Error %d: ANIM name incomplete.\n", lineNum);
 		return false;
 	}
 
@@ -233,14 +233,14 @@ bool SpriteAnimData::readANIM(std::string &currentAnimName, SpriteAnimTrack *&cu
 
 	quoteStart = line.find('\"', quoteEnd);
 	if (quoteStart == std::string::npos) {
-		dbgPrintLog("Error %d: ANIM spritesheet filename not found. Skipping line.\n", lineNum);
+		printLog("Error %d: ANIM spritesheet filename not found. Skipping line.\n", lineNum);
 		return false;
 	}
 	quoteStart++;
 
 	quoteEnd = line.find('\"', quoteStart);
 	if (quoteEnd == std::string::npos) {
-		dbgPrintLog("Error %d: ANIM spritesheet filename incomplete. Skipping line.\n",lineNum);
+		printLog("Error %d: ANIM spritesheet filename incomplete. Skipping line.\n",lineNum);
 		return false;
 	}
 
@@ -252,14 +252,14 @@ bool SpriteAnimData::readANIM(std::string &currentAnimName, SpriteAnimTrack *&cu
 
 	short loops = 0;
 	if (!(sline >> loops)) {
-		dbgPrintLog("Error %d: ANIM num of loops not found.  Skipping line.", lineNum);
+		printLog("Error %d: ANIM num of loops not found.  Skipping line.", lineNum);
 		return false;
 	}
 
 	std::map<std::string, int>::iterator it = animNames.find(AnimName);
 	if ( it != animNames.end() ) //EXISTS
 	{
-		dbgPrintLog("Warning %d: Animation name redefined. Overriding attributes.", lineNum);
+		printLog("Warning %d: Animation name redefined. Overriding attributes.", lineNum);
 		currentAnimTrack = &animations[it->second];
 	}
 	else 
@@ -293,14 +293,14 @@ bool SpriteAnimData::readFRAME(SpriteAnimTrack *&currentAnimTrack, std::string &
 		{
 			if (!(sline >> *info[i])) 
 			{
-				dbgPrintLog("Error %d: FRAME incorrect or incomplete. Skipping line.\n", lineNum);
+				printLog("Error %d: FRAME incorrect or incomplete. Skipping line.\n", lineNum);
 				return false;
 			}
 		}
 
 		if(frame.time < 1)
 		{
-			dbgPrintLog("Error %d: time isn't bigger than 0, setting time to 1.\n", lineNum);
+			printLog("Error %d: time isn't bigger than 0, setting time to 1.\n", lineNum);
 			frame.time = 1;
 		}
 		currentAnimTrack->frames.push_back(frame);

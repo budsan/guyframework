@@ -44,12 +44,13 @@ private:
 	QNXInput*            m_input; //input
 	QNXPersistenceLayer* m_persistenceLayer;
 
-	bool  m_exit;
+	screen_context_t screen_ctx;
+
+	bool m_exit;
+	bool m_pause;
 
 	unsigned short m_framesPerSecond;
 	float         m_secsPerFrame;
-
-	bool m_pause;
 
 	//-GAMELOOP-BEHAVIOR-------------------------------------------------//
 

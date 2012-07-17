@@ -13,10 +13,11 @@ namespace Guy {
 class QNXScreen : public Screen
 {
 public:
-	QNXScreen();
+	QNXScreen(screen_context_t screen_ctx);
 	virtual ~QNXScreen();
 
-	bool preinit();
+	void terminate();
+
 	bool init();
 	void resetViewport();
 

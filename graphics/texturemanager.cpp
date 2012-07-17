@@ -82,7 +82,7 @@ const Texture& TextureManager::getTexture(std::string _filename)
 		std::ifstream f(path.c_str());
 		if (!f.is_open())
 		{
-			dbgPrintLog("Unable to load %s\n", path.c_str());
+			printLog("Unable to load %s\n", path.c_str());
 			continue;
 		}
 		valid = i;

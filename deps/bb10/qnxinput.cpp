@@ -14,12 +14,45 @@
 
 namespace Guy {
 
-QNXInput::QNXInput()
-	: m_focusState(0)
+QNXInput::QNXInput(screen_context_t screen_ctx)
+	: screen_ctx(screen_ctx), m_focusState(0)
 {
 	m_keyboard = new Keyboard();
 	m_keyboard->setConnected(true);
 	m_keyboard->setEnabled(true);
+}
+
+QNXInput::~QNXInput()
+{
+
+}
+
+bool QNXInput::init()
+{
+	//Signal BPS library that navigator and screen events will be requested
+	if (BPS_SUCCESS != screen_request_events(screen_ctx))
+	{
+		printLog("screen_request_events failed\n");
+		screen_destroy_context(screen_ctx);
+		return 0;
+	}
+
+	if (BPS_SUCCESS != navigator_request_events(0))
+	{
+		printLog("navigator_request_events failed\n");
+		screen_destroy_context(screen_ctx);
+		return false;
+	}
+
+	//Signal BPS library that navigator orientation is not to be locked
+	if (BPS_SUCCESS != navigator_rotation_lock(false))
+	{
+		printLog("navigator_rotation_lock failed\n");
+		screen_destroy_context(screen_ctx);
+		return false;
+	}
+
+	return true;
 }
 
 void QNXInput::pollEvents()
