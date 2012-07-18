@@ -35,8 +35,15 @@ bool QNXEnvironment::init(Game *game)
 	printLog(" %s - %s\n", m_game->getName(), m_game->getVersion());
 	printLog("--------------------------------------------------------\n");
 
-	screen_create_context(&screen_ctx, 0);
 	bps_initialize();
+
+	screen_create_context(&screen_ctx, 0);
+	if (BPS_SUCCESS != screen_request_events(screen_ctx))
+	{
+		printLog("screen_request_events failed\n");
+		screen_destroy_context(screen_ctx);
+		return false;
+	}
 
 	m_screen = new QNXScreen(screen_ctx);
 	m_audio  = emyl::manager::get_instance();
