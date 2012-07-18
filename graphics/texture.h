@@ -16,8 +16,9 @@ public:
 
 	bool create(int width, int height);
 	bool load(std::string filename);
-	bool load(const void* data, std::size_t size);
-	bool load(const Texture &other); //TODO
+	bool load(const void* memFile, std::size_t size);
+	bool load(const unsigned char *rgba8Raw, int width, int height);
+
 	bool loadNullTexture();
 
 	int getWidth()  const {return m_size.x;}
@@ -47,10 +48,6 @@ private:
 
 	GLuint m_id;
 	math::vec2i m_size;
-	math::vec2i m_actualSize;
-
-	static int getValidSize(int size);
-	static int getMaximumSize();
 };
 
 } // namespace Guy

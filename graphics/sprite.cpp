@@ -83,11 +83,12 @@ void Sprite::draw()
 	tex.setWrap(GL_CLAMP_TO_EDGE);
 	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_ED, rgba(0,0,0,0).raw());
 
+	math::vec2i tSize = tex.getSize();
 	struct { float x0, y0, x1, y1; } normCoords;
-	normCoords.x0 = float(params.x)/float(tex.getWidth());
-	normCoords.y0 = 1.0f - (float(params.y)/float(tex.getHeight()));
-	normCoords.x1 = (float)normCoords.x0 +(float(params.w)/float(tex.getWidth()));
-	normCoords.y1 = (float)normCoords.y0 -(float(params.h)/float(tex.getHeight()));
+	normCoords.x0 = (float)params.x/(float)tSize.x;
+	normCoords.y0 = 1.0f - ((float)params.y/(float)tSize.y);
+	normCoords.x1 = (float)normCoords.x0 + ((float)params.w/(float)tSize.x);
+	normCoords.y1 = (float)normCoords.y0 - ((float)params.h/(float)tSize.y);
 
 	struct { float u, v; } texcoordsArray[4] = {
 		{ normCoords.x0, normCoords.y0 },
@@ -123,7 +124,7 @@ void Sprite::draw()
 	glTexCoordPointer(2, GL_FLOAT, 0, texcoordsArray);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);	
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 	glPopMatrix();
 

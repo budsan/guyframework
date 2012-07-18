@@ -8,7 +8,7 @@
 
 namespace Guy {
 
-Texture::Texture() : m_id(0), m_size(0,0), m_actualSize(0,0)
+Texture::Texture() : m_id(0), m_size(0,0)
 {
 
 }
@@ -24,12 +24,6 @@ const Texture& Texture::operator=(const Texture& other)
 	assert(other.m_id == 0);
 	return *this;
 }
-
-bool Texture::load(const Texture &other)
-{
-	return false;
-}
-
 
 void Texture::setFiltering(GLenum filter) const
 {
@@ -55,30 +49,6 @@ void Texture::unbind()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-int Texture::getValidSize(int size)
-{
-	if (GLEW_ARB_texture_non_power_of_two)
-	{
-		// If hardware supports NPOT textures, then just return the unmodified size
-		return size;
-	}
-	else
-	{
-		// If hardware doesn't support NPOT textures, we calculate the nearest power of two
-		int powerOfTwo = 1;
-		while (powerOfTwo < size) powerOfTwo *= 2;
-		return powerOfTwo;
-	}
-}
-
-int Texture::getMaximumSize()
-{
-	GLint size;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &size);
-
-	return static_cast<int>(size);
-}
-
 //---------------------------------------------------------------------------//
 
 bool Texture::create(int width, int height)
@@ -90,22 +60,9 @@ bool Texture::create(int width, int height)
 		return false;
 	}
 
-	// Compute the internal texture dimensions depending on NPOT textures support
-	math::vec2<GLint> actualSize(getValidSize(width), getValidSize(height));
-
-	// Check the maximum texture size
-	int maxSize = getMaximumSize();
-	if ((actualSize.x > maxSize) || (actualSize.y > maxSize))
-	{
-		dbgPrintLog("Failed to create texture, its internal size is too high (%dx%d, maximum is %dx%d)\n",
-			    actualSize.x, actualSize.y, maxSize, maxSize);
-		return false;
-	}
-
 	// All the validity checks passed, we can store the new texture settings
 	m_size.x = width;
 	m_size.y = height;
-	m_actualSize = actualSize;
 
 	// Create the OpenGL texture if it doesn't exist yet
 	if (!m_id)
@@ -117,48 +74,51 @@ bool Texture::create(int width, int height)
 
 	// Initialize the texture
 	glBindTexture(GL_TEXTURE_2D, m_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_actualSize.x, m_actualSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 	return true;
 }
 
 bool Texture::load(std::string filename)
 {
-	// Load the image and get a pointer to the pixels in memory
 	int width, height, channels;
 	unsigned char* ptr = stbi_load(filename.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
-	if (ptr && width && height)
-	{
-		if (!this->create(width, height))
-		{
-			stbi_image_free(ptr);
-			return false;
-		}
+	bool result = false;
+	if (ptr && width && height) result = load(ptr, width, height);
+	else printLog("Failed to load image \"%s\". Reason : %s\n", filename.c_str(), stbi_failure_reason());
+	stbi_image_free(ptr);
 
-		unsigned char* pixels = ptr;
-		glBindTexture(GL_TEXTURE_2D, m_id);
-		for (int i = 0; i < height; ++i)
-		{
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, i, width, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-			pixels += 4 * width;
-		}
-
-		// Free the loaded pixels
-		stbi_image_free(ptr);
-
-		return true;
-	}
-	else
-	{
-		printLog("Failed to load image \"%s\". Reason : %s\n", filename.c_str(), stbi_failure_reason());
-		return false;
-	}
+	return result;
 }
 
-bool Texture::load(const void* data, std::size_t size)
+bool Texture::load(const void* memFile, std::size_t size)
 {
+	int width, height, channels;
+	const unsigned char* buffer = static_cast<const unsigned char*>(memFile);
+	unsigned char* ptr = stbi_load_from_memory(buffer, static_cast<int>(size), &width, &height, &channels, STBI_rgb_alpha);
 
+	bool result = false;
+	if (ptr && width && height) result = load(ptr, width, height);
+	else printLog("Failed to load image from memory. Reason : %s\n", stbi_failure_reason());
+	stbi_image_free(ptr);
+
+	return result;
+}
+
+bool Texture::load(const unsigned char* rgba8Raw, int width, int height)
+{
+	if (!this->create(width, height)) return false;
+
+	const unsigned char* pixels = rgba8Raw;
+	glBindTexture(GL_TEXTURE_2D, m_id);
+	int line = height;
+	while(line--) {
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, line, width, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		pixels += 4 * width;
+	}
+
+	return true;
 }
 
 bool Texture::loadNullTexture()
@@ -166,7 +126,6 @@ bool Texture::loadNullTexture()
 	m_id = 0;
 	const int size = 64;
 	if (!this->create(size, size)) return false;
-
 
 	unsigned char *texels = new unsigned char[4*size*size];
 	unsigned char *p = texels;
@@ -194,9 +153,8 @@ bool Texture::loadNullTexture()
 	}
 
 	glBindTexture (GL_TEXTURE_2D, m_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, texels);
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+
 	delete[] texels;
 
 	m_size.x  = size;
