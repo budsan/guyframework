@@ -84,10 +84,10 @@ void Sprite::draw()
 	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_ED, rgba(0,0,0,0).raw());
 
 	struct { float x0, y0, x1, y1; } normCoords;
-	normCoords.x0 = float(params.x)/float(tex.w());
-	normCoords.y0 = 1.0f - (float(params.y)/float(tex.h()));
-	normCoords.x1 = (float)normCoords.x0 +(float(params.w)/float(tex.w()));
-	normCoords.y1 = (float)normCoords.y0 -(float(params.h)/float(tex.h()));
+	normCoords.x0 = float(params.x)/float(tex.getWidth());
+	normCoords.y0 = 1.0f - (float(params.y)/float(tex.getHeight()));
+	normCoords.x1 = (float)normCoords.x0 +(float(params.w)/float(tex.getWidth()));
+	normCoords.y1 = (float)normCoords.y0 -(float(params.h)/float(tex.getHeight()));
 
 	struct { float u, v; } texcoordsArray[4] = {
 		{ normCoords.x0, normCoords.y0 },

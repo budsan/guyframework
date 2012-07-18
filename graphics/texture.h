@@ -1,36 +1,28 @@
 #pragma once
-#define GUY_TEXTURE_INCLUDED
 
 #include "graphics.h"
-#include <stdexcept>
+#include "math/algebra3.h"
+
+#include <string>
 
 namespace Guy {
 
 /// Texture class
 class Texture
 {
-private:
-	friend class TexturePNGLoader;
-	friend class TextureQTLoader;
-	friend class TextureManager;
-
-	GLuint  m_id;
-	GLsizei m_width;
-	GLsizei m_height;
 public:
 	Texture();
 	~Texture();
 
+	bool create(int width, int height);
 	bool load(std::string filename);
-	//bool load(GLenum iformat, int width, int height, GLubyte *pixels);
+	bool load(const void* data, std::size_t size);
 	bool load(const Texture &other); //TODO
 	bool loadNullTexture();
 
-	GLsizei getWidth()  const {return m_width; }
-	GLsizei	getHeight() const {return m_height;}
-
-	GLsizei w() const {return m_width; }
-	GLsizei	h() const {return m_height;}
+	int getWidth()  const {return m_size.x;}
+	int getHeight() const {return m_size.y;}
+	const math::vec2i &getSize() const {return m_size;}
 
 	GLuint id() const {return m_id;}
 
@@ -50,6 +42,15 @@ public:
 	// We doing that for efficiency issues. If we just simply copy
 	// opengl texture id throught every instance, it will be freed
 	// when first instance is destroyed, invalidating all copies.
+private:
+	friend class TextureManager;
+
+	GLuint m_id;
+	math::vec2i m_size;
+	math::vec2i m_actualSize;
+
+	static int getValidSize(int size);
+	static int getMaximumSize();
 };
 
 } // namespace Guy

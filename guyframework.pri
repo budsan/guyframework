@@ -43,8 +43,7 @@ SOURCES += \
     $$PWD/input/controller.cpp \
     $$PWD/deps/sdl/sdlscreen.cpp \
     $$PWD/deps/sdl/sdlinput.cpp \
-    $$PWD/deps/sdl/sdlenvironment.cpp \
-    $$PWD/deps/png/texturepngloader.cpp
+    $$PWD/deps/sdl/sdlenvironment.cpp
     
 HEADERS += \
     $$PWD/environment.h \
@@ -94,7 +93,8 @@ HEADERS += \
     $$PWD/deps/sdl/sdlscreen.h \
     $$PWD/deps/sdl/sdlinput.h \
     $$PWD/deps/sdl/sdlenvironment.h \
-    $$PWD/deps/png/texturepngloader.h
+    $$PWD/deps/stb_image/stb_image_write.h \
+    $$PWD/deps/stb_image/stb_image.h
 
 # Needed for GUY_USE_QT_DEPS define
 # SOURCES += guyframework/deps/qt/textureqtloader.cpp
