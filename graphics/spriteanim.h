@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <set>
-#include "boost/shared_ptr.hpp"
+#include <boost/shared_ptr.hpp>
 
 #include "sprite.h"
 

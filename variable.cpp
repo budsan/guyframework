@@ -98,8 +98,8 @@ Variable::Variable(const Variable & other)
 	}
 	else
 	{
-		m_defVal.asInt = m_defVal.asInt;
-		m_curVal.asInt = m_curVal.asInt;
+		m_defVal.asInt = other.m_defVal.asInt;
+		m_curVal.asInt = other.m_curVal.asInt;
 	}
 }
 
@@ -159,8 +159,8 @@ const Variable &Variable::operator=(const Variable & other)
 	}
 	else
 	{
-		m_defVal.asInt = m_defVal.asInt;
-		m_curVal.asInt = m_curVal.asInt;
+		m_defVal.asInt = other.m_defVal.asInt;
+		m_curVal.asInt = other.m_curVal.asInt;
 	}
 
 	return *this;
@@ -322,13 +322,13 @@ std::string Variable::toString() const
 	char *c_ret = NULL;
 	switch (m_type)
 	{
-	case Variable::Invalid: std::string();
+	case Variable::Invalid: std::string(); break;
 	case Variable::Bool: c_ret = Guy::toString(m_curVal.asBool); break;
 	case Variable::Int: c_ret = Guy::toString(m_curVal.asInt); break;
 	case Variable::Double: c_ret = Guy::toString(m_curVal.asDouble); break;
 	case Variable::Char: c_ret = Guy::toString(m_curVal.asChar); break;
 	case Variable::String: c_ret = Guy::toString(m_curVal.asString); break;
-	default: c_ret = Guy::toString("");
+	default: c_ret = Guy::toString(""); break;
 	}
 
 	std::string ret(c_ret); delete c_ret;
@@ -401,22 +401,22 @@ std::istream &operator >>(std::istream &in, Variable &var)
 		bool value;
 		in.read((char *)&value, sizeof(bool)); break;
 		var = Variable(name, value);
-	}
+	} break;
 	case Variable::Int: {
 		int value;
 		in.read((char *)&value, sizeof(int)); break;
 		var = Variable(name, value);
-	}
+	} break;
 	case Variable::Double: {
 		double value;
 		in.read((char *)&value, sizeof(double)); break;
 		var = Variable(name, value);
-	}
+	} break;
 	case Variable::Char: {
 		char value;
 		in.read((char *)&value, sizeof(char)); break;
 		var = Variable(name, value);
-	}
+	} break;
 	case Variable::String: {
 			var = Variable(name, variableReadString(in));
 		} break;
