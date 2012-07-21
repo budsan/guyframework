@@ -2,6 +2,8 @@
 
 #if defined(GUY_USE_LINUX)
 #include "deps/linux/linuxenvironment.h"
+#elif defined(GUY_USE_WINDOWS)
+#include "deps/win/winenvironment.h"
 #elif defined(GUY_USE_BB10)
 #include "deps/bb10/qnxenvironment.h"
 #endif
@@ -9,7 +11,9 @@
 namespace Guy {
 
 #if defined(GUY_USE_LINUX)
-	static LinuxEnvironment sEnvironment;
+    static LinuxEnvironment sEnvironment;
+#elif defined(GUY_USE_WINDOWS)
+    static WinEnvironment sEnvironment;
 #elif defined(GUY_USE_BB10)
 	static QNXEnvironment sEnvironment;
 #else

@@ -6,6 +6,10 @@
 		#include <typeinfo>
 		#define _CLASS_NAME_ typeid(*this).name()
 		#define dbgPrintLog(format, args...) printLog("%s " format, _CLASS_NAME_, ## args)
+	#elif defined(GUY_USE_WINDOWS)
+		#include <typeinfo>
+		#define _CLASS_NAME_ typeid(*this).name()
+		#define dbgPrintLog(format, args...) printLog("%s " format, _CLASS_NAME_, ## args)
 	#elif defined(GUY_USE_BB10)
 		#include <typeinfo>
 		#define _CLASS_NAME_ typeid(*this).name()

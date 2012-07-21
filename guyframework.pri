@@ -1,12 +1,23 @@
+CONFIG -= qt
 
-DEFINES += GUY_USE_LINUX
+win32 {
+    DEFINES += GUY_USE_WINDOWS GLEW_STATIC _GNU_SOURCE=1
+    LIBS += -L$$PWD/extlibs/libs-mingw/ -lmingw32 -lSDL -mwindows -lopengl32 -lglu32 -lopenal32
+    INCLUDEPATH += $$PWD/extlibs/include
+}
 
-LIBS += -lSDL -lGL -lGLU -lGLEW -lpng -lopenal -lvorbis -logg -lvorbisfile -lfreetype
+unix {
+    DEFINES += GUY_USE_LINUX
+    LIBS += -SDL -lGL -lGLU -lopenal
+    INCLUDEPATH += /usr/include/freetype2/
+}
 
-QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow -pg
-QMAKE_LDFLAGS += -pg
+LIBS += -lGLEW -logg -lvorbis -lvorbisfile -lfreetype
 
-INCLUDEPATH += $$PWD/ /usr/include/freetype2/
+QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow
+#QMAKE_LDFLAGS += -pg
+
+INCLUDEPATH += $$PWD/
 
 SOURCES += \
     $$PWD/environment.cpp \
@@ -28,6 +39,7 @@ SOURCES += \
     $$PWD/input/input.cpp \
     $$PWD/input/keyboard.cpp \
     $$PWD/input/gamepad.cpp \
+    $$PWD/input/controller.cpp \
     $$PWD/tools/transition.cpp \
     $$PWD/math/hit.cpp \
     $$PWD/audio/emyl.cpp \
@@ -37,13 +49,22 @@ SOURCES += \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
     $$PWD/graphics/spritestatic.cpp \
-    $$PWD/deps/linux/linuxenvironment.cpp \
-    $$PWD/deps/linux/linuxlog.cpp \
-    $$PWD/deps/linux/linuxpersistencelayer.cpp \
-    $$PWD/input/controller.cpp \
     $$PWD/deps/sdl/sdlscreen.cpp \
     $$PWD/deps/sdl/sdlinput.cpp \
     $$PWD/deps/sdl/sdlenvironment.cpp
+
+win32 {
+SOURCES += $$PWD/deps/win/winmain.cpp \
+    $$PWD/deps/win/winenvironment.cpp \
+    $$PWD/deps/win/winlog.cpp \
+    $$PWD/deps/win/winpersistencelayer.cpp
+}
+
+unix {
+SOURCES += $$PWD/deps/linux/linuxenvironment.cpp \
+    $$PWD/deps/linux/linuxlog.cpp \
+    $$PWD/deps/linux/linuxpersistencelayer.cpp
+}
     
 HEADERS += \
     $$PWD/environment.h \
@@ -69,6 +90,7 @@ HEADERS += \
     $$PWD/input/keyboardlistener.h \
     $$PWD/input/controller.h \
     $$PWD/input/gamepadlistener.h \
+    $$PWD/input/focuslistener.h \
     $$PWD/tools/transition.h \
     $$PWD/math/bbox.h \
     $$PWD/math/poly2.h \
@@ -86,17 +108,24 @@ HEADERS += \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
     $$PWD/graphics/camera.h \
-    $$PWD/deps/linux/linuxenvironment.h \
-    $$PWD/deps/linux/linuxpersistencelayer.h \
-    $$PWD/deps/linux/graphics.h \
-    $$PWD/input/focuslistener.h \
     $$PWD/deps/sdl/sdlscreen.h \
     $$PWD/deps/sdl/sdlinput.h \
     $$PWD/deps/sdl/sdlenvironment.h \
     $$PWD/deps/stb_image/stb_image_write.h \
     $$PWD/deps/stb_image/stb_image.h
 
+win32 {
+HEADERS += $$PWD/deps/win/winenvironment.h \
+    $$PWD/deps/win/winpersistencelayer.h \
+    $$PWD/deps/win/graphics.h
+}
+
+unix {
+HEADERS += $$PWD/deps/linux/linuxenvironment.h \
+    $$PWD/deps/linux/linuxpersistencelayer.h \
+    $$PWD/deps/linux/graphics.h
+}
+
 # Needed for GUY_USE_QT_DEPS define
 # SOURCES += guyframework/deps/qt/textureqtloader.cpp
 # HEADERS  += guyframework/deps/qt/textureqtloader.h
-
