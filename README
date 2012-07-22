@@ -1,0 +1,20 @@
+Guy Framework gives a basis for build your games on.
+
+It's object oriented and supports many platforms.
+Flexible enough to easily add support for new platforms.
+
+It provides:
+- Windows management
+- Flexible gameloops behaviours
+- Easy input access for keyboards, mice, gamepads, touchscreens...
+- Many formats file loaders (textures, shaders, audio...)
+- Resource management
+- 3D audio (only if platform supports it)
+- Templated math library (matrices, vectors, quaternions)
+- 3D graphics based on OpenGL ES 2.0, and more.
+
+Platforms supported (right now):
+- Windows
+- Linux
+- Blackberry OS 10
+
