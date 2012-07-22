@@ -1,18 +1,18 @@
 CONFIG -= qt
 
+LIBS += -lvorbisfile -lvorbis -logg -lfreetype
+
 win32 {
-    DEFINES += GUY_USE_WINDOWS GLEW_STATIC _GNU_SOURCE=1
-    LIBS += -L$$PWD/extlibs/libs-mingw/ -lmingw32 -lSDL -mwindows -lopengl32 -lglu32 -lopenal32
+    DEFINES += GUY_USE_WINDOWS
+    LIBS += -static -L$$PWD/extlibs/libs-mingw/ -lmingw32 -lSDL.dll -mwindows -lopengl32 -lglu32 -lopenal32
     INCLUDEPATH += $$PWD/extlibs/include
 }
 
 unix {
     DEFINES += GUY_USE_LINUX
-    LIBS += -SDL -lGL -lGLU -lopenal
+    LIBS += -SDL -lGL -lGLU -lopenal -lGLEW
     INCLUDEPATH += /usr/include/freetype2/
 }
-
-LIBS += -lGLEW -logg -lvorbis -lvorbisfile -lfreetype
 
 QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow
 #QMAKE_LDFLAGS += -pg
@@ -57,7 +57,8 @@ win32 {
 SOURCES += $$PWD/deps/win/winmain.cpp \
     $$PWD/deps/win/winenvironment.cpp \
     $$PWD/deps/win/winlog.cpp \
-    $$PWD/deps/win/winpersistencelayer.cpp
+    $$PWD/deps/win/winpersistencelayer.cpp \
+    $$PWD/deps/win/glew.c
 }
 
 unix {
