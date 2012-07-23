@@ -23,18 +23,23 @@ public:
 	virtual void resume() = 0;
 	virtual void exit() = 0;
 
-	Game& getGame();
+	Game& game();
 
-	//frames 0 -> as fast as posible, stable true -> delta time fixed
-	virtual void setFramesPerSecond(unsigned short frames = 0,
-					bool stable = false,
-					bool dropFrames = false) = 0;
+	enum DeltaTimeType
+	{
+		VariableDeltaTime,
+		StableDeltaTime,
+		StableWithFrameSkipDeltaTime
+	};
+
+	virtual void setFrameRate(unsigned short frames = 0,
+							   DeltaTimeType type = VariableDeltaTime) = 0;
 
 	//Managers
-	virtual Screen&           getScreenManager() = 0;
-	virtual emyl::manager&    getAudioManager() = 0;
-	virtual Input&            getInputManager() = 0;
-	virtual PersistenceLayer& getPersitenceLayer() = 0;
+	virtual Screen&           screen() = 0;
+	virtual emyl::manager&    audio() = 0;
+	virtual Input&            input() = 0;
+	virtual PersistenceLayer& persitenceLayer() = 0;
 
 protected:
 

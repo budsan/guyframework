@@ -37,19 +37,19 @@ public:
 
 	void vibrate(int leftVal, int rightVal);
 
-	const math::vec2f &getAnalogL();
-	const math::vec2f &getAnalogR();
+	const math::vec2f &analogL();
+	const math::vec2f &analogR();
 	void setAnalogL(float x, float y);
 	void setAnalogR(float x, float y);
 
-	float getTriggerL();
-	float getTriggerR();
+	float triggerL();
+	float triggerR();
 	void setTriggers(float l, float r);
 
 	void setButtonDown(Button button, bool down);
 	bool isButtonDown(Button button);
 
-	inline int getId() { return mId; }
+	inline int id() { return mId; }
 
 	virtual void setEnabled(bool enabled);
 

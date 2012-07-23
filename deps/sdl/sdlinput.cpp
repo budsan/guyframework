@@ -34,12 +34,12 @@ void SDLInput::waitEvent()
 	dbgPrintLog("Error waiting event\n");
 }
 
-int SDLInput::getKeyboardCount()
+int SDLInput::keyboardCount()
 {
 	return 1;
 }
 
-Keyboard& SDLInput::getKeyboard(int i)
+Keyboard& SDLInput::keyboard(int i)
 {
 	assert(i == 0);
 	return *m_keyboard;
@@ -85,46 +85,46 @@ void SDLInput::handleEvent(const SDL_Event &event)
 	{
 		if (event.active.gain) {
 			if (event.active.state & SDL_APPMOUSEFOCUS) {
-				m_focusState |= MOUSE;
-				std::set<FocusListener*>::iterator it = m_FocusListeners.begin();
-				for (;it != m_FocusListeners.end(); ++it) {
+				m_focusState |= MouseFocusState;
+				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+				for (;it != m_focusListeners.end(); ++it) {
 					(*it)->onGainMouseFocus();
 				}
 			}
 			if (event.active.state & SDL_APPINPUTFOCUS) {
-				m_focusState |= INPUT;
-				std::set<FocusListener*>::iterator it = m_FocusListeners.begin();
-				for (;it != m_FocusListeners.end(); ++it) {
+				m_focusState |= InputFocusState;
+				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+				for (;it != m_focusListeners.end(); ++it) {
 					(*it)->onGainInputFocus();
 				}
 			}
 			if (event.active.state & SDL_APPACTIVE) {
-				m_focusState |= DRAW;
-				std::set<FocusListener*>::iterator it = m_FocusListeners.begin();
-				for (;it != m_FocusListeners.end(); ++it) {
+				m_focusState |= DrawFocusState;
+				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+				for (;it != m_focusListeners.end(); ++it) {
 					(*it)->onGainDrawFocus();
 				}
 			}
 		}
 		else {
 			if (event.active.state & SDL_APPMOUSEFOCUS) {
-				m_focusState &= ~MOUSE;
-				std::set<FocusListener*>::iterator it = m_FocusListeners.begin();
-				for (;it != m_FocusListeners.end(); ++it) {
+				m_focusState &= ~MouseFocusState;
+				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+				for (;it != m_focusListeners.end(); ++it) {
 					(*it)->onLoseMouseFocus();
 				}
 			}
 			if (event.active.state & SDL_APPINPUTFOCUS) {
-				m_focusState &= ~INPUT;
-				std::set<FocusListener*>::iterator it = m_FocusListeners.begin();
-				for (;it != m_FocusListeners.end(); ++it) {
+				m_focusState &= ~InputFocusState;
+				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+				for (;it != m_focusListeners.end(); ++it) {
 					(*it)->onLoseInputFocus();
 				}
 			}
 			if (event.active.state & SDL_APPACTIVE) {
-				m_focusState &= ~DRAW;
-				std::set<FocusListener*>::iterator it = m_FocusListeners.begin();
-				for (;it != m_FocusListeners.end(); ++it) {
+				m_focusState &= ~DrawFocusState;
+				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+				for (;it != m_focusListeners.end(); ++it) {
 					(*it)->onLoseDrawFocus();
 				}
 			}

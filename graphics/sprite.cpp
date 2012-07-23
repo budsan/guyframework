@@ -15,8 +15,8 @@ float Sprite::s_globalUnitsPerPixel = 1.0f;
 Sprite::Sprite()
 {
 	m_unitsPerPixel = s_globalUnitsPerPixel;
-	m_scaleWidth = 1.0f;
-	m_scaleHeight= 1.0f;
+	m_scale.x = 1.0f;
+	m_scale.y= 1.0f;
 	m_rotate = 0.0f;
 }
 
@@ -37,18 +37,18 @@ void Sprite::setPixelsPerUnit(float value)
 
 void Sprite::setScale(float value)
 {
-	m_scaleWidth = value;
-	m_scaleHeight= value;
+	m_scale.x = value;
+	m_scale.y = value;
 }
 
 void Sprite::setScaleWidth(float value)
 {
-	m_scaleWidth = value;
+	m_scale.x = value;
 }
 
 void Sprite::setScaleHeight(float value)
 {
-	m_scaleHeight= value;
+	m_scale.y = value;
 }
 
 void Sprite::setRotation(float value)
@@ -58,13 +58,14 @@ void Sprite::setRotation(float value)
 
 float Sprite::getScaleWidth()
 {
-	return m_scaleWidth;
+	return m_scale.x;
 }
 
 float Sprite::getScaleHeight()
 {
-	return m_scaleHeight;
+	return m_scale.y;
 }
+
 float Sprite::getRotation()
 {
 	return m_rotate;
@@ -114,7 +115,7 @@ void Sprite::draw()
 	preDrawing();
 
 	glTranslatef(m_pos.x , m_pos.y, 0);
-	glScalef(m_unitsPerPixel*m_scaleWidth, m_unitsPerPixel*m_scaleHeight, 0);
+	glScalef(m_unitsPerPixel*m_scale.x, m_unitsPerPixel*m_scale.y, 0);
 	glRotatef(m_rotate, 0, 0, 1);
 	glTranslatef((float)-params.cx, (float)+params.cy, 0);
 

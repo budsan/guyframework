@@ -18,8 +18,8 @@ public:
 
 	virtual void unload();
 
-	virtual const char *getName();
-	virtual const char *getVersion();
+	virtual const char *name();
+	virtual const char *version();
 };
 
 } //namespace Guy

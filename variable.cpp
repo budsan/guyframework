@@ -82,59 +82,51 @@ char* toString(const char* val)
 }
 
 Variable::Variable()
-	: m_name(""), m_type(Variable::Invalid)
+	: m_type(Variable::Null)
 {
-	m_defVal.asInt = 0;
 	m_curVal.asInt = 0;
 }
 
 Variable::Variable(const Variable & other)
-	: m_name(other.m_name), m_type(other.m_type)
+	: m_type(other.m_type)
 {
 	if (m_type == Variable::String)
 	{
-		m_defVal.asString = allocStringCopy(other.m_defVal.asString);
 		m_curVal.asString = allocStringCopy(other.m_curVal.asString);
 	}
 	else
 	{
-		m_defVal.asInt = other.m_defVal.asInt;
 		m_curVal.asInt = other.m_curVal.asInt;
 	}
 }
 
-Variable::Variable(const std::string &_name, bool dval)
-	: m_name(_name), m_type(Variable::Bool)
+Variable::Variable(bool dval)
+	: m_type(Variable::Bool)
 {
-	m_defVal.asBool = dval;
 	m_curVal.asBool = dval;
 }
 
-Variable::Variable(const std::string &_name, int dval)
-	: m_name(_name), m_type(Variable::Int)
+Variable::Variable(int dval)
+	: m_type(Variable::Int)
 {
-	m_defVal.asInt = dval;
 	m_curVal.asInt = dval;
 }
 
-Variable::Variable(const std::string &_name, double dval)
-	: m_name(_name), m_type(Variable::Double)
+Variable::Variable(double dval)
+	: m_type(Variable::Double)
 {
-	m_defVal.asDouble = dval;
 	m_curVal.asDouble = dval;
 }
 
-Variable::Variable(const std::string &_name, char dval)
-	: m_name(_name), m_type(Variable::Char)
+Variable::Variable(char dval)
+	: m_type(Variable::Char)
 {
-	m_defVal.asChar = dval;
 	m_curVal.asChar = dval;
 }
 
-Variable::Variable(const std::string &_name, std::string dval)
-	: m_name(_name), m_type(Variable::String)
+Variable::Variable(std::string dval)
+	: m_type(Variable::String)
 {
-	m_defVal.asString = allocStringCopy(dval);
 	m_curVal.asString = allocStringCopy(dval);
 }
 
@@ -142,26 +134,18 @@ Variable::~Variable()
 {
 	if (m_type == Variable::String)
 	{
-		delete m_defVal.asString;
 		delete m_curVal.asString;
 	}
 }
 
 const Variable &Variable::operator=(const Variable & other)
 {
-	m_name = other.m_name;
 	m_type = other.m_type;
-
 	if (m_type == Variable::String)
-	{
-		m_defVal.asString = allocStringCopy(other.m_defVal.asString);
 		m_curVal.asString = allocStringCopy(other.m_curVal.asString);
-	}
+
 	else
-	{
-		m_defVal.asInt = other.m_defVal.asInt;
 		m_curVal.asInt = other.m_curVal.asInt;
-	}
 
 	return *this;
 }
@@ -170,7 +154,7 @@ void Variable::set(bool val)
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: break;
+	case Variable::Null: break;
 	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
 	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
 	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
@@ -185,7 +169,7 @@ void Variable::set(int val)
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: break;
+	case Variable::Null: break;
 	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
 	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
 	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
@@ -200,7 +184,7 @@ void Variable::set(double val)
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: break;
+	case Variable::Null: break;
 	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
 	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
 	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
@@ -215,7 +199,7 @@ void Variable::set(char val)
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: break;
+	case Variable::Null: break;
 	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
 	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
 	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
@@ -231,7 +215,7 @@ void Variable::set(std::string _val)
 	const char* val = _val.c_str();
 	switch (m_type)
 	{
-	case Variable::Invalid: break;
+	case Variable::Null: break;
 	case Variable::Bool: m_curVal.asBool = Guy::toBool(val); break;
 	case Variable::Int: m_curVal.asInt = Guy::toInt(val); break;
 	case Variable::Double: m_curVal.asDouble = Guy::toDouble(val); break;
@@ -242,26 +226,11 @@ void Variable::set(std::string _val)
 	}
 }
 
-void Variable::setDefault()
-{
-	switch (m_type)
-	{
-	case Variable::Invalid: break;
-	case Variable::Bool: m_curVal.asBool = m_defVal.asBool; break;
-	case Variable::Int: m_curVal.asInt = m_defVal.asInt; break;
-	case Variable::Double: m_curVal.asDouble = m_defVal.asDouble; break;
-	case Variable::Char: m_curVal.asChar = m_defVal.asChar; break;
-	case Variable::String:
-		delete m_curVal.asString;
-		m_curVal.asString = allocStringCopy(m_defVal.asString); break;
-	}
-}
-
 bool Variable::toBool() const
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: return false;
+	case Variable::Null: return false;
 	case Variable::Bool: return Guy::toBool(m_curVal.asBool);
 	case Variable::Int: return Guy::toBool(m_curVal.asInt);
 	case Variable::Double: return Guy::toBool(m_curVal.asDouble);
@@ -276,7 +245,7 @@ int Variable::toInt() const
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: return 0;
+	case Variable::Null: return 0;
 	case Variable::Bool: return Guy::toInt(m_curVal.asBool);
 	case Variable::Int: return Guy::toInt(m_curVal.asInt);
 	case Variable::Double: return Guy::toInt(m_curVal.asDouble);
@@ -291,7 +260,7 @@ double Variable::toDouble() const
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: return 0;
+	case Variable::Null: return 0;
 	case Variable::Bool: return Guy::toDouble(m_curVal.asBool);
 	case Variable::Int: return Guy::toDouble(m_curVal.asInt);
 	case Variable::Double: return Guy::toDouble(m_curVal.asDouble);
@@ -306,7 +275,7 @@ char Variable::toChar() const
 {
 	switch (m_type)
 	{
-	case Variable::Invalid: return 0;
+	case Variable::Null: return 0;
 	case Variable::Bool: return Guy::toBool(m_curVal.asBool);
 	case Variable::Int: return Guy::toBool(m_curVal.asInt);
 	case Variable::Double: return Guy::toBool(m_curVal.asDouble);
@@ -322,7 +291,7 @@ std::string Variable::toString() const
 	char *c_ret = NULL;
 	switch (m_type)
 	{
-	case Variable::Invalid: std::string(); break;
+	case Variable::Null: std::string(); break;
 	case Variable::Bool: c_ret = Guy::toString(m_curVal.asBool); break;
 	case Variable::Int: c_ret = Guy::toString(m_curVal.asInt); break;
 	case Variable::Double: c_ret = Guy::toString(m_curVal.asDouble); break;
@@ -339,12 +308,12 @@ std::ostream &operator <<(std::ostream &out, const Variable &var)
 {
 	Variable::Type type = var.type();
 	out.write((const char *)&type, sizeof(Variable::Type));
-	if(var.type() == Variable::Invalid) return out;
+	if(var.type() == Variable::Null) return out;
 
 	out.write(var.name().c_str(), var.name().length()+1);
 	switch (var.type())
 	{
-	case Variable::Invalid: break;
+	case Variable::Null: break;
 	case Variable::Bool: {
 		bool value = var.toBool();
 		out.write((const char *)&value, sizeof(bool)); break;
@@ -384,10 +353,10 @@ std::string variableReadString(std::istream &in)
 
 std::istream &operator >>(std::istream &in, Variable &var)
 {
-	Variable::Type type = Variable::Invalid;
+	Variable::Type type = Variable::Null;
 	in.read((char *)&type, sizeof(Variable::Type));
 
-	if(type == Variable::Invalid)
+	if(type == Variable::Null)
 	{
 		var = Variable();
 		return in;
@@ -396,7 +365,7 @@ std::istream &operator >>(std::istream &in, Variable &var)
 	std::string name = variableReadString(in);
 	switch (type)
 	{
-	case Variable::Invalid: break;
+	case Variable::Null: break;
 	case Variable::Bool: {
 		bool value;
 		in.read((char *)&value, sizeof(bool)); break;

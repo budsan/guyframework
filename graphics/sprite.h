@@ -29,8 +29,7 @@ class Sprite
 	static float s_globalUnitsPerPixel;
 	       float       m_unitsPerPixel;
 
-	float m_scaleWidth;
-	float m_scaleHeight;
+	math::vec2f m_scale;
 	float m_rotate;
 
  protected:
