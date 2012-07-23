@@ -27,16 +27,17 @@ public:
 	virtual void resume();
 	virtual void exit();
 
-	virtual Screen&           getScreenManager();
-	virtual emyl::manager&    getAudioManager();
-	virtual Input&            getInputManager();
+	virtual Screen&           screen();
+	virtual emyl::manager&    audio();
+	virtual Input&            input();
 
-	void setFramesPerSecond(unsigned short frames = 0, bool stable = false, bool dropFrames = false);
+	void setFrameRate(unsigned short frames = 0,
+					   DeltaTimeType type = VariableDeltaTime);
 
 private:
-	SDLScreen*           m_screen; //graphics
-	emyl::manager*         m_audio; //sound
-	SDLInput*            m_input; //input
+	SDLScreen*      m_screen; //graphics
+	emyl::manager*  m_audio; //sound
+	SDLInput*       m_input; //input
 
 	bool m_exit;
 	bool m_pause;

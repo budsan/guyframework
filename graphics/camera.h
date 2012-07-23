@@ -10,8 +10,8 @@ class Camera
 public:
 	Camera() {}
 
-	virtual math::mat4f getModelviewMatrix()  = 0;
-	virtual math::mat4f getProjectionMatrix() = 0;
+	virtual math::mat4f viewMatrix()  = 0;
+	virtual math::mat4f projectionMatrix() = 0;
 };
 
 } //namespace Guy

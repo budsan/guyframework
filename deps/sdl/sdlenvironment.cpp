@@ -30,7 +30,7 @@ bool SDLEnvironment::init(Game *game)
 
 	openLogFile();
 	printLog("--------------------------------------------------------\n");
-	printLog(" %s - %s\n", m_game->getName(), m_game->getVersion());
+	printLog(" %s - %s\n", m_game->name(), m_game->version());
 	printLog("--------------------------------------------------------\n");
 
 	SDL_Init(0);
@@ -45,7 +45,7 @@ bool SDLEnvironment::init(Game *game)
 	m_audio    = emyl::manager::get_instance();
 	m_input    = new SDLInput();
 
-	setFramesPerSecond(0, false, false);
+	setFrameRate();
 	m_game->init();
 
 	if (!m_screen->init())
@@ -53,7 +53,7 @@ bool SDLEnvironment::init(Game *game)
 		printLog("ERROR: Couldn't init screen.\n");
 		return false;
 	}
-	m_screen->setCaption(m_game->getName());
+	m_screen->setCaption(m_game->name());
 
 	if (!m_audio-> init())
 	{
@@ -75,19 +75,33 @@ void SDLEnvironment::destroy()
 	SDL_Quit();
 }
 
-void SDLEnvironment::setFramesPerSecond(unsigned short frames, bool stable, bool dropFrames)
+void SDLEnvironment::setFrameRate(unsigned short frames, DeltaTimeType type)
 {
 	m_framesPerSecond = frames;
-	if (frames != 0) m_ticksPerFrame = 1000/(Uint32)m_framesPerSecond;
-	else m_ticksPerFrame = 0;
+	if (frames != 0)
+		m_ticksPerFrame = 1000/(Uint32)m_framesPerSecond;
+	else
+		m_ticksPerFrame = 0;
 
-	if (m_ticksPerFrame == 0) m_gameLoop =  boost::bind(&SDLEnvironment::loopVariableFastest, this);
-	else {
-		if (stable) {
-			if (dropFrames) m_gameLoop = boost::bind(&SDLEnvironment::loopStableDrop, this);
-			else m_gameLoop = boost::bind(&SDLEnvironment::loopStable, this);
+	if (m_ticksPerFrame == 0)
+		m_gameLoop =  boost::bind(&SDLEnvironment::loopVariableFastest, this);
+	else
+	{
+		switch(type)
+		{
+		case VariableDeltaTime:
+			 m_gameLoop =  boost::bind(&SDLEnvironment::loopVariable, this);
+			 break;
+		case StableDeltaTime:
+			m_gameLoop = boost::bind(&SDLEnvironment::loopStable, this);
+			break;
+		case StableWithFrameSkipDeltaTime:
+			m_gameLoop = boost::bind(&SDLEnvironment::loopStableDrop, this);
+			break;
+		default:
+			m_gameLoop =  boost::bind(&SDLEnvironment::loopVariableFastest, this);
+			break;
 		}
-		else m_gameLoop =  boost::bind(&SDLEnvironment::loopVariable, this);
 	}
 
 	m_accumTime = 0;
@@ -141,17 +155,17 @@ void SDLEnvironment::exit()
 	m_exit = true;
 }
 
-Screen& SDLEnvironment::getScreenManager()
+Screen& SDLEnvironment::screen()
 {
 	return *(Screen*)m_screen;
 }
 
-emyl::manager& SDLEnvironment::getAudioManager()
+emyl::manager& SDLEnvironment::audio()
 {
 	return *m_audio;
 }
 
-Input& SDLEnvironment::getInputManager()
+Input& SDLEnvironment::input()
 {
 	return *(Input*)m_input;
 }

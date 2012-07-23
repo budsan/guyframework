@@ -15,8 +15,8 @@ public:
 	void pollEvents();
 	void waitEvent();
 
-	virtual int       getKeyboardCount();
-	virtual Keyboard& getKeyboard(int i = 0);
+	virtual int       keyboardCount();
+	virtual Keyboard& keyboard(int i = 0);
 
 	virtual int getFocusState();
 

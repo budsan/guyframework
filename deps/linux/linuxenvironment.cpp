@@ -31,7 +31,7 @@ void LinuxEnvironment::destroy()
 	SDLEnvironment::destroy();
 }
 
-PersistenceLayer& LinuxEnvironment::getPersitenceLayer()
+PersistenceLayer& LinuxEnvironment::persitenceLayer()
 {
 	return *(PersistenceLayer*)m_persistenceLayer;
 }

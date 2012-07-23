@@ -21,7 +21,7 @@ public:
 	virtual bool init(Game *game);
 	virtual void destroy();
 
-	virtual PersistenceLayer& getPersitenceLayer();
+	virtual PersistenceLayer& persitenceLayer();
 
 private:
 	LinuxPersistenceLayer* m_persistenceLayer;

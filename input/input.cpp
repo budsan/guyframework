@@ -8,14 +8,14 @@ namespace Guy {
 
 void Input::addFocusListener(FocusListener *listener)
 {
-	assert(std::find(m_FocusListeners.begin(),m_FocusListeners.end(),listener) == m_FocusListeners.end());
-	m_FocusListeners.insert(listener);
+	assert(std::find(m_focusListeners.begin(),m_focusListeners.end(),listener) == m_focusListeners.end());
+	m_focusListeners.insert(listener);
 }
 
 void Input::removeFocusListener(FocusListener *listener)
 {
-	assert(find(m_FocusListeners.begin(),m_FocusListeners.end(),listener) != m_FocusListeners.end());
-	m_FocusListeners.erase(listener);
+	assert(find(m_focusListeners.begin(),m_focusListeners.end(),listener) != m_focusListeners.end());
+	m_focusListeners.erase(listener);
 }
 
 } // namespace Guy

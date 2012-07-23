@@ -20,8 +20,8 @@ public:
 	void setCaption(const char* GameName);
 
 	bool setMode(const Mode& mode, bool fullscreen = true);
-	const std::vector<Mode>& getAvailableModes(unsigned int &size);
-	const Mode& getCurrentMode();
+	const std::vector<Mode>& availableModes(unsigned int &size);
+	const Mode& currentMode();
 
 	//Clear with alpha blending
 	void fillWithColor(const rgba &color);

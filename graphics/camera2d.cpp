@@ -20,7 +20,7 @@ Camera2D::Camera2D()
 
 void Camera2D::init()
 {
-	const Screen::Mode& mode = Environment::instance().getScreenManager().getCurrentMode();
+	const Screen::Mode& mode = Environment::instance().screen().currentMode();
 	resizeScreen(mode.w, mode.h);
 }
 
@@ -34,12 +34,12 @@ math::bbox2f Camera2D::getBounding()
 	return math::bbox2f(min, max);
 }
 
-math::mat4f Camera2D::getModelviewMatrix()
+math::mat4f Camera2D::viewMatrix()
 {
 	return math::mat4f::fromIdentity();
 }
 
-math::mat4f Camera2D::getProjectionMatrix()
+math::mat4f Camera2D::projectionMatrix()
 {
 	if (!m_init) init();
 
@@ -65,11 +65,11 @@ void Camera2D::resizeScreen(int w, int h)
 
 void Camera2D::resizeScreen(int h)
 {
-	Screen &screen = Environment::instance().getScreenManager();
-	float ratio = screen.getCurrentMode().getRatio();
+	Screen &screen = Environment::instance().screen();
+	float ratio = screen.currentMode().ratio();
 	if (ratio == 0)
 	{
-		const Screen::Mode& mode = screen.getCurrentMode();
+		const Screen::Mode& mode = screen.currentMode();
 		m_aspect = float(mode.w) / float(mode.h);
 		m_w = (int)(float(h) * m_aspect);
 		m_h = h;
