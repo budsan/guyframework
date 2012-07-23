@@ -53,7 +53,7 @@ void Environment::destroy()
 
 }
 
-Game& Environment::getGame()
+Game& Environment::game()
 {
 	return *m_game;
 }

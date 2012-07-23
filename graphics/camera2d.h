@@ -17,15 +17,15 @@ public:
 	void resizeScreen(int width, int height);
 	void resizeScreen(int height); //Get width from screen's aspect ratio.
 
-	math::mat4f getModelviewMatrix();
-	math::mat4f getProjectionMatrix();
+	math::mat4f viewMatrix();
+	math::mat4f projectionMatrix();
 	void reset();
 
 	void  setPos(math::vec2f m_pos);
-	math::vec2f getPos() const { return m_pos;}
+	math::vec2f pos() const { return m_pos;}
 
 	void  setZoom(float m_zoom);
-	float getZoom() const {return m_zoom;}
+	float zoom() const {return m_zoom;}
 
 	int width()  const {return m_w;}
 	int height() const {return m_h;}

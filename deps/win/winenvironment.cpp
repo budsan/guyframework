@@ -31,7 +31,7 @@ void WinEnvironment::destroy()
 	SDLEnvironment::destroy();
 }
 
-PersistenceLayer& WinEnvironment::getPersitenceLayer()
+PersistenceLayer& WinEnvironment::persitenceLayer()
 {
 	return *(PersistenceLayer*)m_persistenceLayer;
 }

@@ -178,13 +178,13 @@ bool SDLScreen::setMode(const Mode& mode, bool fullscreen)
 	return true;
 }
 
-const std::vector<Screen::Mode> &SDLScreen::getAvailableModes(unsigned int &size)
+const std::vector<Screen::Mode> &SDLScreen::availableModes(unsigned int &size)
 {
 	return m_videoModes;
 }
 //---------------------------------------------------------------------------//
 
-const Screen::Mode& SDLScreen::getCurrentMode()
+const Screen::Mode& SDLScreen::currentMode()
 {
 	return m_selectedMode;
 }

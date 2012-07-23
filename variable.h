@@ -10,7 +10,7 @@ class Variable
 public:
 	enum Type
 	{
-		Invalid = 0,
+		Null = 0,
 		Bool,
 		Int,
 		Double,
@@ -20,11 +20,11 @@ public:
 
 	Variable();
 	Variable(const Variable & other);
-	Variable(const std::string &_name, bool dval);
-	Variable(const std::string &_name, int dval);
-	Variable(const std::string &_name, double dval);
-	Variable(const std::string &_name, char dval);
-	Variable(const std::string &_name, std::string dval);
+	Variable(bool dval);
+	Variable(int dval);
+	Variable(double dval);
+	Variable(char dval);
+	Variable(std::string dval);
 
 	~Variable();
 
@@ -35,7 +35,6 @@ public:
 	void set(double val);
 	void set(char val);
 	void set(std::string val);
-	void setDefault();
 
 	bool        toBool() const;
 	int         toInt() const;
@@ -43,8 +42,8 @@ public:
 	char        toChar() const;
 	std::string toString() const;
 
-	const std::string &name() const {return m_name;}
 	Type type() const {return m_type;}
+	bool isNull() const { return m_type == Variable::Null; }
 
 private:
 
@@ -57,9 +56,7 @@ private:
 		char*  asString;
 	};
 
-	std::string m_name;
 	Type m_type;
-	Value m_defVal;
 	Value m_curVal;
 };
 

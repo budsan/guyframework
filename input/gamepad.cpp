@@ -88,12 +88,12 @@ void GamePad::setConnected(bool connected)
 	*/
 }
 
-float GamePad::getTriggerL()
+float GamePad::triggerL()
 {
 	return mTriggerL;
 }
 
-float GamePad::getTriggerR()
+float GamePad::triggerR()
 {
 	return mTriggerR;
 }
@@ -128,12 +128,12 @@ bool GamePad::isButtonDown(Button button)
 	return mIsButtonDown[button];
 }
 
-const math::vec2f &GamePad::getAnalogL()
+const math::vec2f &GamePad::analogL()
 {
 	return mAnalogL;
 }
 
-const math::vec2f &GamePad::getAnalogR()
+const math::vec2f &GamePad::analogR()
 {
 	return mAnalogR;
 }

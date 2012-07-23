@@ -27,12 +27,12 @@ void Game::unload()
 	//Almost forgot. NOTHING AS WELL.
 }
 
-const char *Game::getName()
+const char *Game::name()
 {
 	return "Game";
 }
 
-const char *Game::getVersion()
+const char *Game::version()
 {
 	return "Undefined";
 }

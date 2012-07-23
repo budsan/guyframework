@@ -14,7 +14,7 @@ Screen::Mode::Mode(unsigned int w, unsigned int h)
 
 }
 
-float Screen::Mode::getRatio() const
+float Screen::Mode::ratio() const
 {
 	return float(w)/float(h);
 }

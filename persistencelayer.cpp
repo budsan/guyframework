@@ -3,45 +3,66 @@
 
 namespace Guy {
 
-void PersistenceLayer::add(const Variable &var, bool overwrite, bool persist)
+static Variable guard;
+
+bool PersistenceLayer::add(const std::string& name, const Variable &var)
 {
-	if (var.type() == Variable::Invalid) return;
-	std::map<std::string, Variable>::iterator it = m_vars.find(var.name());
+	if (var.type() == Variable::Null)
+		return false;
+
+	std::map<std::string, Variable>::iterator it = m_vars.find(name);
 	if (it != m_vars.end())
 	{
-		if (overwrite) {
-			it->second = var;
-			if (persist) this->persist();
-		}
-		else printLog("Var %s already exists.\n", var.name().c_str());
+		printLog("Var %s already exists.\n", name.c_str());
+		return false;
 	}
 	else
 	{
-		m_vars[var.name()] = var;
-		if (persist) this->persist();
+		m_vars[name] = var;
+		return true;
 	}
 }
 
-void PersistenceLayer::set(const Variable &var, bool persist)
+bool PersistenceLayer::replace(const std::string& name, const Variable &var)
 {
-	if (var.type() == Variable::Invalid) return;
-	std::map<std::string, Variable>::iterator it = m_vars.find(var.name());
+	if (var.type() == Variable::Null)
+		return false;
+
+	std::map<std::string, Variable>::iterator it = m_vars.find(name);
 	if (it != m_vars.end())
 	{
 		it->second = var;
-		if (persist) this->persist();
+		return true;
 	}
-	else {
-		printLog("Var %s doesn't exist.\n", var.name().c_str());
+	else
+	{
+		m_vars[name] = var;
+		return false;
 	}
 }
 
-Variable *PersistenceLayer::get(const std::string &name)
+bool PersistenceLayer::set(const std::string& name, const Variable &var)
+{
+	if (var.type() == Variable::Null)
+		return false;
+
+	std::map<std::string, Variable>::iterator it = m_vars.find(name);
+	if (it != m_vars.end())
+	{
+		it->second = var;
+		return true;
+	}
+	else {
+		printLog("Var %s doesn't exist.\n", name.c_str());
+		return false;
+	}
+}
+
+const Variable &PersistenceLayer::get(const std::string &name)
 {
 	std::map<std::string, Variable>::iterator it = m_vars.find(name);
-	if (it == m_vars.end()) return NULL;
-	Variable *v = &(it->second);
-	return v;
+	if (it == m_vars.end()) return guard;
+	return it->second;
 }
 
 } // namespace Guy
