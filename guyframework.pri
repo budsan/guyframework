@@ -10,7 +10,7 @@ win32 {
 
 unix {
     DEFINES += GUY_USE_LINUX
-    LIBS += -SDL -lGL -lGLU -lopenal -lGLEW
+    LIBS += -lSDL -lGL -lGLU -lopenal -lGLEW
     INCLUDEPATH += /usr/include/freetype2/
 }
 
