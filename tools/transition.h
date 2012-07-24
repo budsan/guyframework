@@ -13,7 +13,7 @@ public:
 
 	virtual void update(float _deltaTime) = 0;
 
-	virtual float getPos() {return m_fPos;}
+  virtual float pos() {return m_fPos;}
 	virtual bool reached() {return m_fPosToGo == m_fPos;}
 
 protected:
