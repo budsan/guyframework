@@ -45,6 +45,11 @@ bool PersistenceLayer::Save(const char *filename)
 #endif
 
 
+std::string readString(std::istream &file)
+{
+
+}
+
 bool WinPersistenceLayer::load(const char *filename)
 {
 	std::fstream file;
@@ -52,11 +57,23 @@ bool WinPersistenceLayer::load(const char *filename)
 
 	if (!file.is_open()) return false;
 
-	Variable var;
-	while(file >> var)
+	do
 	{
-		this->add(var);
+		std::string name;
+		char c[2] = { '\0', '\0'};
+		while(file.read(c, sizeof(char)))
+		{
+			if( c != '\0') name.append(c);
+			else break;
+		}
+
+		Variable var;
+		if (file >> var)
+		{
+			this->add(name, var);
+		}
 	}
+	while(file);
 
 	m_filepath = std::string(filename);
 	return true;
@@ -72,6 +89,8 @@ bool WinPersistenceLayer::save()
 	std::map<std::string, Variable>::iterator it = m_vars.begin();
 	for(;it != m_vars.end(); ++it)
 	{
+		const std::string &s = it->first;
+		file.write(s.c_str(),s.length()+1);
 		file << it->second;
 	}
 

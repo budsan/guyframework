@@ -310,7 +310,6 @@ std::ostream &operator <<(std::ostream &out, const Variable &var)
 	out.write((const char *)&type, sizeof(Variable::Type));
 	if(var.type() == Variable::Null) return out;
 
-	out.write(var.name().c_str(), var.name().length()+1);
 	switch (var.type())
 	{
 	case Variable::Null: break;
@@ -362,32 +361,31 @@ std::istream &operator >>(std::istream &in, Variable &var)
 		return in;
 	}
 
-	std::string name = variableReadString(in);
 	switch (type)
 	{
 	case Variable::Null: break;
 	case Variable::Bool: {
 		bool value;
 		in.read((char *)&value, sizeof(bool)); break;
-		var = Variable(name, value);
+		var = Variable(value);
 	} break;
 	case Variable::Int: {
 		int value;
 		in.read((char *)&value, sizeof(int)); break;
-		var = Variable(name, value);
+		var = Variable(value);
 	} break;
 	case Variable::Double: {
 		double value;
 		in.read((char *)&value, sizeof(double)); break;
-		var = Variable(name, value);
+		var = Variable(value);
 	} break;
 	case Variable::Char: {
 		char value;
 		in.read((char *)&value, sizeof(char)); break;
-		var = Variable(name, value);
+		var = Variable(value);
 	} break;
 	case Variable::String: {
-			var = Variable(name, variableReadString(in));
+			var = Variable(variableReadString(in));
 		} break;
 	}
 

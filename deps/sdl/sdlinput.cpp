@@ -45,6 +45,17 @@ Keyboard& SDLInput::keyboard(int i)
 	return *m_keyboard;
 }
 
+int SDLInput::gamePadCount()
+{
+	return 0;
+}
+
+GamePad& SDLInput::gamePad(int i)
+{
+	assert(i >= 0);
+	return *(GamePad*)0;
+}
+
 int SDLInput::getFocusState()
 {
 	return m_focusState;

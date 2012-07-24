@@ -14,22 +14,22 @@ public:
 
 	enum Button
 	{
-		BUTTON_0 = 0,
-		BUTTON_1 = 1,
-		BUTTON_2 = 2,
-		BUTTON_3 = 3,
-		BUTTON_L_SHOULDER = 4,
-		BUTTON_R_SHOULDER = 5,
-		BUTTON_L_STICK = 6,
-		BUTTON_R_STICK = 7,
-		BUTTON_START = 8,
-		BUTTON_AUX = 9,
-		BUTTON_DPAD_UP = 10,
-		BUTTON_DPAD_DOWN = 11,
-		BUTTON_DPAD_LEFT = 12,
-		BUTTON_DPAD_RIGHT = 13,
-		BUTTON_COUNT = 14,
-		BUTTON_UNKNOWN = 0xff
+		Button_Unknown = -1,
+		Button_0 = 0,
+		Button_1,
+		Button_2,
+		Button_3,
+		Button_LShoulder,
+		Button_RShoulder,
+		Button_LStick,
+		Button_RStick,
+		Button_Start,
+		Button_Aux,
+		Button_DPadUp,
+		Button_DPadDown,
+		Button_DPadLeft,
+		Button_DPadRight,
+		Button_Count
 	};
 
 	GamePad(int id);
@@ -49,7 +49,7 @@ public:
 	void setButtonDown(Button button, bool down);
 	bool isButtonDown(Button button);
 
-	inline int id() { return mId; }
+	inline int id() { return m_id; }
 
 	virtual void setEnabled(bool enabled);
 
@@ -66,13 +66,13 @@ protected:
 
 protected:
 
-	std::vector<GamePadListener*> mListeners;
-	int mId;
-	math::vec2f mAnalogL;
-	math::vec2f mAnalogR;
-	float mTriggerL;
-	float mTriggerR;
-	bool mIsButtonDown[BUTTON_COUNT];
+	std::vector<GamePadListener*> m_listeners;
+	int m_id;
+	math::vec2f m_analogL;
+	math::vec2f m_analogR;
+	float m_triggerL;
+	float m_triggerR;
+	bool m_isButtonDown[Button_Count];
 };
 
 } // namespace Guy

@@ -18,6 +18,9 @@ public:
 	virtual int       keyboardCount();
 	virtual Keyboard& keyboard(int i = 0);
 
+	virtual int      gamePadCount();
+	virtual GamePad& gamePad(int i = 0);
+
 	virtual int getFocusState();
 
 private:

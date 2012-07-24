@@ -10,10 +10,10 @@ namespace Guy {
 
 GamePad::GamePad(int id)
 {
-	mId = id;
-	for (int i=0 ; i<BUTTON_COUNT ; i++)
+	m_id = id;
+	for (int i=0 ; i<Button_Count ; i++)
 	{
-		mIsButtonDown[i] = false;
+		m_isButtonDown[i] = false;
 	}
 }
 
@@ -23,38 +23,38 @@ GamePad::~GamePad()
 
 void GamePad::addListener(GamePadListener *listener)
 {
-	assert(find(mListeners.begin(),mListeners.end(),listener) == mListeners.end());
-	mListeners.push_back(listener);
+	assert(find(m_listeners.begin(),m_listeners.end(),listener) == m_listeners.end());
+	m_listeners.push_back(listener);
 }
 
 void GamePad::removeListener(GamePadListener *listener)
 {
-	assert(find(mListeners.begin(),mListeners.end(),listener) != mListeners.end());
-	mListeners.erase(find(mListeners.begin(),mListeners.end(),listener));
+	assert(find(m_listeners.begin(),m_listeners.end(),listener) != m_listeners.end());
+	m_listeners.erase(find(m_listeners.begin(),m_listeners.end(),listener));
 }
 
 void GamePad::fireDownEvent(Button button)
 {
-	mIsButtonDown[button] = true;
-	if (mListeners.size()>0 && isEnabled())
+	m_isButtonDown[button] = true;
+	if (m_listeners.size()>0 && isEnabled())
 	{
-		int numListeners = (int)mListeners.size();
+		int numListeners = (int)m_listeners.size();
 		for (int i=0 ; i<numListeners ; i++)
 		{
-			mListeners[i]->onGamePadButtonDown(this,button);
+			m_listeners[i]->onGamePadButtonDown(this,button);
 		}
 	}
 }
 
 void GamePad::fireUpEvent(Button button)
 {
-	mIsButtonDown[button] = false;
-	if (mListeners.size()>0 && isEnabled())
+	m_isButtonDown[button] = false;
+	if (m_listeners.size()>0 && isEnabled())
 	{
-		int numListeners = (int)mListeners.size();
+		int numListeners = (int)m_listeners.size();
 		for (int i=0 ; i<numListeners ; i++)
 		{
-			mListeners[i]->onGamePadButtonUp(this,button);
+			m_listeners[i]->onGamePadButtonUp(this,button);
 		}
 	}
 }
@@ -66,52 +66,44 @@ void GamePad::setEnabled(bool enabled)
 
 void GamePad::setConnected(bool connected) 
 {
-	/*
 	// if there's no change, return:
 	if (connected == isConnected())
-	{
 		return;
-	}
 
 	// connect the controller:
 	Controller::setConnected(connected);
 
 	// fire notification:
 	if (connected)
-	{
-		Environment::instance().fireGamePadAdded(mId);
-	}
+		Environment::instance().input().fireGamePadAdded(m_id);
 	else
-	{
-		Environment::instance().fireGamePadRemoved(mId);
-	}
-	*/
+		Environment::instance().input().fireGamePadRemoved(m_id);
 }
 
 float GamePad::triggerL()
 {
-	return mTriggerL;
+	return m_triggerL;
 }
 
 float GamePad::triggerR()
 {
-	return mTriggerR;
+	return m_triggerR;
 }
 
 void GamePad::setTriggers(float l, float r)
 {
-	mTriggerL = l;
-	mTriggerR = r;
+	m_triggerL = l;
+	m_triggerR = r;
 }
 
 void GamePad::setButtonDown(Button button, bool down)
 {
-	if (mIsButtonDown[button]==down)
+	if (m_isButtonDown[button]==down)
 	{
 		return;
 	}
 
-	mIsButtonDown[button] = down;
+	m_isButtonDown[button] = down;
 	if (down)
 	{
 		fireDownEvent(button);
@@ -124,30 +116,30 @@ void GamePad::setButtonDown(Button button, bool down)
 
 bool GamePad::isButtonDown(Button button)
 {
-	assert(button<BUTTON_COUNT);
-	return mIsButtonDown[button];
+	assert(button<Button_Count);
+	return m_isButtonDown[button];
 }
 
 const math::vec2f &GamePad::analogL()
 {
-	return mAnalogL;
+	return m_analogL;
 }
 
 const math::vec2f &GamePad::analogR()
 {
-	return mAnalogR;
+	return m_analogR;
 }
 
 void GamePad::setAnalogL(float x, float y)
 {
-	mAnalogL.x = x;
-	mAnalogL.y = y;
+	m_analogL.x = x;
+	m_analogL.y = y;
 }
 
 void GamePad::setAnalogR(float x, float y)
 {
-	mAnalogR.x = x;
-	mAnalogR.y = y;
+	m_analogR.x = x;
+	m_analogR.y = y;
 }
 
 } // namespace Guy

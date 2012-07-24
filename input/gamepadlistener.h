@@ -16,5 +16,17 @@ public:
 
 };
 
+class GamePadPlugListener
+{
+public:
+
+	GamePadPlugListener() {}
+	virtual ~GamePadPlugListener() {}
+
+	virtual void onGamePadAdded(int id) = 0;
+	virtual void onGamePadRemoved(int id) = 0;
+
+};
+
 } // namespace Guy
 
