@@ -52,20 +52,20 @@ public:
 	float getDirection() { return m_dir; }
 	float getAngle() { return m_angle; }
 
-	int getParticleNumber() { return m_num0;}
-	float getFrequency() { return m_freq; }
-	const vec2f & getGravity() { return m_grav; }
+  int particleCount() { return m_num0;}
+  float frequency() { return m_freq; }
+  const vec2f & gravity() { return m_grav; }
 
-	float getParticleLiveMin() { return m_l0; }
-	float getParticleLiveMax() { return m_l1; }
-	const rgba &getParticleColorStart() { return m_c0; }
-	const rgba &getParticleColorEnd()   { return m_c1; }
-	float getParticleSpeedMin() { return m_s0; }
-	float getParticleSpeedMax() { return m_s1; }
-	float getParticleSizeStart() { return m_z0; }
-	float getParticleSizeEnd()   { return m_z1; }
-	bool getParticleAccumulativeColor() { return m_accumBlending; }
-	const std::string &getParticleMaterial() { return m_material; }
+  float particleLiveMin() { return m_l0; }
+  float particleLiveMax() { return m_l1; }
+  const rgba &particleColorStart() { return m_c0; }
+  const rgba &particleColorEnd()   { return m_c1; }
+  float particleSpeedMin() { return m_s0; }
+  float particleSpeedMax() { return m_s1; }
+  float particleSizeStart() { return m_z0; }
+  float particleSizeEnd()   { return m_z1; }
+  bool particleAccumulativeColor() { return m_accumBlending; }
+  const std::string &particleMaterial() { return m_material; }
 
 	bool areParticlesLeft() { return m_num || m_particles.empty();}
 
