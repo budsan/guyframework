@@ -10,9 +10,11 @@ class Shader
 	public:
 		Shader(GLenum type);
 		~Shader();
-		bool load(const char *filename);
 
-		void compile() const;
+		bool load(const char *filename);
+		bool compile(const char *filename);
+		bool compile() const;
+
 		void attach(GLuint program) const;
 		void printInfoLog() const;
 };

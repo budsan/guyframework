@@ -86,7 +86,7 @@ void Camera2D::resizeScreen(int h)
 
 void Camera2D::setPos(math::vec2f pos)
 {
-	this->m_pos = pos;
+	m_pos = pos;
 }
 
 void Camera2D::setZoom(float _zoom)

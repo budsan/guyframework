@@ -9,19 +9,19 @@ namespace Guy {
 
 FrameBuffer::FrameBuffer() : m_width(0), m_height(0), m_frameId(0), m_depthId(0), m_stencilId(0), m_buffers(0)
 {
-	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &m_maxColorAttachments);
+	GL_ASSERT(glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &m_maxColorAttachments));
 	m_buffers = new GLenum[m_maxColorAttachments];
 
-	glGenFramebuffers(1, &m_frameId);
+	GL_ASSERT(glGenFramebuffers(1, &m_frameId));
 }
 
 
 FrameBuffer::FrameBuffer(int width, int height) : m_width(0), m_height(0), m_frameId(0), m_depthId(0), m_stencilId(0), m_buffers(0)
 {
-	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &m_maxColorAttachments);
+	GL_ASSERT(glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &m_maxColorAttachments));
 	m_buffers = new GLenum[m_maxColorAttachments];
 
-	glGenFramebuffersEXT(1, &m_frameId);
+	GL_ASSERT(glGenFramebuffersEXT(1, &m_frameId));
 	m_width = width;
 	m_height = height;
 }
@@ -34,16 +34,16 @@ FrameBuffer::~FrameBuffer()
 	std::vector<GLuint>::const_iterator cii;
 	for(cii = m_texId.begin(); cii != m_texId.end(); cii++) {
 		tex_id = *cii;
-		glDeleteTextures(1, &tex_id);
+		GL_ASSERT(glDeleteTextures(1, &tex_id));
 	}
 
 	if (m_depthId) {
-		glDeleteRenderbuffersEXT(1, &m_depthId);
+		GL_ASSERT(glDeleteRenderbuffersEXT(1, &m_depthId));
 	}
 	if (m_stencilId) {
-		glDeleteRenderbuffersEXT(1, &m_stencilId);
+		GL_ASSERT(glDeleteRenderbuffersEXT(1, &m_stencilId));
 	}
-	glDeleteFramebuffersEXT(1, &m_frameId);
+	GL_ASSERT(glDeleteFramebuffersEXT(1, &m_frameId));
 	delete[] m_buffers;
 }
 
@@ -72,11 +72,11 @@ void FrameBuffer::attachRender(GLenum iformat)
 		throw std::invalid_argument("FrameBuffer::AttachRender - unrecognized internal format");
 	}
 
-	glGenRenderbuffersEXT(1, &render_id);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
-	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, render_id);
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, iformat, m_width, m_height);
-	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, render_id);
+	GL_ASSERT(glGenRenderbuffersEXT(1, &render_id));
+	GL_ASSERT(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId));
+	GL_ASSERT(glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, render_id));
+	GL_ASSERT(glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, iformat, m_width, m_height));
+	GL_ASSERT(glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, render_id));
 
 	if (attachment == GL_DEPTH_ATTACHMENT_EXT || attachment == GL_DEPTH_STENCIL_ATTACHMENT) {
 		m_depthId = render_id;
@@ -159,18 +159,18 @@ void FrameBuffer::attachTexture(GLenum iformat, GLint filter)
 		throw std::invalid_argument("FrameBuffer::AttachTexture - unrecognized internal format");
 	}
 
-	glGenTextures(1, &tex_id);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
-	glBindTexture(GL_TEXTURE_2D, tex_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, iformat, m_width, m_height, 0, format, type, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+	GL_ASSERT(glGenTextures(1, &tex_id));
+	GL_ASSERT(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId));
+	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, tex_id));
+	GL_ASSERT(glTexImage2D(GL_TEXTURE_2D, 0, iformat, m_width, m_height, 0, format, type, NULL));
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
 	if (format == GL_DEPTH_STENCIL) { // packed depth and stencil added separately
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tex_id, 0);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, tex_id, 0);
+		GL_ASSERT(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tex_id, 0));
+		GL_ASSERT(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, tex_id, 0));
 	}
 	else {
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attachment, GL_TEXTURE_2D, tex_id, 0);
+		GL_ASSERT(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attachment, GL_TEXTURE_2D, tex_id, 0));
 	}
 
 	m_texId.push_back(tex_id);
@@ -181,8 +181,8 @@ void FrameBuffer::attachTexture(GLenum iformat, GLint filter)
 void FrameBuffer::bindInput()
 {
 	for (int i = 0; i < int(m_texId.size()); i++) {
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, m_texId[i]);
+		GL_ASSERT(glActiveTexture(GL_TEXTURE0 + i));
+		GL_ASSERT(glBindTexture(GL_TEXTURE_2D, m_texId[i]));
 	}
 }
 
@@ -193,7 +193,7 @@ void FrameBuffer::bindInput(int num) throw(std::out_of_range)
 		throw std::out_of_range("FrameBuffer::BindInput - texture vector size exceeded");
 	}
 
-	glBindTexture(GL_TEXTURE_2D, m_texId[num]);
+	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, m_texId[num]));
 }
 
 
@@ -203,12 +203,12 @@ void FrameBuffer::bindOutput() throw(std::domain_error)
 		throw std::domain_error("FrameBuffer::BindOutput - no textures to bind");
 	}	
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
+	GL_ASSERT(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId));
 	if (m_texId.size() == 1) {
-		glDrawBuffer(m_buffers[0]);
+		GL_ASSERT(glDrawBuffer(m_buffers[0]));
 	}
 	else {
-		glDrawBuffers((GLsizei) m_texId.size(), m_buffers);
+		GL_ASSERT(glDrawBuffers((GLsizei) m_texId.size(), m_buffers));
 	}
 }
 
@@ -219,8 +219,8 @@ void FrameBuffer::bindOutput(int num) throw(std::out_of_range)
 		throw std::out_of_range("FrameBuffer::BindOutput - texture vector size exceeded");
 	}
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
-	glDrawBuffer(m_buffers[num]);
+	GL_ASSERT(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId));
+	GL_ASSERT(glDrawBuffer(m_buffers[num]));
 }
 
 
@@ -235,23 +235,23 @@ void FrameBuffer::blitTo(FrameBuffer *dest, GLbitfield mask, GLenum filter)
 {
 	int old_read, old_draw;
 
-	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &old_read);
-	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &old_draw);;
+	GL_ASSERT(glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_EXT, &old_read));
+	GL_ASSERT(glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING_EXT, &old_draw));
 
 	if ((mask & GL_DEPTH_BUFFER_BIT) || (mask & GL_STENCIL_BUFFER_BIT)) {
 		filter = GL_NEAREST;
 	}
 
-	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, m_frameId);
+	GL_ASSERT(glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, m_frameId));
 	if (dest)
-		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, dest->m_frameId);
+		GL_ASSERT(glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, dest->m_frameId));
 	else
-		glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, 0);
+		GL_ASSERT(glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, 0));
 
-	glBlitFramebufferEXT(0, 0, m_width, m_height, 0, 0, m_width, m_height, mask, filter);
+	GL_ASSERT(glBlitFramebufferEXT(0, 0, m_width, m_height, 0, 0, m_width, m_height, mask, filter));
 
-	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, old_read);
-	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, old_draw);
+	GL_ASSERT(glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, old_read));
+	GL_ASSERT(glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, old_draw));
 }
 
 
@@ -259,8 +259,8 @@ void FrameBuffer::check()
 {
 	GLenum status;
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId);
-	status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	GL_ASSERT(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_frameId));
+	GL_ASSERT(status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT));
 	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) {
 		std::cout << "FBO Status error: " << status << std::endl;
 		throw std::invalid_argument("FrameBuffer::Check - status error");
@@ -270,8 +270,8 @@ void FrameBuffer::check()
 
 void FrameBuffer::unbind()
 {
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	glDrawBuffer(GL_BACK);
+	GL_ASSERT(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	GL_ASSERT(glDrawBuffer(GL_BACK));
 }
 
 } //namespace Guy

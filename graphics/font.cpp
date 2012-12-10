@@ -33,7 +33,7 @@ bool Font::load(const char* path, int point_size, int dpi)
 
 	this->pt = (float) point_size;
 
-	glGenTextures(1, &(this->font_texture));
+	GL_ASSERT(glGenTextures(1, &(this->font_texture)));
 
 	//Let each glyph reside in 32x32 section of the font texture
 	int segment_size_x = 0, segment_size_y = 0;
@@ -116,11 +116,11 @@ bool Font::load(const char* path, int point_size, int dpi)
 		this->offset_y[c] = (float)((slot->metrics.horiBearingY-face->glyph->metrics.height) >> 6);
 	}
 
-	glBindTexture(GL_TEXTURE_2D, this->font_texture);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, this->font_texture));
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR));
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR));
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, font_tex_width, font_tex_height, 0, GL_LUMINANCE_ALPHA , GL_UNSIGNED_BYTE, font_texture_data);
+	GL_ASSERT(glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, font_tex_width, font_tex_height, 0, GL_LUMINANCE_ALPHA , GL_UNSIGNED_BYTE, font_texture_data));
 
 	free(font_texture_data);
 
@@ -163,17 +163,17 @@ math::vec2f Font::measure(const char* msg)
 
 void Font::draw2D(const char* msg, float x, float y, float r, float g, float b, float a) {
 	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadMatrixf(
+	GL_ASSERT(glGetIntegerv(GL_VIEWPORT, viewport));
+	GL_ASSERT(glMatrixMode(GL_PROJECTION));
+	GL_ASSERT(glPushMatrix());
+	GL_ASSERT(glLoadMatrixf(
 		math::mat4f::fromOrtho(
 			(float) viewport[0], (float) viewport[2],
-			(float) viewport[1], (float) viewport[3],1, -1).v);
+			(float) viewport[1], (float) viewport[3],1, -1).v));
 	draw(msg, x, y, r, g, b, a);
 
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+	GL_ASSERT(glMatrixMode(GL_PROJECTION));
+	GL_ASSERT(glPopMatrix());
 }
 
 void Font::draw(const char* msg, float x, float y, float r, float g, float b, float a) {

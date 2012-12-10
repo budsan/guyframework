@@ -31,7 +31,7 @@ void SDLInput::waitEvent()
 {
 	SDL_Event event;
 	if (SDL_WaitEvent(&event)) handleEvent(event);
-	dbgPrintLog("Error waiting event\n");
+	else GUY_WARN("Error waiting event\n");
 }
 
 int SDLInput::keyboardCount()

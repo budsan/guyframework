@@ -9,21 +9,14 @@ namespace Guy {
 
 Shader::Shader(GLenum type)
 {
-	m_id = glCreateShader(type);
+	GL_ASSERT(m_id = glCreateShader(type));
 }
 
 
 Shader::~Shader()
 {
-	glDeleteShader(m_id);
+	GL_ASSERT(glDeleteShader(m_id));
 }
-
-
-void Shader::compile() const
-{
-	glCompileShader(m_id);
-}
-
 
 bool Shader::load(const char *filename)
 {
@@ -34,6 +27,7 @@ bool Shader::load(const char *filename)
 	is.open(filename, std::ios::in);
 	if (is.fail())
 	{
+		GUY_ERROR("Failed to read vertex shader from file '%s'.", filename);
 		return false;
 	}
 
@@ -51,17 +45,31 @@ bool Shader::load(const char *filename)
 
 	buffer[length] = '\0';
 	const char *source = buffer;
-	glShaderSource(m_id, 1, &source, NULL);
+	GL_ASSERT(glShaderSource(m_id, 1, &source, NULL));
 
 	delete[] buffer;
 
 	return true;
 }
 
+bool Shader::compile(const char *filename)
+{
+	if (load(filename)) return compile();
+	return false;
+}
+
+bool Shader::compile() const
+{
+	GLint status;
+	GL_ASSERT(glCompileShader(m_id));
+	GL_ASSERT(glGetShaderiv(m_id, GL_COMPILE_STATUS, &status));
+	return status == GL_TRUE;
+}
+
 
 void Shader::attach(GLuint program) const
 {
-	glAttachShader(program, m_id);
+	GL_ASSERT(glAttachShader(program, m_id));
 }
 
 
@@ -70,11 +78,11 @@ void Shader::printInfoLog() const
 	int length = 0;
 	char *infoLog;
 
-	glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &length);
+	GL_ASSERT(glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &length));
 	if (length > 1) {
 		infoLog = new char[length];
-		glGetShaderInfoLog(m_id, length, NULL, infoLog);
-		std::cout << infoLog;
+		GL_ASSERT(glGetShaderInfoLog(m_id, length, NULL, infoLog));
+		printLog(infoLog);
 		delete[] infoLog;
 	}
 }

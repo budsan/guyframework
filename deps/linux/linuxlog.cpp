@@ -25,11 +25,13 @@ void printLog(const char *fmt, ...)
 	struct tm * ptm;
 	ptm = gmtime (&t);
 
-	printf("[%2d:%02d:%02d] ", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
+#ifdef _DEBUG
+	fprintf(stderr, "[%2d:%02d:%02d] ", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
 	va_list ap;
 	va_start(ap, fmt);
-	vprintf(fmt, ap);
+	vfprintf(stderr, fmt, ap);
 	va_end(ap);
+#endif
 
 	if (sLogFile != NULL)
 	{

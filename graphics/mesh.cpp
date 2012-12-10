@@ -1,221 +1,90 @@
 #include "mesh.h"
+#include "log.h"
 
-#include <vector>
-#include <map>
-#include <list>
-#include <cmath>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <utility>
+namespace Guy {
 
-/*---------------------------------------------------------------------------*/
-
-void OBJbuilder::ParseLine(std::string& l)
+Mesh::Mesh(const Vertex::Format& vertexFormat, unsigned int vertexCount, bool dynamic)
+	: m_vertexFormat(vertexFormat), m_vertexCount(vertexCount), m_vertexBuffer(0), m_primitiveType(TRIANGLES),
+	  m_dynamic(dynamic)
 {
-	std::stringstream line(l);
-	std::string param;
+	GLuint vbo;
+	GL_ASSERT( glGenBuffers(1, &vbo) );
+	if (GL_LAST_ERROR())
+	{
+		GUY_ERROR("Failed to create VBO for mesh with OpenGL error %d.", GL_LAST_ERROR());
+		return;
+	}
 
-	line >> param;
-	if (param.compare("v")==0) //Vertices
+	GL_ASSERT( glBindBuffer(GL_ARRAY_BUFFER, vbo) );
+	if (GL_LAST_ERROR())
 	{
-		vec3f vert;
-		line >> vert.x >> vert.y >> vert.z;
-		v.push_back(vert);
+		GUY_ERROR("Failed to bind VBO for mesh with OpenGL error %d.", GL_LAST_ERROR());
+		glDeleteBuffers(1, &vbo);
+		return;
 	}
-	else if (param.compare("vn")==0) //Normales
+
+	GL_CHECK( glBufferData(GL_ARRAY_BUFFER, vertexFormat.vertexSize() * vertexCount, NULL, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW) );
+	if (GL_LAST_ERROR())
 	{
-		vec3f norm;
-		line >> norm.x >> norm.y >> norm.z;
-		vn.push_back(norm);
+		GUY_ERROR("Failed to load VBO with vertex data with OpenGL error %d.", GL_LAST_ERROR());
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDeleteBuffers(1, &vbo);
+		return;
 	}
-	else if (param.compare("vt")==0) //Coordenadas de textura
+}
+
+const Vertex::Format& Mesh::vertexFormat() const
+{
+	return m_vertexFormat;
+}
+
+unsigned int Mesh::vertexCount() const
+{
+	return m_vertexCount;
+}
+
+unsigned int Mesh::vertexSize() const
+{
+	return m_vertexFormat.vertexSize();
+}
+
+bool Mesh::isDynamic() const
+{
+	return m_dynamic;
+}
+
+GLuint Mesh::vertexBuffer() const
+{
+	return m_vertexBuffer;
+}
+
+Mesh::PrimitiveType Mesh::primitiveType() const
+{
+	return m_primitiveType;
+}
+
+void Mesh::setPrimitiveType(Mesh::PrimitiveType type)
+{
+	m_primitiveType = type;
+}
+
+void Mesh::setVertexData(float* vertexData, unsigned int vertexStart, unsigned int vertexCount)
+{
+	GL_ASSERT( glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer) );
+
+	if (vertexStart == 0 && vertexCount == 0)
 	{
-		vec2f t;
-		line >> t.x >> t.y;
-		vt.push_back(t);
+		GL_ASSERT( glBufferData(GL_ARRAY_BUFFER, m_vertexFormat.vertexSize() * m_vertexCount, vertexData, m_dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW) );
 	}
-	else if (param.compare("f")==0) //Caras
+	else
 	{
-		std::vector<int> poly;
-		while(line>>param)
+		if (vertexCount == 0)
 		{
-			OBJface objf;
-			size_t pos;
-
-			// Indice a la coordenada del vertice
-			{
-				pos = param.find("/");
-				std::stringstream param1(param.substr(0, pos));
-				param1 >> objf.v;
-				if (pos == std::string::npos) goto endparsing;
-			}
-
-			// Indice a la coordenada de textura
-			{
-				param = param.substr(pos+1);
-				pos = param.find("/");
-				std::stringstream param2(param.substr(0, pos));
-				param2 >> objf.vt;
-				if (pos == std::string::npos) goto endparsing;
-			}
-
-			// Normal del vertice
-			{
-				param = param.substr(pos+1);
-				std::stringstream param3(param.substr(0, pos));
-				param3 >> objf.vn;
-			}
-
-                        endparsing:
-
-			objf.v -= 1; objf.vt -= 1; objf.vn -= 1;
-			std::map<OBJface, int>::iterator it = f2i.find(objf);
-			if (it != f2i.end())
-			{
-				poly.push_back(it->second);
-			}
-			else
-			{
-				int index = i2f.size();
-				f2i[objf] = index;
-				i2f.push_back(objf);
-				poly.push_back(index);
-			}
+			vertexCount = m_vertexCount - vertexStart;
 		}
 
-		for (unsigned int i = 2; i < poly.size(); i++)
-		{
-			face triangle;
-			triangle.f[0] = poly[0];
-			triangle.f[1] = poly[i-1];
-			triangle.f[2] = poly[i];
-
-			f.push_back(triangle);
-		}
-	}
-  
-}
-
-/*---------------------------------------------------------------------------*/
-
-void Mesh::Clear()
-{
-	bound.clear();
-	verts.clear();
-	faces.clear();
-	faces_norm.clear();
-}
-
-bool Mesh::Load(const char* filename)
-{
-	std::ifstream file;
-	std::string line;
-
-	file.open(filename, std::ifstream::in);
-	if(file.fail()) return false;
-	Clear();
-
-	char* locale = setlocale(LC_ALL,NULL);
-	setlocale(LC_NUMERIC, "C");
-
-	OBJbuilder obj;
-	while (std::getline(file, line)) obj.ParseLine(line);
-
-	setlocale(LC_ALL, locale);
-	file.close();
-	
-	for (unsigned int i = 0; i < obj.i2f.size(); i++)
-	{
-		vert v;
-		OBJbuilder::OBJface &objf = obj.i2f[i];
-		if (objf.v > 0) v.coord = obj.v[objf.v];
-		if (objf.vn> 0) v.norm  = obj.vn[objf.vn];
-		if (objf.vt> 0) v.tex   = obj.vt[objf.vt];
-
-		bound.update(v.coord);
-		verts.push_back(v);
-	}
-
-	for (unsigned int i = 0; i < obj.f.size(); i++)
-	{
-		tri1i newface; OBJbuilder::face &objt = obj.f[i];
-		newface.v[0] = objt.f[0];
-		newface.v[1] = objt.f[1];
-		newface.v[2] = objt.f[2];
-		faces.push_back(newface);
-	}
-
-	ComputeNormalsPerFace();
-	if (obj.vn.empty()) ComputeNormalsPerVertex();
-
-	return true;
-}
-
-void Mesh::Draw() const
-{
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glVertexPointer  (3, GL_FLOAT, sizeof(vert), &(verts[0].coord));
-	glNormalPointer  (   GL_FLOAT, sizeof(vert), &(verts[0].norm));
-	glTexCoordPointer(2, GL_FLOAT, sizeof(vert), &(verts[0].tex));
-	glDrawElements(GL_TRIANGLES,faces.size()*3,GL_UNSIGNED_INT, &faces[0]);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-}
-
-void Mesh::ComputeNormalsPerFace()
-{
-	faces_norm.clear();
-	faces_norm.resize(faces.size());
-
-	for (unsigned int it = 0; it < faces.size(); it++)
-	{
-		tri1i &f = faces[it]; vec3f norm;
-		for(int i = 0; i < 3; i++)
-		{
-			int j = (i+1)%3;
-			norm.x += ((verts[f.v[i]].coord.z+verts[f.v[j]].coord.z)*
-				   (verts[f.v[i]].coord.y-verts[f.v[j]].coord.y));
-			norm.y += ((verts[f.v[i]].coord.x+verts[f.v[j]].coord.x)*
-				   (verts[f.v[i]].coord.z-verts[f.v[j]].coord.z));
-			norm.z += ((verts[f.v[i]].coord.y+verts[f.v[j]].coord.y)*
-				   (verts[f.v[i]].coord.x-verts[f.v[j]].coord.x));
-		}
-		norm.normalize();
-		faces_norm[it] = norm;
+		GL_ASSERT( glBufferSubData(GL_ARRAY_BUFFER, vertexStart * m_vertexFormat.vertexSize(), vertexCount * m_vertexFormat.vertexSize(), vertexData) );
 	}
 }
 
-void Mesh::ComputeNormalsPerVertex()
-{
-	std::map<vec3f, std::list<int> > aux;
-	for(unsigned  int i = 0; i < verts.size(); i++)
-	{
-		verts[i].norm = vec3f(0,0,0);
-		std::list<int> &l = aux[verts[i].coord];
-		l.push_back(i);
-	}
-
-	for (unsigned int i = 0; i < faces.size(); i++)
-	{
-		tri1i &f = faces[i];
-		vec3f &norm = faces_norm[i];
-		for(unsigned int j = 0; j < 3; j++)
-		{
-			std::list<int> &l = aux[verts[f.v[j]].coord];
-			std::list<int>::iterator it = l.begin();
-			for (;it != l.end();it++)
-			{
-				verts[*it].norm += norm;
-			}
-		}
-	}
-	
-	for(unsigned int i = 0; i < verts.size(); i++)
-	{
-		verts[i].norm.normalize();
-	}
-}
+} //namespace Guy

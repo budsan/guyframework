@@ -58,8 +58,8 @@ TextureManager::~TextureManager()
 void TextureManager::useTexture(std::string _filename)
 {
 	getTexture(_filename).bind();
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR));
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR));
 }
 
 //---------------------------------------------------------------------------//

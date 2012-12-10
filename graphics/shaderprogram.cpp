@@ -10,70 +10,81 @@ namespace Guy {
 
 ShaderProgram::ShaderProgram()
 {
-	m_id = glCreateProgram();
+	GL_ASSERT(m_id = glCreateProgram());
 }
 
 ShaderProgram::ShaderProgram(const char *vp_filename, const char *fp_filename)
 {
-	m_id = glCreateProgram();
+	GUY_ASSERT(vp_filename);
+	GUY_ASSERT(fp_filename);
+	GL_ASSERT(m_id = glCreateProgram());
 
-	Shader *vertex = new Shader(GL_VERTEX_SHADER);
-	Shader *fragment = new Shader(GL_FRAGMENT_SHADER);
+	Shader vertex(GL_VERTEX_SHADER);
+	vertex.load(vp_filename);
+	if (!vertex.compile())
+	{
+		vertex.printInfoLog();
+		GUY_ERROR("Compile failed for vertex shader '%s'.", vp_filename);
+	}
 
-	vertex->load(vp_filename);
-	vertex->compile();
-//	vertex->PrintInfoLog(); // redundant info on nvidia
-	fragment->load(fp_filename);
-	fragment->compile();
-//	fragment->PrintInfoLog(); // redundant info on nvidia
+	Shader fragment(GL_FRAGMENT_SHADER);
+	fragment.load(fp_filename);
+	if (!fragment.compile())
+	{
+		fragment.printInfoLog();
+		GUY_ERROR("Compile failed for vertex shader '%s'.", fp_filename);
+	}
+
 	attachShader(vertex);
 	attachShader(fragment);
-	link();
-	printInfoLog();
+
+	if (!link())
+	{
+		printInfoLog();
+		GUY_ERROR("Linking program failed (%s,%s).", vp_filename, fp_filename);
+	}
 }
 
 
 ShaderProgram::~ShaderProgram()
 {
-	std::vector<Shader *>::const_iterator cii;
-	for(cii = m_shaders.begin(); cii != m_shaders.end(); cii++) {
-		delete *cii;
-	}
-
-	glDeleteProgram(m_id);
+	GL_ASSERT(glDeleteProgram(m_id));
 }
 
-
-void ShaderProgram::attachShader(Shader *sh)
+void ShaderProgram::attachShader(Shader &sh)
 {
-	m_shaders.push_back(sh);
-	sh->attach(m_id);
+	sh.attach(m_id);
 }
 
-
-void ShaderProgram::link()
+bool ShaderProgram::link()
 {
-	glLinkProgram(m_id);
+	GLint success;
+	GL_ASSERT(glLinkProgram(m_id));
+	GL_ASSERT(glGetProgramiv(m_id, GL_LINK_STATUS, &success) );
+	return success == GL_TRUE;
 }
 
-
-void ShaderProgram::use()
+void ShaderProgram::bind()
 {
-	glUseProgram(m_id);
+	GL_ASSERT(glUseProgram(m_id));
 }
 
+void ShaderProgram::unbind()
+{
+	GL_ASSERT(glUseProgram(0));
+}
 
 void ShaderProgram::uniform(const char* name, GLint value)
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform1i(loc, value);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform1i(loc, value));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -81,13 +92,13 @@ void ShaderProgram::uniform(const char* name, GLfloat value)
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform1f(loc, value);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform1f(loc, value));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -95,13 +106,13 @@ void ShaderProgram::uniform(const char* name, GLfloat v0, GLfloat v1)
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform2f(loc, v0, v1);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform2f(loc, v0, v1));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -109,13 +120,13 @@ void ShaderProgram::uniform(const char* name, GLfloat v0, GLfloat v1, GLfloat v2
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform3f(loc, v0, v1, v2);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform3f(loc, v0, v1, v2));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -123,13 +134,13 @@ void ShaderProgram::uniform(const char* name, GLfloat v0, GLfloat v1, GLfloat v2
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform4f(loc, v0, v1, v2, v3);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform4f(loc, v0, v1, v2, v3));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -137,13 +148,38 @@ void ShaderProgram::uniform(const char* name, GLsizei count, const GLfloat *arra
 { 
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform1fv(loc, count, array);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform1fv(loc, count, array));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
+}
+
+void ShaderProgram::uniform(const char *name, const rgb&  c)
+{
+	uniform3v(name, c.raw());
+}
+
+void ShaderProgram::uniform(const char *name, const rgba& c)
+{
+	uniform4v(name, c.raw());
+}
+
+void ShaderProgram::uniform(const char* name, const math::vec2f &v)
+{
+	uniform(name, (GLfloat) v.x, (GLfloat) v.y);
+}
+
+void ShaderProgram::uniform(const char* name, const math::vec3f &v)
+{
+	uniform(name, (GLfloat) v.x, (GLfloat) v.y, (GLfloat) v.z);
+}
+
+void ShaderProgram::uniform(const char* name, const math::vec4f &v)
+{
+	uniform(name, (GLfloat) v.x, (GLfloat) v.y, (GLfloat) v.z, (GLfloat) v.w);
 }
 
 
@@ -151,13 +187,13 @@ void ShaderProgram::uniform3v(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform3fv(loc, 1, array);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform3fv(loc, 1, array));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -165,13 +201,13 @@ void ShaderProgram::uniformMatrix3(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniformMatrix3fv(loc, 1, 0, array);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniformMatrix3fv(loc, 1, 0, array));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -179,13 +215,13 @@ void ShaderProgram::uniform4v(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniform4fv(loc, 1, array);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniform4fv(loc, 1, array));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
 
@@ -193,26 +229,35 @@ void ShaderProgram::uniformMatrix4(const char* name, const GLfloat *array)
 {
 	GLint loc, oldprog;
 
-	glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog);
-	glUseProgram(m_id);
+	GL_ASSERT(glGetIntegerv(GL_CURRENT_PROGRAM, &oldprog));
+	GL_ASSERT(glUseProgram(m_id));
 
-	loc = glGetUniformLocation(m_id, name);
-	glUniformMatrix4fv(loc, 1, 0, array);
+	GL_ASSERT(loc = glGetUniformLocation(m_id, name));
+	GL_ASSERT(glUniformMatrix4fv(loc, 1, 0, array));
 
-	glUseProgram(oldprog);
+	GL_ASSERT(glUseProgram(oldprog));
 }
 
+void ShaderProgram::uniform(const char* name, const math::mat3f &m)
+{
+	uniformMatrix3(name, m.v);
+}
+
+void ShaderProgram::uniform(const char* name, const math::mat4f &m)
+{
+	uniformMatrix4(name, m.v);
+}
 
 void ShaderProgram::printInfoLog()
 {
 	int length = 0;
 	char *infoLog;
 
-	glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length);
+	GL_ASSERT(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
 	if (length > 1) {
 		infoLog = new char[length];
-		glGetProgramInfoLog(m_id, length, NULL, infoLog);
-		std::cout << infoLog;
+		GL_ASSERT(glGetProgramInfoLog(m_id, length, NULL, infoLog));
+		printLog(infoLog);
 		delete[] infoLog;
 	}
 }

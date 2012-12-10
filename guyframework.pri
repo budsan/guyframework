@@ -36,6 +36,12 @@ SOURCES += \
     $$PWD/graphics/camera2d.cpp \
     $$PWD/graphics/primitives.cpp \
     $$PWD/graphics/color.cpp \
+    $$PWD/graphics/mesh.cpp \
+    $$PWD/graphics/vertexattribute.cpp \
+    $$PWD/graphics/graphics.cpp \
+    $$PWD/graphics/model.cpp \
+    $$PWD/graphics/effect.cpp \
+    $$PWD/graphics/renderstate.cpp \
     $$PWD/input/input.cpp \
     $$PWD/input/keyboard.cpp \
     $$PWD/input/gamepad.cpp \
@@ -52,6 +58,7 @@ SOURCES += \
     $$PWD/deps/sdl/sdlscreen.cpp \
     $$PWD/deps/sdl/sdlinput.cpp \
     $$PWD/deps/sdl/sdlenvironment.cpp
+
 
 win32 {
 SOURCES += $$PWD/deps/win/winmain.cpp \
@@ -85,6 +92,12 @@ HEADERS += \
     $$PWD/graphics/framebuffer.h \
     $$PWD/graphics/camera2d.h \
     $$PWD/graphics/primitives.h \
+    $$PWD/graphics/mesh.h \
+    $$PWD/graphics/vertexattribute.h \
+    $$PWD/graphics/model.h \
+    $$PWD/graphics/effect.h \
+    $$PWD/graphics/renderstate.h \
+    $$PWD/graphics/camera.h \
     $$PWD/input/input.h \
     $$PWD/input/keyboard.h \
     $$PWD/input/gamepad.h \
@@ -99,7 +112,6 @@ HEADERS += \
     $$PWD/math/seg.h \
     $$PWD/math/tri.h \
     $$PWD/math/algebra3.h \
-    $$PWD/math/algebra3_cpp11.h \
     $$PWD/audio/emyl.h \
     $$PWD/graphics/tools/frameshud.h \
     $$PWD/graphics/tools/texthud.h \
@@ -108,7 +120,6 @@ HEADERS += \
     $$PWD/tools/particle.h \
     $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
-    $$PWD/graphics/camera.h \
     $$PWD/deps/sdl/sdlscreen.h \
     $$PWD/deps/sdl/sdlinput.h \
     $$PWD/deps/sdl/sdlenvironment.h \

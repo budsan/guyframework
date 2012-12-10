@@ -15,7 +15,7 @@ Texture::Texture() : m_id(0), m_size(0,0)
 
 Texture::~Texture()
 {
-	if (m_id != 0) glDeleteTextures(1, &m_id);
+	if (m_id != 0) GL_ASSERT(glDeleteTextures(1, &m_id));
 }
 
 // Assignment operator for copying instances is FORBIDDEN
@@ -28,25 +28,25 @@ const Texture& Texture::operator=(const Texture& other)
 void Texture::setFiltering(GLenum filter) const
 {
 	bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
 }
 
 void Texture::setWrap(GLenum wrap) const
 {
 	bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap));
+	GL_ASSERT(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap));
 }
 
 void Texture::bind() const
 {
-	glBindTexture(GL_TEXTURE_2D, m_id);
+	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, m_id));
 }
 
 void Texture::unbind()
 {
-	glBindTexture(GL_TEXTURE_2D, 0);
+	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 //---------------------------------------------------------------------------//
@@ -56,7 +56,7 @@ bool Texture::create(int width, int height)
 	// Check if texture parameters are valid before creating it
 	if ((width == 0) || (height == 0))
 	{
-		dbgPrintLog("Failed to create texture, invalid size (%dx%d)\n", width, height);
+		GUY_ERROR("Failed to create texture, invalid size (%dx%d)\n", width, height);
 		return false;
 	}
 
@@ -68,13 +68,13 @@ bool Texture::create(int width, int height)
 	if (!m_id)
 	{
 		GLuint texture;
-		glGenTextures(1, &texture);
+		GL_ASSERT(glGenTextures(1, &texture));
 		m_id = texture;
 	}
 
 	// Initialize the texture
-	glBindTexture(GL_TEXTURE_2D, m_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, m_id));
+	GL_ASSERT(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
 
 	return true;
 }
@@ -111,10 +111,10 @@ bool Texture::load(const unsigned char* rgba8Raw, int width, int height)
 	if (!this->create(width, height)) return false;
 
 	const unsigned char* pixels = rgba8Raw;
-	glBindTexture(GL_TEXTURE_2D, m_id);
+	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, m_id));
 	int line = height;
 	while(line--) {
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, line, width, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		GL_ASSERT(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, line, width, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels));
 		pixels += 4 * width;
 	}
 
@@ -152,8 +152,8 @@ bool Texture::loadNullTexture()
 		}
 	}
 
-	glBindTexture (GL_TEXTURE_2D, m_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, texels);
+	GL_ASSERT(glBindTexture (GL_TEXTURE_2D, m_id));
+	GL_ASSERT(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, texels));
 
 	delete[] texels;
 

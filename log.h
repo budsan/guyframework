@@ -1,25 +1,41 @@
 #pragma once
 #include <cstdio>
+#include <cassert>
+#include <cstdlib>
+
+#ifdef WIN32
+#define __current__func__ __FUNCTION__
+#else
+#define __current__func__ __func__
+#endif
 
 #ifdef _DEBUG
-	#if defined(GUY_USE_LINUX)
-		#include <typeinfo>
-		#define _CLASS_NAME_ typeid(*this).name()
-		#define dbgPrintLog(format, args...) printLog("%s " format, _CLASS_NAME_, ## args)
-	#elif defined(GUY_USE_WINDOWS)
-		#include <typeinfo>
-		#define _CLASS_NAME_ typeid(*this).name()
-		#define dbgPrintLog(format, args...) printLog("%s " format, _CLASS_NAME_, ## args)
-	#elif defined(GUY_USE_BB10)
-		#include <typeinfo>
-		#define _CLASS_NAME_ typeid(*this).name()
-		#define dbgPrintLog(format, args...) printLog("%s " format, _CLASS_NAME_, ## args)
-	#else
-		#error "dbgPrintLog not defined for your platform"
-	#endif
+#define GUY_ASSERT(expression) assert(expression)
 #else
-	#define dbgPrintLog(format, args...) do {} while(0);
+#define GUY_ASSERT(expression)
 #endif
+
+// Error macro.
+#ifdef GUY_ERRORS_AS_WARNINGS
+#define GUY_ERROR GUY_WARN
+#else
+#define GUY_ERROR(...) do \
+    { \
+	printLog("%s -- ", __current__func__); \
+	printLog(__VA_ARGS__); \
+	printLog("\n"); \
+	assert(0); \
+	std::exit(-1); \
+    } while (0)
+#endif
+
+// Warning macro.
+#define GUY_WARN(...) do \
+    { \
+	printLog("%s -- ", __current__func__); \
+	printLog(__VA_ARGS__); \
+	printLog("\n"); \
+    } while (0)
 
 namespace Guy {
 
