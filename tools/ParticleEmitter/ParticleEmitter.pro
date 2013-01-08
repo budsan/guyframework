@@ -15,10 +15,11 @@ SOURCES += main.cpp\
     ../editorcamera2d.cpp \
     ../../graphics/texturemanager.cpp \
     ../../graphics/texture.cpp \
-    ../../log.cpp \
     ../particleemitter.cpp \
     ../particle.cpp \
-    particleparameters.cpp
+    particleparameters.cpp \
+    ../../deps/linux/linuxlog.cpp \
+    ../../graphics/graphics.cpp
 
 HEADERS += particleeditor.h \
 	editorwidget.h \
@@ -39,7 +40,7 @@ HEADERS += particleeditor.h \
 FORMS += particleeditor.ui \
     particleparameters.ui
 
-DEFINES += INCLUDED_FROM_QT
+DEFINES += GUY_USE_QT
 
 QMAKE_CXXFLAGS += -std=c++0x
 

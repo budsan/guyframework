@@ -53,25 +53,25 @@ void ParticleParameters::UpdateUI()
 	ui->ApertureSpin->setValue(m_parameters.getAngle()*RAG2DEG);
 	ui->DirectionSpin->setValue(m_parameters.getDirection()*RAG2DEG);
 	const math::vec2f &pos = m_parameters.position();
-	const math::vec2f &grav = m_parameters.getGravity();
+    const math::vec2f &grav = m_parameters.gravity();
 	ui->PosXSpin->setValue(pos.x);
 	ui->PosYSpin->setValue(pos.y);
 	ui->GravXSpin->setValue(grav.x);
 	ui->GravYSpin->setValue(grav.y);
-	ui->FrequencySpin->setValue(m_parameters.getFrequency());
-	StartColor = toQColor(m_parameters.getParticleColorStart());
-	EndColor = toQColor(m_parameters.getParticleColorEnd());
+    ui->FrequencySpin->setValue(m_parameters.frequency());
+    StartColor = toQColor(m_parameters.particleColorStart());
+    EndColor = toQColor(m_parameters.particleColorEnd());
 	setBackgroundColor(ui->StartColorBut, StartColor);
 	setBackgroundColor(ui->EndColorBut, EndColor);
-	ui->MinLiveSpin->setValue(m_parameters.getParticleLiveMin());
-	ui->MaxLiveSpin->setValue(m_parameters.getParticleLiveMax());
-	ui->NumPartSpin->setValue(m_parameters.getParticleNumber());
-	ui->MinSpeedSpin->setValue(m_parameters.getParticleSpeedMin());
-	ui->MaxSpeedSpin->setValue(m_parameters.getParticleSpeedMax());
-	ui->StartSizeSpin->setValue(m_parameters.getParticleSizeStart());
-	ui->EndSizeSpin->setValue(m_parameters.getParticleSizeEnd());
-	ui->AccumColorCheckbox->setChecked(m_parameters.getParticleAccumulativeColor());
-	ui->MaterialLineEdit->setText(QString(m_parameters.getParticleMaterial().c_str()));
+    ui->MinLiveSpin->setValue(m_parameters.particleLiveMin());
+    ui->MaxLiveSpin->setValue(m_parameters.particleLiveMax());
+    ui->NumPartSpin->setValue(m_parameters.particleCount());
+    ui->MinSpeedSpin->setValue(m_parameters.particleSpeedMin());
+    ui->MaxSpeedSpin->setValue(m_parameters.particleSpeedMax());
+    ui->StartSizeSpin->setValue(m_parameters.particleSizeStart());
+    ui->EndSizeSpin->setValue(m_parameters.particleSizeEnd());
+    ui->AccumColorCheckbox->setChecked(m_parameters.particleAccumulativeColor());
+    ui->MaterialLineEdit->setText(QString(m_parameters.particleMaterial().c_str()));
 }
 
 void ParticleParameters::ApplyChanges()

@@ -6,6 +6,8 @@
 #include "deps/win/graphics.h"
 #elif defined(GUY_USE_BB10)
 #include "deps/bb10/graphics.h"
+#elif defined(GUY_USE_QT)
+#include <qgl.h>
 #endif
 
 #include "log.h"

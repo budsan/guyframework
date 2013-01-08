@@ -7,6 +7,8 @@
 #include "tools/particleemitter.h"
 #include "graphics/color.h"
 
+using namespace Guy;
+
 namespace Ui {
 	class ParticleParameters;
 }

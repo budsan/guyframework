@@ -1,9 +1,8 @@
 #ifndef CAMERA2D_H
 #define CAMERA2D_H
 
-#include "math/vec2.h"
+#include "math/algebra3.h"
 #include "math/bbox.h"
-#include "math/mat4.h"
 
 using math::vec2f;
 using math::vec2i;
