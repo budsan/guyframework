@@ -13,51 +13,60 @@ namespace Vertex
 
 class Attribute {
 public:
-	static Attribute& get(const std::string &name);
+    static Attribute& get(int ID);
+    static Attribute& get(const std::string &name);
 
-	bool operator == (const Attribute& a) const;
-	bool operator != (const Attribute& a) const;
+    int ID();
 
-	typedef std::set<std::string>::const_iterator iterator;
-	iterator begin() { return m_names.begin();}
-	iterator end()   { return m_names.end();  }
+    bool operator == (const Attribute& a) const;
+    bool operator != (const Attribute& a) const;
 
-	Attribute& addName(const std::string &name);
-	Attribute& delName(const std::string &name);
-	unsigned int nameCount();
+    typedef std::set<std::string>::const_iterator iterator;
+    iterator begin() { return m_names.begin();}
+    iterator end()   { return m_names.end();  }
+
+    Attribute& addName(const std::string &name);
+
+    enum  { //Build-in default attributes
+        Position = 0,
+        Normal,
+        Color,
+        Tangent,
+        Binormal,
+        BlendWeight,
+        BlendIndices,
+        TexCoord0,
+        TexCoord1,
+        TexCoord2,
+        TexCoord3,
+        TexCoord4,
+        TexCoord5,
+        TexCoord6,
+        TexCoord7,
+        UserAttribute
+    };
+
 private:
-	Attribute();
-	Attribute(const Attribute &a);
-	Attribute& operator=(const Attribute &a);
+    Attribute(int ID);
+    int m_id;
 
-	std::set<std::string> m_names;
+    static void init();
+    static bool s_attrsInit;
+    static std::map<std::string, Attribute*> s_names;
+    static std::vector<Attribute*> s_attrs;
+
+    std::set<std::string> m_names;
 };
 
 class Element {
 public:
-	Attribute &attr;
+    Attribute &attr;
 	unsigned int size;
 
 	Element();
-	Element(Attribute &attr, unsigned int size);
+    Element(Attribute &attr, unsigned int size);
 	bool operator == (const Element& e) const;
-	bool operator != (const Element& e) const;
-
-	static const std::string Position;
-	static const std::string Normal;
-	static const std::string Color;
-	static const std::string Tangent;
-	static const std::string Binormal;
-	static const std::string BlendWeight;
-	static const std::string BlendIndices;
-	static const std::string TexCoord0;
-	static const std::string TexCoord1;
-	static const std::string TexCoord2;
-	static const std::string TexCoord3;
-	static const std::string TexCoord4;
-	static const std::string TexCoord5;
-	static const std::string TexCoord6;
-	static const std::string TexCoord7;
+    bool operator != (const Element& e) const;
 };
 
 class Format

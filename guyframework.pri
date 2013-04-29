@@ -6,12 +6,18 @@ win32 {
     DEFINES += GUY_USE_WINDOWS
     LIBS += -static -L$$PWD/extlibs/libs-mingw/ -lmingw32 -lSDL.dll -mwindows -lopengl32 -lglu32 -lopenal32
     INCLUDEPATH += $$PWD/extlibs/include
+
+    SOURCES += \
+        $$PWD/deps/win/main.cpp
 }
 
 unix {
     DEFINES += GUY_USE_LINUX
     LIBS += -lSDL -lGL -lGLU -lopenal -lGLEW
     INCLUDEPATH += /usr/include/freetype2/
+
+    SOURCES += \
+        $$PWD/deps/linux/main.cpp
 }
 
 QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow

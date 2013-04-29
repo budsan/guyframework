@@ -1,4 +1,5 @@
 #include "vertexattribute.h"
+#include "log.h"
 
 #include <string>
 #include <set>
@@ -17,80 +18,108 @@ namespace Vertex {
 #define VERTEX_ATTRIBUTE_BLENDINDICES_NAME          "a_blendIndices"
 #define VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME       "a_texCoord"
 
-void AttributeInit()
+bool Attribute::s_attrsInit = false;
+std::map<std::string, Attribute*> Attribute::s_names;
+std::vector<Attribute*> Attribute::s_attrs;
+
+void Attribute::init()
 {
-	//Default names for default elements
-	Attribute::get(Element::Position).addName(VERTEX_ATTRIBUTE_POSITION_NAME);
-	Attribute::get(Element::Normal).addName(VERTEX_ATTRIBUTE_NORMAL_NAME);
-	Attribute::get(Element::Color).addName(VERTEX_ATTRIBUTE_COLOR_NAME);
-	Attribute::get(Element::Tangent).addName(VERTEX_ATTRIBUTE_TANGENT_NAME);
-	Attribute::get(Element::Binormal).addName(VERTEX_ATTRIBUTE_BINORMAL_NAME);
-	Attribute::get(Element::BlendWeight).addName(VERTEX_ATTRIBUTE_BLENDWEIGHTS_NAME);
-	Attribute::get(Element::BlendIndices).addName(VERTEX_ATTRIBUTE_BLENDINDICES_NAME);
-	Attribute::get(Element::TexCoord0).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME)
-		.addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"0");
-	Attribute::get(Element::TexCoord1).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"1");
-	Attribute::get(Element::TexCoord2).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"2");
-	Attribute::get(Element::TexCoord3).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"3");
-	Attribute::get(Element::TexCoord4).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"4");
-	Attribute::get(Element::TexCoord5).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"5");
-	Attribute::get(Element::TexCoord6).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"6");
-	Attribute::get(Element::TexCoord7).addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"7");
+    //Default names for default elements
+    s_attrs.resize(Attribute::UserAttribute);
+
+    s_attrs[Attribute::Position] = new Attribute(Attribute::Position);
+    s_attrs[Attribute::Position]->addName(VERTEX_ATTRIBUTE_POSITION_NAME);
+
+    s_attrs[Attribute::Normal] = new Attribute(Attribute::Normal);
+    s_attrs[Attribute::Normal]->addName(VERTEX_ATTRIBUTE_NORMAL_NAME);
+
+    s_attrs[Attribute::Color] = new Attribute(Attribute::Color);
+    s_attrs[Attribute::Color]->addName(VERTEX_ATTRIBUTE_COLOR_NAME);
+
+    s_attrs[Attribute::Tangent] = new Attribute(Attribute::Tangent);
+    s_attrs[Attribute::Tangent]->addName(VERTEX_ATTRIBUTE_TANGENT_NAME);
+
+    s_attrs[Attribute::Binormal] = new Attribute(Attribute::Binormal);
+    s_attrs[Attribute::Binormal]->addName(VERTEX_ATTRIBUTE_BINORMAL_NAME);
+
+    s_attrs[Attribute::BlendWeight] = new Attribute(Attribute::BlendWeight);
+    s_attrs[Attribute::BlendWeight]->addName(VERTEX_ATTRIBUTE_BLENDWEIGHTS_NAME);
+
+    s_attrs[Attribute::BlendIndices] = new Attribute(Attribute::BlendIndices);
+    s_attrs[Attribute::BlendIndices]->addName(VERTEX_ATTRIBUTE_BLENDINDICES_NAME);
+
+    s_attrs[Attribute::TexCoord0] = new Attribute(Attribute::TexCoord0);
+    s_attrs[Attribute::TexCoord0]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME);
+    s_attrs[Attribute::TexCoord0]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"0");
+
+    s_attrs[Attribute::TexCoord1] = new Attribute(Attribute::TexCoord1);
+    s_attrs[Attribute::TexCoord1]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"1");
+
+    s_attrs[Attribute::TexCoord2] = new Attribute(Attribute::TexCoord2);
+    s_attrs[Attribute::TexCoord2]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"2");
+
+    s_attrs[Attribute::TexCoord3] = new Attribute(Attribute::TexCoord3);
+    s_attrs[Attribute::TexCoord3]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"3");
+
+    s_attrs[Attribute::TexCoord4] = new Attribute(Attribute::TexCoord4);
+    s_attrs[Attribute::TexCoord4]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"4");
+
+    s_attrs[Attribute::TexCoord5] = new Attribute(Attribute::TexCoord5);
+    s_attrs[Attribute::TexCoord5]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"5");
+
+    s_attrs[Attribute::TexCoord6] = new Attribute(Attribute::TexCoord6);
+    s_attrs[Attribute::TexCoord6]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"6");
+
+    s_attrs[Attribute::TexCoord7] = new Attribute(Attribute::TexCoord7);
+    s_attrs[Attribute::TexCoord7]->addName(VERTEX_ATTRIBUTE_TEXCOORD_PREFIX_NAME"7");
+
+    s_attrsInit = true;
 }
 
-bool s_attrsInit = false;
-std::map<std::string, Attribute*> s_attrs;
-
-Attribute::Attribute() {}
-Attribute::Attribute(const Attribute &a) : m_names(a.m_names) {}
-Attribute& Attribute::operator=(const Attribute &a)
+Attribute::Attribute(int id) : m_id(id)
 {
-	m_names = a.m_names;
-	return *this;
+
+}
+
+Attribute& Attribute::get(int id)
+{
+    if (!s_attrsInit) init();
+    GUY_ASSERT(id >= 0 && id < s_attrs.size());
+    return *s_attrs[id];
 }
 
 Attribute& Attribute::get(const std::string &name)
 {
-	if (!s_attrsInit)
-	{
-		s_attrsInit = true;
-		AttributeInit();
-	}
+    if (!s_attrsInit) init();
+    std::map<std::string, Attribute*>::iterator it = s_names.find(name);
+    if (it == s_names.end()) {
+        s_attrs.push_back(new Attribute(s_attrs.size()));
+        it = s_names.insert(std::pair<std::string, Attribute*>(name,s_attrs.back())).first;
+    }
 
-	std::map<std::string, Attribute*>::iterator it = s_attrs.find(name);
-	if (it == s_attrs.end())
-		s_attrs.insert(std::pair<std::string, Attribute*>(name,new Attribute())) ;
-	return *s_attrs[name];
+    return *(it->second);
 }
 
 bool Attribute::operator == (const Attribute& a) const
 {
-	return this == &a;
+    return m_id == a.m_id;
 }
 
 bool Attribute::operator != (const Attribute& a) const
 {
-	return this != &a;
+    return m_id != a.m_id;
 }
 
 Attribute& Attribute::addName(const std::string &name)
 {
-	m_names.insert(name);
-	return *this;
+    std::pair<std::map<std::string, Attribute*>::iterator, bool>
+            result = s_names.insert(std::pair<std::string, Attribute*>(name, this));
+    if (result.second) m_names.insert(name);
+
+    return *this;
 }
 
-Attribute& Attribute::delName(const std::string &name)
-{
-	m_names.erase(name);
-	return *this;
-}
-
-unsigned int Attribute::nameCount()
-{
-	return m_names.size();
-}
-
-Element::Element() : attr(Attribute::get(Position)), size(0)
+Element::Element() : attr(Attribute::get(Attribute::Position)), size(0)
 {
 }
 
@@ -107,22 +136,6 @@ bool Element::operator != (const Element& e) const
 {
 	return attr != e.attr && size != e.size;
 }
-
-const std::string Element::Position     = "POSITION";
-const std::string Element::Normal       = "NORMAL";
-const std::string Element::Color        = "COLOR";
-const std::string Element::Tangent      = "TANGENT";
-const std::string Element::Binormal     = "BINORMAL";
-const std::string Element::BlendWeight = "BLENDWEIGHTS";
-const std::string Element::BlendIndices = "BLENDINDICES";
-const std::string Element::TexCoord0    = "TEXCOORD0";
-const std::string Element::TexCoord1    = "TEXCOORD1";
-const std::string Element::TexCoord2    = "TEXCOORD2";
-const std::string Element::TexCoord3    = "TEXCOORD3";
-const std::string Element::TexCoord4    = "TEXCOORD4";
-const std::string Element::TexCoord5    = "TEXCOORD5";
-const std::string Element::TexCoord6    = "TEXCOORD6";
-const std::string Element::TexCoord7    = "TEXCOORD7";
 
 Format::Format(const std::vector<Element> &elements)
 	: m_elements(elements), m_vertexSize(0)

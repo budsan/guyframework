@@ -319,7 +319,7 @@ std::ostream &operator <<(std::ostream &out, const Variable &var)
 	}
 	case Variable::Int: {
 		int value = var.toInt();
-		out.write((const char *)&value, sizeof(int)); break;
+        out.write((const char *)&value, sizeof(int)); break;
 	}
 	case Variable::Double: {
 		double value = var.toDouble();
@@ -368,7 +368,7 @@ std::istream &operator >>(std::istream &in, Variable &var)
 		bool value;
 		in.read((char *)&value, sizeof(bool)); break;
 		var = Variable(value);
-	} break;
+    } break;
 	case Variable::Int: {
 		int value;
 		in.read((char *)&value, sizeof(int)); break;

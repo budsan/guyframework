@@ -11,7 +11,7 @@ namespace Guy {
 GamePad::GamePad(int id)
 {
 	m_id = id;
-	for (int i=0 ; i<Button_Count ; i++)
+    for (int i = 0; i < Button_Count; i++)
 	{
 		m_isButtonDown[i] = false;
 	}

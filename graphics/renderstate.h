@@ -2,103 +2,100 @@
 
 #include "graphics.h"
 
-#include <map>
-#include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
-
 namespace Guy
 {
 
-class ShaderProgram;
-
 class RenderState
 {
-	friend class Environment;
 
 public:
 
-	RenderState();
-	~RenderState();
+    enum Blend
+    {
+        BLEND_ZERO = GL_ZERO,
+        BLEND_ONE = GL_ONE,
+        BLEND_SRC_COLOR = GL_SRC_COLOR,
+        BLEND_ONE_MINUS_SRC_COLOR = GL_ONE_MINUS_SRC_COLOR,
+        BLEND_DST_COLOR = GL_DST_COLOR,
+        BLEND_ONE_MINUS_DST_COLOR = GL_ONE_MINUS_DST_COLOR,
+        BLEND_SRC_ALPHA = GL_SRC_ALPHA,
+        BLEND_ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA,
+        BLEND_DST_ALPHA = GL_DST_ALPHA,
+        BLEND_ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA,
+        BLEND_CONSTANT_ALPHA = GL_CONSTANT_ALPHA,
+        BLEND_ONE_MINUS_CONSTANT_ALPHA = GL_ONE_MINUS_CONSTANT_ALPHA,
+        BLEND_SRC_ALPHA_SATURATE = GL_SRC_ALPHA_SATURATE
+    };
 
-	typedef boost::function<void(ShaderProgram&)> AutoBinding;
+    enum DepthFunction
+    {
+        DEPTH_NEVER = GL_NEVER,
+        DEPTH_LESS = GL_LESS,
+        DEPTH_EQUAL = GL_EQUAL,
+        DEPTH_LEQUAL = GL_LEQUAL,
+        DEPTH_GREATER = GL_GREATER,
+        DEPTH_NOTEQUAL = GL_NOTEQUAL,
+        DEPTH_GEQUAL = GL_GEQUAL,
+        DEPTH_ALWAYS = GL_ALWAYS
+    };
 
-	enum Blend
-	{
-		BLEND_ZERO = GL_ZERO,
-		BLEND_ONE = GL_ONE,
-		BLEND_SRC_COLOR = GL_SRC_COLOR,
-		BLEN_ONE_MINUS_SRC_COLOR = GL_ONE_MINUS_SRC_COLOR,
-		BLEND_DST_COLOR = GL_DST_COLOR,
-		BLEND_ONE_MINUS_DST_COLOR = GL_ONE_MINUS_DST_COLOR,
-		BLEND_SRC_ALPHA = GL_SRC_ALPHA,
-		BLEND_ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA,
-		BLEND_DST_ALPHA = GL_DST_ALPHA,
-		BLEND_ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA,
-		BLEND_CONSTANT_ALPHA = GL_CONSTANT_ALPHA,
-		BLEND_ONE_MINUS_CONSTANT_ALPHA = GL_ONE_MINUS_CONSTANT_ALPHA,
-		BLEND_SRC_ALPHA_SATURATE = GL_SRC_ALPHA_SATURATE
-	};
+    class StateBlock
+    {
+        friend class RenderState;
 
-	class StateBlock
-	{
-		friend class RenderState;
+    public:
 
-	public:
-		boost::shared_ptr<StateBlock> create();
+        StateBlock();
+        StateBlock(const StateBlock& copy);
+        ~StateBlock();
 
-		void bind();
-		void setBlend(bool enabled);
-		void setBlendSrc(Blend blend);
-		void setBlendDst(Blend blend);
-		void setCullFace(bool enabled);
-		void setDepthTest(bool enabled);
-		void setDepthWrite(bool enabled);
+        void bind();
 
-	private:
+        void setBlend(bool enabled);
+        void setBlendSrc(Blend blend);
+        void setBlendDst(Blend blend);
+        void setCullFace(bool enabled);
+        void setDepthTest(bool enabled);
+        void setDepthWrite(bool enabled);
+        void setDepthFunction(DepthFunction func);
 
-		StateBlock();
-		~StateBlock();
+    private:
 
-		void bindNoRestore();
-		static void restore(long stateOverrideBits);
-		static void enableDepthWrite();
+        void bindNoRestore();
 
-		bool m_cullFaceEnabled;
-		bool m_depthTestEnabled;
-		bool m_depthWriteEnabled;
-		bool m_blendEnabled;
-		Blend m_blendSrc;
-		Blend m_blendDst;
-		long m_bits;
+        static void restore(long stateOverrideBits);
+        static void enableDepthWrite();
 
-		static void initialize();
-		static boost::shared_ptr<StateBlock> s_defaultState;
-	};
+        // States
+        bool _cullFaceEnabled;
+        bool _depthTestEnabled;
+        bool _depthWriteEnabled;
+        DepthFunction _depthFunction;
+        bool _blendEnabled;
+        Blend _blendSrc;
+        Blend _blendDst;
+        long _bits;
 
-	class UniformBinding
-	{
-		friend class RenderState;
+        static StateBlock _defaultState;
+    };
 
-	public:
+    void setStateBlock(const StateBlock &state);
+    StateBlock& getStateBlock();
 
-		UniformBinding(const std::string& name);
+protected:
 
-	private:
-		std::string m_name;
-		bool m_valid;
-	};
+    RenderState();
+    virtual ~RenderState();
 
-
-	void setStateBlock(boost::shared_ptr<StateBlock> state);
-	boost::shared_ptr<StateBlock> stateBlock();
-	boost::shared_ptr<UniformBinding> uniformBinding(const char* name);
 
 private:
 
-	void init();
+    RenderState(const RenderState& copy);
+    RenderState& operator=(const RenderState&);
 
-	std::map<std::string, boost::shared_ptr<UniformBinding> > m_bindings;
-	boost::shared_ptr<StateBlock> m_state;
+protected:
+
+    StateBlock _state;
 };
 
-} // namespace Guy
+}

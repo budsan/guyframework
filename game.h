@@ -7,8 +7,10 @@ namespace Guy {
 class Game
 {
 public:
+    static Game* ptrInstance();
+
 	Game();
-	~Game();
+    virtual ~Game();
 
 	virtual void init();
 	virtual void load();
@@ -19,7 +21,10 @@ public:
 	virtual void unload();
 
 	virtual const char *name();
-	virtual const char *version();
+    virtual const char *version();
+
+private:
+    static Game *s_game;
 };
 
 } //namespace Guy
