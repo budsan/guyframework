@@ -7,7 +7,7 @@
 #include <string>
 
 #include "graphics.h"
-#include "log.h"
+#include "debug.h"
 
 namespace Guy {
 

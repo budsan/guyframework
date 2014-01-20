@@ -9,7 +9,7 @@ namespace Guy {
 FramesHUD::FramesHUD()
 {
 	setColor(rgba(1,0,1,1));
-	setDisplayTime(1.0f);
+	setDisplayTime(1.0);
 	m_isFontLoaded = false;
 
 	reset();
@@ -36,13 +36,13 @@ void FramesHUD::setColor(const rgba &color)
 	m_color = color;
 }
 
-void FramesHUD::setDisplayTime(float time)
+void FramesHUD::setDisplayTime(double time)
 {
-	if (time <= 0 ) time = 1.0f;
+	if (time <= 0 ) time = 1.0;
 	m_displayTime = time;
-	m_displayTimeInv = 1.0f/time;
+	m_displayTimeInv = 1.0/time;
 }
-void FramesHUD::update(float deltaTime)
+void FramesHUD::update(double deltaTime)
 {
 	m_timeCount += deltaTime;
 	if(m_timeCount > m_displayTime)
@@ -50,7 +50,7 @@ void FramesHUD::update(float deltaTime)
 		float currentFramesToDisplay  = (float) m_framesCount * m_displayTimeInv;
 		float timesHappenedDisplayTime = floorf(m_timeCount * m_displayTimeInv);
 		currentFramesToDisplay /= timesHappenedDisplayTime;
-		m_framesToDisplay = currentFramesToDisplay*0.8f + m_framesToDisplay*0.2f;
+		m_framesToDisplay = currentFramesToDisplay*0.8 + m_framesToDisplay*0.2;
 
 		m_timeCount -= timesHappenedDisplayTime * m_displayTime;
 		m_framesCount = 0;

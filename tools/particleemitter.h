@@ -2,7 +2,7 @@
 
 #include <list>
 #include <fstream>
-#include <boost/random.hpp>
+#include <random>
 
 #include "math/algebra3.h"
 #include "graphics/color.h"
@@ -16,7 +16,7 @@ public:
 	ParticleEmitter();
 	ParticleEmitter(const ParticleEmitter &oth);
 
-	void update(float deltaTime);
+	void update(double deltaTime);
 	void draw();
 	void restart();
 
@@ -26,46 +26,46 @@ public:
 
 	// SETTERS
 
-	void setPosition(const vec2f &pos);
-	void setDirection(const vec2f &dir);
-	void setDirection(float dir);
-	void setAngle(float angle);
+	void setPosition(const vec2d &pos);
+	void setDirection(const vec2d &dir);
+	void setDirection(double dir);
+	void setAngle(double angle);
 
 	void setParticleNumber(int num);
-	void setFrequency(float freq);
-	void setGravity(const vec2f &grav);
+	void setFrequency(double freq);
+	void setGravity(const vec2d &grav);
 
-	void setParticleLive(float l);
-	void setParticleLive(float l0, float l1);
+	void setParticleLive(double l);
+	void setParticleLive(double l0, double l1);
 	void setParticleColor(const rgba &c);
 	void setParticleColor(const rgba &c0, const rgba &c1);
-	void setParticleSpeed(float s);
-	void setParticleSpeed(float s0, float s1);
-	void setParticleSize(float z);
-	void setParticleSize(float z0, float z1);
+	void setParticleSpeed(double s);
+	void setParticleSpeed(double s0, double s1);
+	void setParticleSize(double z);
+	void setParticleSize(double z0, double z1);
 	void setParticleAccumulativeColor(bool enable);
 	void setParticleMaterial(std::string name);
 
 	//GETTERS
 
-	const vec2f &position()  { return m_pos; }
-	float getDirection() { return m_dir; }
-	float getAngle() { return m_angle; }
+	const vec2d &position()  { return m_pos; }
+	double getDirection() { return m_dir; }
+	double getAngle() { return m_angle; }
 
-  int particleCount() { return m_num0;}
-  float frequency() { return m_freq; }
-  const vec2f & gravity() { return m_grav; }
+	int particleCount() { return m_num0;}
+	double frequency() { return m_freq; }
+	const vec2d & gravity() { return m_grav; }
 
-  float particleLiveMin() { return m_l0; }
-  float particleLiveMax() { return m_l1; }
-  const rgba &particleColorStart() { return m_c0; }
-  const rgba &particleColorEnd()   { return m_c1; }
-  float particleSpeedMin() { return m_s0; }
-  float particleSpeedMax() { return m_s1; }
-  float particleSizeStart() { return m_z0; }
-  float particleSizeEnd()   { return m_z1; }
-  bool particleAccumulativeColor() { return m_accumBlending; }
-  const std::string &particleMaterial() { return m_material; }
+	double particleLiveMin() { return m_l0; }
+	double particleLiveMax() { return m_l1; }
+	const rgba &particleColorStart() { return m_c0; }
+	const rgba &particleColorEnd()   { return m_c1; }
+	double particleSpeedMin() { return m_s0; }
+	double particleSpeedMax() { return m_s1; }
+	double particleSizeStart() { return m_z0; }
+	double particleSizeEnd()   { return m_z1; }
+	bool particleAccumulativeColor() { return m_accumBlending; }
+	const std::string &particleMaterial() { return m_material; }
 
 	bool areParticlesLeft() { return m_num || m_particles.empty();}
 
@@ -75,27 +75,39 @@ public:
 private:
 	void newParticle();
 
-	void read (std::ifstream &file, vec2f &v);
-	void write(std::ofstream &file, const vec2f &v);
+	template <typename T>
+	void read(std::ifstream &file, math::vec2<T>& v)
+	{
+        file.read((char*)&v.x,sizeof(v.x));
+        file.read((char*)&v.y,sizeof(v.y));
+	}
+
+	template <typename T>
+	void write(std::ofstream &file, const math::vec2<T>& v)
+	{
+        file.write((char*)&v.x,sizeof(v.x));
+        file.write((char*)&v.y,sizeof(v.y ));
+	}
+
 	void read (std::ifstream &file, rgba &c);
 	void write(std::ofstream &file, const rgba &c);
 
 protected:
 
-	vec2f m_pos;
-	float m_dir;
-	float m_angle;
+	vec2d m_pos;
+	double m_dir;
+	double m_angle;
 
 	int m_num, m_num0;
-	float m_freq;
-	vec2f m_grav;
+	double m_freq;
+	vec2d m_grav;
 
-	float m_time;
+	double m_time;
 
-	float m_l0, m_l1;
+	double m_l0, m_l1;
 	rgba  m_c0, m_c1;
-	float m_s0, m_s1;
-	float m_z0, m_z1;
+	double m_s0, m_s1;
+	double m_z0, m_z1;
 	bool m_accumBlending;
 	std::string m_material;
 
@@ -103,7 +115,7 @@ protected:
 	std::list<Particle> m_particles;
 
 	//RANDOM ENGINE
-	boost::mt19937 m_random;
+	std::default_random_engine m_random;
 };
 
 } // namespace Guy

@@ -13,14 +13,14 @@ win32 {
 
 unix {
     DEFINES += GUY_USE_LINUX
-    LIBS += -lSDL -lGL -lGLU -lopenal -lGLEW
+    LIBS += -lSDL2 -lGL -lGLU -lopenal -lGLEW
     INCLUDEPATH += /usr/include/freetype2/
 
     SOURCES += \
         $$PWD/deps/linux/main.cpp
 }
 
-QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow
+QMAKE_CXXFLAGS += -std=c++11 -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow
 #QMAKE_LDFLAGS += -pg
 
 INCLUDEPATH += $$PWD/
@@ -30,7 +30,6 @@ SOURCES += \
     $$PWD/game.cpp \
     $$PWD/persistencelayer.cpp \
     $$PWD/variable.cpp \
-    $$PWD/content/content.cpp \
     $$PWD/graphics/screen.cpp \
     $$PWD/graphics/texture.cpp \
     $$PWD/graphics/sprite.cpp \
@@ -84,8 +83,7 @@ HEADERS += \
     $$PWD/environment.h \
     $$PWD/game.h \
     $$PWD/persistencelayer.h \
-    $$PWD/log.h \
-    $$PWD/content/content.h \
+    $$PWD/debug.h \
     $$PWD/graphics/graphics.h \
     $$PWD/graphics/screen.h \
     $$PWD/graphics/texture.h \

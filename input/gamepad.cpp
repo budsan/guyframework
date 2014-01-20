@@ -1,7 +1,8 @@
 #include "gamepad.h"
 
 #include <algorithm>
-#include <cassert>
+
+#include "debug.h"
 
 #include "environment.h"
 #include "gamepadlistener.h"
@@ -23,13 +24,13 @@ GamePad::~GamePad()
 
 void GamePad::addListener(GamePadListener *listener)
 {
-	assert(find(m_listeners.begin(),m_listeners.end(),listener) == m_listeners.end());
+	GUY_ASSERT(find(m_listeners.begin(),m_listeners.end(),listener) == m_listeners.end());
 	m_listeners.push_back(listener);
 }
 
 void GamePad::removeListener(GamePadListener *listener)
 {
-	assert(find(m_listeners.begin(),m_listeners.end(),listener) != m_listeners.end());
+	GUY_ASSERT(find(m_listeners.begin(),m_listeners.end(),listener) != m_listeners.end());
 	m_listeners.erase(find(m_listeners.begin(),m_listeners.end(),listener));
 }
 
@@ -116,7 +117,7 @@ void GamePad::setButtonDown(Button button, bool down)
 
 bool GamePad::isButtonDown(Button button)
 {
-	assert(button<Button_Count);
+	GUY_ASSERT(button<Button_Count);
 	return m_isButtonDown[button];
 }
 

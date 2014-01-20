@@ -1,5 +1,5 @@
 #include "vertexattribute.h"
-#include "log.h"
+#include "debug.h"
 
 #include <string>
 #include <set>

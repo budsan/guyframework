@@ -1,5 +1,5 @@
 #include "persistencelayer.h"
-#include "log.h"
+#include "debug.h"
 
 namespace Guy {
 

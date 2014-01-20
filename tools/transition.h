@@ -8,149 +8,149 @@ public:
 	 Transition();
 	~Transition() {}
 
-	virtual void  setPos(float _fPos) {m_fPos = m_fPosToGo = _fPos;}
-	virtual void   goPos(float _fPos) {m_fPosToGo = _fPos;}
+	virtual void  setPos(double _pos) {m_pos = m_posToGo = _pos;}
+	virtual void   goPos(double _pos) {m_posToGo = _pos;}
 
-	virtual void update(float _deltaTime) = 0;
+	virtual void update(double _deltaTime) = 0;
 
-  virtual float pos() {return m_fPos;}
-	virtual bool reached() {return m_fPosToGo == m_fPos;}
+  virtual double pos() {return m_pos;}
+	virtual bool reached() {return m_posToGo == m_pos;}
 
 protected:
 
-	float m_fPos;
-	float m_fPosToGo;
+	double m_pos;
+	double m_posToGo;
 };
 
 //-TRANSITION-CONSTANT-VELOCITY----------------------------------------------//
 class TransitionVelConst : public Transition {
 public:
-	 TransitionVelConst() : m_fVel(1.0f) {}
+	 TransitionVelConst() : m_vel(1.0) {}
 	~TransitionVelConst() {}
 
-	void update(float _deltaTime);
+	void update(double time);
 
-	void setVel(float _fSecsTotal) {m_fVel = _fSecsTotal;}
+	void setVel(double _secsTotal) {m_vel = _secsTotal;}
 
 protected:
 
-	float m_fVel;
+	double m_vel;
 };
 
 //-TRANSITION-LINEAR---------------------------------------------------------//
 class TransitionLinear : public Transition {
 public:
-	 TransitionLinear() : m_fTime(1.0f), m_fPercent(1.0f) {}
+	 TransitionLinear() : m_time(1.0), m_percent(1.0) {}
 	~TransitionLinear() {}
 
-	void setPos(float _fPos);
-	void  goPos(float _fPos);
-	void update(float _deltaTime);
+	void setPos(double _pos);
+	void  goPos(double _pos);
+	void update(double _deltaTime);
 
-	void setTime(float _fTimeToReach) { m_fTime = _fTimeToReach;}
+	void setTime(double _timeToReach) { m_time = _timeToReach;}
 
 protected:
 
-	float m_fTime;
-	float m_fPercent;
-	float m_fInitPos;
+	double m_time;
+	double m_percent;
+	double m_initPos;
 };
 
 //-TRANSITION-SINUSOIDAL-----------------------------------------------------//
 class TransitionSinus : public Transition {
 public:
-	 TransitionSinus() : m_fSinPos(0.0f), m_fVel(0.5f) {}
+	 TransitionSinus() : m_sinPos(0.0), m_vel(0.5) {}
 	~TransitionSinus() {}
 
-	void setPos(float _fPos);
-	void  goPos(float _fPos);
-	void update(float _deltaTime);
+	void setPos(double _pos);
+	void  goPos(double _pos);
+	void update(double _deltaTime);
 
-	void setTime(float _fSecsTotal) { m_fVel = _fSecsTotal;}
+	void setTime(double _secsTotal) { m_vel = _secsTotal;}
 
 protected:
 
-	float m_fSinPos;
-	float m_fVel;
-	float m_fInitPos;
+	double m_sinPos;
+	double m_vel;
+	double m_initPos;
 };
 
 //-TRANSITION-SINUSOIDAL-FADE-IN---------------------------------------------//
 
 class TransitionSinusFadeIn : public Transition {
 public:
-	 TransitionSinusFadeIn() : m_fSinPos(0.0f), m_fVel(0.5f) {}
+	 TransitionSinusFadeIn() : m_sinPos(0.0), m_vel(0.5) {}
 	~TransitionSinusFadeIn() {}
 
-	void setPos(float _fPos);
-	void  goPos(float _fPos);
-	void update(float _deltaTime);
+	void setPos(double _pos);
+	void  goPos(double _pos);
+	void update(double _deltaTime);
 
-	void setTime(float _fSecsTotal) { m_fVel = _fSecsTotal;}
+	void setTime(double _secsTotal) { m_vel = _secsTotal;}
 
 protected:
 
-	float m_fSinPos;
-	float m_fVel;
-	float m_fInitPos;
+	double m_sinPos;
+	double m_vel;
+	double m_initPos;
 };
 
 //-TRANSITION-SINUSOIDAL-FADE-OUT--------------------------------------------//
 class TransitionSinusFadeOut : public Transition {
 public:
-	 TransitionSinusFadeOut() : m_fSinPos(0.0f), m_fVel(0.5f) {}
+	 TransitionSinusFadeOut() : m_sinPos(0.0), m_vel(0.5) {}
 	~TransitionSinusFadeOut() {}
 
-	void setPos(float _fPos);
-	void  goPos(float _fPos);
-	void update(float _deltaTime);
+	void setPos(double _pos);
+	void  goPos(double _pos);
+	void update(double _deltaTime);
 
-	void setTime(float _fSecsTotal) { m_fVel = _fSecsTotal;}
+	void setTime(double _secsTotal) { m_vel = _secsTotal;}
 
 protected:
 
-	float m_fSinPos;
-	float m_fVel;
-	float m_fInitPos;
+	double m_sinPos;
+	double m_vel;
+	double m_initPos;
 };
 
 //-TRANSITION-BOUNCE---------------------------------------------------------//
 class TransitionBounce : public Transition {
 public:
-	 TransitionBounce() : m_fVel(0), m_fAcc(5), m_fVelLostPercent(0.4f) {}
+	 TransitionBounce() : m_vel(0), m_acc(5), m_velLostPercent(0.4) {}
 	~TransitionBounce();
 
-	void update(float _deltaTime);
-	bool reached() {return (m_fPosToGo == m_fPos) && m_fVel == 0;}
+	void update(double _deltaTime);
+	bool reached() {return (m_posToGo == m_pos) && m_vel == 0;}
 
-	void setAcc(float _fUnitsPerSec) {m_fAcc = _fUnitsPerSec;}
-	void setVelLost(float _fPercentVel) {m_fVelLostPercent = _fPercentVel;}
+	void setAcc(double _unitsPerSec) {m_acc = _unitsPerSec;}
+	void setVelLost(double _percentVel) {m_velLostPercent = _percentVel;}
 
 protected:
 
-	float   m_fVel;
-	float   m_fAcc;
-	float   m_fVelLostPercent;
+	double   m_vel;
+	double   m_acc;
+	double   m_velLostPercent;
 };
 
 //-TRANSITION-INERTIAL-------------------------------------------------------//
 class TransitionInertial : public Transition {
 public:
-	 TransitionInertial() : m_fVel(0), m_fAcc(1.f), m_fVelMax(3.0f) {}
+	 TransitionInertial() : m_vel(0), m_acc(1.0), m_velMax(3.0) {}
 	~TransitionInertial();
 
-	void update(float _deltaTime);
-	void update(int   _deltaTime) {update(float(_deltaTime)/1000.f);}
-	bool reached() {return (m_fPosToGo == m_fPos) && m_fVel == 0;}
+	void update(double _deltaTime);
+	void update(int   _deltaTime) {update(double(_deltaTime)/1000.0);}
+	bool reached() {return (m_posToGo == m_pos) && m_vel == 0;}
 
-	void setAcc(float _fUnitsPerSec) {m_fAcc = _fUnitsPerSec;}
-	void setVelMax(float _fVelMax) {m_fVelMax = _fVelMax;}
+	void setAcc(double _unitsPerSec) {m_acc = _unitsPerSec;}
+	void setVelMax(double _velMax) {m_velMax = _velMax;}
 
 protected:
 
-	float m_fVel;
-	float m_fAcc;
-	float m_fVelMax;
+	double m_vel;
+	double m_acc;
+	double m_velMax;
 };
 
 

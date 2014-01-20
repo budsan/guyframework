@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graphics/screen.h"
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 
@@ -14,7 +14,6 @@ public:
 	bool preinit();
 	bool init();
 	void resetViewport();
-
 
 	void unloadContent();
 	void setCaption(const char* GameName);
@@ -32,7 +31,8 @@ protected:
 	void initGL();
 
 	//ATRIBS
-	SDL_Surface* m_screen;
+	SDL_Window* m_window;
+	const char* m_windowName;
 	Mode m_selectedMode;
 	std::vector<Mode> m_videoModes;
 	bool m_isFullscreen;

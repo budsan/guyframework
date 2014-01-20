@@ -10,7 +10,7 @@
 #include <qgl.h>
 #endif
 
-#include "log.h"
+#include "debug.h"
 
 #ifdef NDEBUG
 #define GL_ASSERT( gl_code ) gl_code

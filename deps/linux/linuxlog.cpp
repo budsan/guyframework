@@ -1,4 +1,4 @@
-#include "log.h"
+#include "debug.h"
 
 #include <cstdarg>
 #include <cstdlib>

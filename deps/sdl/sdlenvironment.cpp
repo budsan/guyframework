@@ -2,18 +2,13 @@
 #include "sdlinput.h"
 #include "sdlscreen.h"
 
-#include "log.h"
+#include "debug.h"
 #include "game.h"
 
-#include <boost/bind.hpp>
-#include <SDL/SDL.h>
+#include <functional>
+#include <SDL2/SDL.h>
 
 namespace Guy {
-
-void emylErrorCallback(const std::string &error)
-{
-	printLog("emyl error: %s\n", error.c_str());
-}
 
 SDLEnvironment::SDLEnvironment()
 	: m_exit(false), m_framesPerSecond(0), m_pause(false)
@@ -36,6 +31,8 @@ bool SDLEnvironment::init(Game *game)
 	SDL_Init(0);
 
 	m_screen   = new SDLScreen();
+	m_screen->setCaption(m_game->name());
+
 	if (!m_screen->preinit())
 	{
 		printLog("ERROR: Couldn't init screen.\n");
@@ -53,13 +50,15 @@ bool SDLEnvironment::init(Game *game)
 		printLog("ERROR: Couldn't init screen.\n");
 		return false;
 	}
-	m_screen->setCaption(m_game->name());
 
 	if (!m_audio-> init())
 	{
 		printLog("ERROR: Couldn't run sound.\n");
 	}
-	emyl::setErrorCallback(emylErrorCallback);
+
+	emyl::setErrorCallback([](const std::string &error){
+		printLog("emyl error: %s\n", error.c_str());
+	});
 
 	m_game->load();
 	return true;
@@ -84,22 +83,22 @@ void SDLEnvironment::setFrameRate(unsigned short frames, DeltaTimeType type)
 		m_ticksPerFrame = 0;
 
 	if (m_ticksPerFrame == 0)
-		m_gameLoop =  boost::bind(&SDLEnvironment::loopVariableFastest, this);
+		m_gameLoop =  std::bind(&SDLEnvironment::loopVariableFastest, this);
 	else
 	{
 		switch(type)
 		{
 		case VariableDeltaTime:
-			 m_gameLoop =  boost::bind(&SDLEnvironment::loopVariable, this);
-			 break;
+			m_gameLoop = std::bind(&SDLEnvironment::loopVariable, this);
+			break;
 		case StableDeltaTime:
-			m_gameLoop = boost::bind(&SDLEnvironment::loopStable, this);
+			m_gameLoop = std::bind(&SDLEnvironment::loopStable, this);
 			break;
 		case StableWithFrameSkipDeltaTime:
-			m_gameLoop = boost::bind(&SDLEnvironment::loopStableDrop, this);
+			m_gameLoop = std::bind(&SDLEnvironment::loopStableDrop, this);
 			break;
 		default:
-			m_gameLoop =  boost::bind(&SDLEnvironment::loopVariableFastest, this);
+			m_gameLoop = std::bind(&SDLEnvironment::loopVariableFastest, this);
 			break;
 		}
 	}
@@ -176,7 +175,7 @@ void SDLEnvironment::loopVariableFastest()
 	Uint32 uiDeltaTime = now - m_before;
 	m_before = now;
 
-	m_game->update(uiDeltaTime/1000.f);
+	m_game->update(uiDeltaTime/1000.0);
 	m_game->draw();
 }
 
@@ -192,7 +191,7 @@ void SDLEnvironment::loopVariable()
 	}
 	m_before = now;
 
-	m_game->update(uiDeltaTime/1000.f);
+	m_game->update(uiDeltaTime/1000.0);
 	m_game->draw();
 }
 
@@ -214,7 +213,7 @@ void SDLEnvironment::loopStable()
 		}
 	}
 
-	m_game->update(m_ticksPerFrame/1000.f);
+	m_game->update(m_ticksPerFrame/1000.0);
 	m_game->draw();
 }
 
@@ -238,7 +237,7 @@ void SDLEnvironment::loopStableDrop()
 
 	while(m_accumTime >= m_ticksPerFrame)
 	{
-		m_game->update(m_ticksPerFrame/1000.f);
+		m_game->update(m_ticksPerFrame/1000.0);
 		m_accumTime -= m_ticksPerFrame;
 	}
 

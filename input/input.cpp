@@ -1,32 +1,32 @@
 #include "input.h"
 #include "environment.h"
 
-#include <cassert>
+#include "debug.h"
 #include <algorithm>
 
 namespace Guy {
 
 void Input::addFocusListener(FocusListener *listener)
 {
-	assert(std::find(m_focusListeners.begin(),m_focusListeners.end(),listener) == m_focusListeners.end());
+	GUY_ASSERT(std::find(m_focusListeners.begin(),m_focusListeners.end(),listener) == m_focusListeners.end());
 	m_focusListeners.insert(listener);
 }
 
 void Input::removeFocusListener(FocusListener *listener)
 {
-	assert(find(m_focusListeners.begin(),m_focusListeners.end(),listener) != m_focusListeners.end());
+	GUY_ASSERT(find(m_focusListeners.begin(),m_focusListeners.end(),listener) != m_focusListeners.end());
 	m_focusListeners.erase(listener);
 }
 
 void Input::addGamePadPlugListener(GamePadPlugListener *listener)
 {
-	assert(std::find(m_gamepadListeners.begin(),m_gamepadListeners.end(),listener) == m_gamepadListeners.end());
+	GUY_ASSERT(std::find(m_gamepadListeners.begin(),m_gamepadListeners.end(),listener) == m_gamepadListeners.end());
 	m_gamepadListeners.insert(listener);
 }
 
 void Input::removeGamePadPlugListener(GamePadPlugListener *listener)
 {
-	assert(std::find(m_gamepadListeners.begin(),m_gamepadListeners.end(),listener) == m_gamepadListeners.end());
+	GUY_ASSERT(std::find(m_gamepadListeners.begin(),m_gamepadListeners.end(),listener) == m_gamepadListeners.end());
 	m_gamepadListeners.insert(listener);
 }
 

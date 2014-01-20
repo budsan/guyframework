@@ -6,7 +6,7 @@
 #include "graphics/primitives.h"
 
 #include "graphics/graphics.h"
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include <stdlib.h>
 #include <iostream>
@@ -16,24 +16,19 @@
 
 #include <algorithm>
 
-#include "log.h"
+#include "debug.h"
 
 namespace Guy {
 
-static const unsigned int GUY_SDL_SURFACE_FLAGS =
-		SDL_OPENGL |
-		SDL_GL_DOUBLEBUFFER |
-		SDL_HWPALETTE |
-		SDL_HWSURFACE |
-		SDL_HWACCEL;
-
 static const int GUY_DEFAULT_BPP = 32;
+
+thread_local SDL_GLContext s_glcontext = nullptr;
 
 //---------------------------------------------------------------------------//
 
-SDLScreen::SDLScreen()
+SDLScreen::SDLScreen() : m_window(nullptr), m_windowName(nullptr)
 {
-	m_screen = NULL;
+
 }
 
 //---------------------------------------------------------------------------//
@@ -62,15 +57,12 @@ bool SDLScreen::preinit()
 	}
 
 	//GET AVAILABLE VIDEO MODES
-	SDL_Rect **modes_available = SDL_ListModes(NULL, GUY_SDL_SURFACE_FLAGS|SDL_FULLSCREEN);
-	const SDL_VideoInfo* videoinfo = SDL_GetVideoInfo();
-	if (modes_available == (SDL_Rect **) 0) return NULL;
-	unsigned int nModes;
-	for (nModes = 0; modes_available[nModes]; nModes++) {}
-
-	m_videoModes.reserve(nModes);
-	for(nModes = 0; modes_available[nModes]; nModes++) {
-		m_videoModes.push_back(Mode(modes_available[nModes]->w, modes_available[nModes]->h));
+	SDL_DisplayMode mode;
+	int modes = SDL_GetNumDisplayModes(0);
+	for (unsigned int i = 0; i < modes; ++i) {
+		if (SDL_GetDisplayMode(0, i, &mode) == 0) {
+			m_videoModes.push_back(Mode(mode.w, mode.h));
+		}
 	}
 	std::sort( m_videoModes.begin(), m_videoModes.end());
 
@@ -79,7 +71,7 @@ bool SDLScreen::preinit()
 
 bool SDLScreen::init()
 {
-	if (m_screen == NULL) {
+	if (m_window == NULL) {
 		if(!setMode(Mode(), true)) return false;
 	}
 
@@ -100,7 +92,9 @@ bool SDLScreen::init()
 
 void SDLScreen::flip()
 {
-	SDL_GL_SwapBuffers();
+	if (m_window != NULL) {
+		SDL_GL_SwapWindow(m_window);
+	}
 }
 
 //---------------------------------------------------------------------------//
@@ -129,57 +123,71 @@ bool SDLScreen::setMode(const Mode& mode, bool fullscreen)
 {
 	Mode selected = mode;
 
-	if (m_screen != NULL)
+	if (m_window != NULL)
 	{
 		if (m_selectedMode.w  == selected.w &&
 		    m_selectedMode.h  == selected.h)
 		{
-			if (fullscreen != m_isFullscreen)
-				SDL_WM_ToggleFullScreen(m_screen);
-
+			if (fullscreen != m_isFullscreen) {
+				SDL_SetWindowFullscreen(m_window, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (m_isFullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+			}
 			return true;
 		}
-		else unloadContent();
+		else
+		{
+			SDL_DestroyWindow(m_window);
+			m_window = NULL;
+		}
 	}
 
-	unsigned int flags = GUY_SDL_SURFACE_FLAGS;
-	if (fullscreen) flags |= SDL_FULLSCREEN;
+	SDL_DisplayMode sdl_mode;
+	if (mode.w == 0 || mode.h == 0) {
+		int res = SDL_GetCurrentDisplayMode(0, &sdl_mode);
+		if (res != 0 ) return false;
+	}
+	else {
+		SDL_DisplayMode closest;
+		closest.w = mode.w;
+		closest.h = mode.h;
+		closest.format = SDL_PIXELFORMAT_RGBA8888;
+		closest.refresh_rate = 0;
+		closest.driverdata = NULL;
 
-	SDL_Surface* screen = NULL;
+		SDL_DisplayMode *res = SDL_GetClosestDisplayMode(0, &closest, &sdl_mode);
+		if (res == NULL) return false;
+	}
 
-	//select settings video-mode if exists
-	if (selected.w == 0 || selected.h == 0)
+	m_window = SDL_CreateWindow(
+		m_windowName == nullptr ? "Game" : m_windowName,
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		sdl_mode.w,
+		sdl_mode.h,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0)
+		);
+
+	if( m_window == NULL )
 	{
-		selected = m_videoModes[0];
-		screen = SDL_SetVideoMode (selected.w, selected.h, GUY_DEFAULT_BPP, flags);
+		return false;
 	}
 
-	//select current desktop video-mode
-	if (screen == NULL)
+	if (s_glcontext == nullptr)
 	{
-		screen = SDL_SetVideoMode (selected.w, selected.h, GUY_DEFAULT_BPP, flags);
+		s_glcontext = SDL_GL_CreateContext(m_window);
 	}
 
-	if (screen == NULL) return false;
-
-	m_selectedMode.w = selected.w;
-	m_selectedMode.h = selected.h;
+	m_selectedMode.w = sdl_mode.w;
+	m_selectedMode.h = sdl_mode.h;
 	m_isFullscreen = fullscreen;
-
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	initGL();
 
-	m_screen = screen;
 	return true;
 }
 
 const std::vector<Screen::Mode> &SDLScreen::availableModes(unsigned int &size)
 {
+	if (m_videoModes.empty())
 	return m_videoModes;
 }
 //---------------------------------------------------------------------------//
@@ -198,9 +206,13 @@ void SDLScreen::unloadContent()
 
 //---------------------------------------------------------------------------//
 
-void SDLScreen::setCaption(const char* GameName)
+void SDLScreen::setCaption(const char* name)
 {
-	SDL_WM_SetCaption(GameName, GameName);
+	m_windowName = name;
+
+	if (m_window != NULL) {
+		SDL_SetWindowTitle(m_window, m_windowName);
+	}
 }
 
 //---------------------------------------------------------------------------//

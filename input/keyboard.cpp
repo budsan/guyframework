@@ -1,10 +1,9 @@
 #include "keyboard.h"
 #include "keyboardlistener.h"
 
-#include "log.h"
-
 #include <algorithm>
-#include <assert.h>
+
+#include "debug.h"
 
 namespace Guy {
 
@@ -18,13 +17,13 @@ Keyboard::~Keyboard()
 
 void Keyboard::addListener(KeyboardListener *listener)
 {
-	assert(find(m_listeners.begin(),m_listeners.end(),listener) == m_listeners.end());
+	GUY_ASSERT(find(m_listeners.begin(),m_listeners.end(),listener) == m_listeners.end());
 	m_listeners.push_back(listener);
 }
 
 void Keyboard::removeListener(KeyboardListener *listener)
 {
-	assert(find(m_listeners.begin(),m_listeners.end(),listener) != m_listeners.end());
+	GUY_ASSERT(find(m_listeners.begin(),m_listeners.end(),listener) != m_listeners.end());
 	m_listeners.erase(find(m_listeners.begin(),m_listeners.end(),listener));
 }
 

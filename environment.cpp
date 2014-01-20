@@ -1,5 +1,7 @@
 #include "environment.h"
 
+#include "debug.h"
+
 #if defined(GUY_USE_LINUX)
 #include "deps/linux/linuxenvironment.h"
 #elif defined(GUY_USE_WINDOWS)
@@ -32,13 +34,13 @@ Environment::~Environment()
 
 Environment& Environment::instance()
 {
-	assert(s_instance != NULL);
+	GUY_ASSERT(s_instance != NULL);
 	return *s_instance;
 }
 
 Environment* Environment::ptrInstance()
 {
-	assert(s_instance != NULL);
+	GUY_ASSERT(s_instance != NULL);
 	return s_instance;
 }
 

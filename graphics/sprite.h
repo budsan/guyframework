@@ -6,14 +6,14 @@ namespace Guy {
 
 class Sprite
 {
- public:
+public:
 	Sprite();
 
-	virtual void update(float deltaTime);
+	virtual void update(double deltaTime);
 	void draw();
 
 	static void setGlobalPixelsPerUnit(float value);
-	       void       setPixelsPerUnit(float value);
+	       void setPixelsPerUnit(float value);
 
 	void setScale(float value);
 	void setScaleWidth(float value);
@@ -25,14 +25,14 @@ class Sprite
 	float getRotation();
 
 	math::vec2f &pos() { return m_pos;}
- private:
+private:
 	static float s_globalUnitsPerPixel;
-	       float       m_unitsPerPixel;
+	       float m_unitsPerPixel;
 
 	math::vec2f m_scale;
 	float m_rotate;
 
- protected:
+protected:
 	struct drawParams {
 		const char* filename;
 		int x, y, w, h, cx, cy;

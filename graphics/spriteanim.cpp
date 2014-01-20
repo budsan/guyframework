@@ -6,7 +6,7 @@
 #include <string>
 #include <memory>
 
-#include "log.h"
+#include "debug.h"
 
 namespace Guy {
 
@@ -18,12 +18,12 @@ SpriteAnim::SpriteAnim() : Sprite(), m_data()
 	m_frameTimeLeft = 0;
 }
 
-SpriteAnim::SpriteAnim(boost::shared_ptr<SpriteAnimData> _data)
+SpriteAnim::SpriteAnim(std::shared_ptr<SpriteAnimData> _data)
 {
 	setAnimData(_data);
 }
 
-void SpriteAnim::update(float deltaTime)
+void SpriteAnim::update(double deltaTime)
 {
 	if (m_data == NULL) return;
 
@@ -52,7 +52,7 @@ void SpriteAnim::nextFrame()
 	m_frameTimeLeft = anim.frames[m_frameSelected].time;
 }
 
-bool SpriteAnim::setAnimData(boost::shared_ptr<SpriteAnimData> _data)
+bool SpriteAnim::setAnimData(std::shared_ptr<SpriteAnimData> _data)
 {
 	if (_data == NULL)
 	{

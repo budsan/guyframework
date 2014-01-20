@@ -4,221 +4,221 @@
 #include <math.h>
 #include <iostream>
 
-#define M_PI_2F ( (float) M_PI_2 )
+#define M_PI_2F ( (double) M_PI_2 )
 
 namespace Guy {
 
 //-TRANSITION----------------------------------------------------------------//
 Transition::Transition() {
-	m_fPos = 0;
-	m_fPosToGo = 0;
+	m_pos = 0;
+	m_posToGo = 0;
 }
 
 //-TRANSITION-CONSTANT-VELOCITY----------------------------------------------//
-void TransitionVelConst::update(float fTime)
+void TransitionVelConst::update(double time)
 {
-	float DistLeft = m_fPos - m_fPosToGo;
-	if ( DistLeft < 0 )
+	double distLeft = m_pos - m_posToGo;
+	if ( distLeft < 0 )
 	{
-		float DistToMove = -m_fVel * fTime;
-		if ( DistLeft >= DistToMove )
-			DistLeft  = 0;
-		else	DistLeft -= DistToMove;
+		double distToMove = -m_vel * time;
+		if ( distLeft >= distToMove )
+			distLeft  = 0;
+		else	distLeft -= distToMove;
 	}
-	else if ( DistLeft > 0 )
+	else if ( distLeft > 0 )
 	{
-		float DistToMove =  m_fVel * fTime;
-		if ( DistLeft <= DistToMove )
-			DistLeft  = 0;
-		else	DistLeft -= DistToMove;
+		double distToMove =  m_vel * time;
+		if ( distLeft <= distToMove )
+			distLeft  = 0;
+		else	distLeft -= distToMove;
 	}
 
-	m_fPos = DistLeft + m_fPosToGo;
+	m_pos = distLeft + m_posToGo;
 }
 
 //-TRANSITION-LINEAL---------------------------------------------------------//
-void TransitionLinear::setPos(float _fPos)
+void TransitionLinear::setPos(double _pos)
 {
-	Transition::setPos(_fPos);
-	m_fPercent = 1.0f;
+	Transition::setPos(_pos);
+	m_percent = 1.0;
 }
 
-void TransitionLinear::goPos(float _fPos)
+void TransitionLinear::goPos(double _pos)
 {
-	m_fPercent = 0.0f;
-	m_fInitPos = m_fPos;
-	Transition::goPos(_fPos);
+	m_percent = 0.0;
+	m_initPos = m_pos;
+	Transition::goPos(_pos);
 }
 
-void TransitionLinear::update(float _deltaTime)
+void TransitionLinear::update(double _deltaTime)
 {
-	if(m_fPercent < 1.0f)
+	if(m_percent < 1.0)
 	{
-		m_fPercent += _deltaTime/m_fTime;
-		if (m_fPercent >= 1.0f)
+		m_percent += _deltaTime/m_time;
+		if (m_percent >= 1.0)
 		{
-			m_fPercent = 1.0f;
-			m_fPos = m_fPosToGo;
+			m_percent = 1.0;
+			m_pos = m_posToGo;
 		}
-		else m_fPos = 
-			m_fInitPos      * (1.0f-m_fPercent) +
-			m_fPosToGo * (     m_fPercent);
+		else m_pos =
+			m_initPos * (1.0 - m_percent) +
+			m_posToGo * (      m_percent);
 	}
 }
 
 //-TRANSITION-SINUSOIDAL-----------------------------------------------------//
-void TransitionSinus::setPos(float _fPos)
+void TransitionSinus::setPos(double _pos)
 {
-	Transition::setPos(_fPos);
-	m_fSinPos = (float)M_PI;
+	Transition::setPos(_pos);
+	m_sinPos = (double)M_PI;
 }
 
-void TransitionSinus::goPos(float _fPos)
+void TransitionSinus::goPos(double _pos)
 {
-	m_fSinPos = 0.0f;
-	m_fInitPos = m_fPos;
-	Transition::goPos(_fPos);
+	m_sinPos = 0.0;
+	m_initPos = m_pos;
+	Transition::goPos(_pos);
 }
 
-void TransitionSinus::update(float _deltaTime)
+void TransitionSinus::update(double _deltaTime)
 {
-	if(m_fSinPos < M_PI)
+	if(m_sinPos < M_PI)
 	{
-		float fPercent = (cosf(m_fSinPos)+1.0f)/2.0f;
-		m_fPos =
-			m_fInitPos * (     fPercent) +
-			m_fPosToGo * (1.0f-fPercent);
-		m_fSinPos += (float)M_PI/m_fVel*_deltaTime;
+		double percent = (cosf(m_sinPos)+1.0)/2.0;
+		m_pos =
+			m_initPos * (     percent) +
+			m_posToGo * (1.0-percent);
+		m_sinPos += (double)M_PI/m_vel*_deltaTime;
 
-		if (m_fSinPos > M_PI) {
-			m_fSinPos = (float)M_PI;
-			m_fPos = m_fPosToGo;
+		if (m_sinPos > M_PI) {
+			m_sinPos = (double)M_PI;
+			m_pos = m_posToGo;
 		}
 	}
 }
 
 //-TRANSITION-SINUSOIDAL-FADE-IN---------------------------------------------//
-void TransitionSinusFadeIn::setPos(float _fPos)
+void TransitionSinusFadeIn::setPos(double _pos)
 {
-	Transition::setPos(_fPos);
-	m_fSinPos = M_PI_2F;
+	Transition::setPos(_pos);
+	m_sinPos = M_PI_2F;
 }
 
-void TransitionSinusFadeIn::goPos(float _fPos)
+void TransitionSinusFadeIn::goPos(double _pos)
 {
-	m_fSinPos = 0.0f;
-	m_fInitPos = m_fPos;
-	Transition::goPos(_fPos);
+	m_sinPos = 0.0;
+	m_initPos = m_pos;
+	Transition::goPos(_pos);
 }
 
-void TransitionSinusFadeIn::update(float _deltaTime)
+void TransitionSinusFadeIn::update(double _deltaTime)
 {
-	if(m_fSinPos < M_PI_2F)
+	if(m_sinPos < M_PI_2F)
 	{
-		float fPercent = cosf(m_fSinPos);
-		m_fPos =
-			m_fInitPos * (     fPercent) +
-			m_fPosToGo * (1.0f-fPercent);
-		m_fSinPos += M_PI_2F/m_fVel*_deltaTime;
+		double percent = cosf(m_sinPos);
+		m_pos =
+			m_initPos * (    percent) +
+			m_posToGo * (1.0-percent);
+		m_sinPos += M_PI_2F/m_vel*_deltaTime;
 
-		if(m_fSinPos > M_PI_2F) {
-			m_fSinPos = M_PI_2F;
-			m_fPos = m_fPosToGo;
+		if(m_sinPos > M_PI_2F) {
+			m_sinPos = M_PI_2F;
+			m_pos = m_posToGo;
 		}
 	}
 }
 
 //-TRANSITION-SINUSOIDAL-FADE-OUT--------------------------------------------//
-void TransitionSinusFadeOut::setPos(float _fPos)
+void TransitionSinusFadeOut::setPos(double _pos)
 {
-	Transition::setPos(_fPos);
-	m_fSinPos = (float) M_PI_2;
+	Transition::setPos(_pos);
+	m_sinPos = (double) M_PI_2;
 }
 
-void TransitionSinusFadeOut::goPos(float _fPos)
+void TransitionSinusFadeOut::goPos(double _pos)
 {
-	m_fSinPos = 0.0f;
-	m_fInitPos = m_fPos;
+	m_sinPos = 0.0;
+	m_initPos = m_pos;
 
-	Transition::goPos(_fPos);
+	Transition::goPos(_pos);
 }
 
-void TransitionSinusFadeOut::update(float _deltaTime)
+void TransitionSinusFadeOut::update(double _deltaTime)
 {
-	if(m_fSinPos < M_PI_2F)
+	if(m_sinPos < M_PI_2F)
 	{
-		float fPercent = sinf(m_fSinPos);
-		m_fPos =
-			m_fInitPos * (1.0f-fPercent) +
-			m_fPosToGo * (     fPercent);
-		m_fSinPos += M_PI_2F/m_fVel*_deltaTime;
+		double percent = sinf(m_sinPos);
+		m_pos =
+			m_initPos * (1.0-percent) +
+			m_posToGo * (     percent);
+		m_sinPos += M_PI_2F/m_vel*_deltaTime;
 
-		if(m_fSinPos >  M_PI_2F) {
-			m_fSinPos = M_PI_2F;
-			m_fPos = m_fPosToGo;
+		if(m_sinPos >  M_PI_2F) {
+			m_sinPos = M_PI_2F;
+			m_pos = m_posToGo;
 		}
 	}
 }
 
 //-TRANSITION-BOUNCE---------------------------------------------------------//
-void TransitionBounce::update(float fTime)
+void TransitionBounce::update(double time)
 {
-	float fFacing;
+	double facing;
 
-	     if (m_fPos > m_fPosToGo) fFacing = -1;
-	else if (m_fPos < m_fPosToGo) fFacing = +1;
+	     if (m_pos > m_posToGo) facing = -1;
+	else if (m_pos < m_posToGo) facing = +1;
 	else {
-		     if (m_fVel > 0) fFacing = -1;
-		else if (m_fVel < 0) fFacing = +1;
-		else fFacing = 0;
+		     if (m_vel > 0) facing = -1;
+		else if (m_vel < 0) facing = +1;
+		else facing = 0;
 	}
 
 	//PHYSICS FORMULA
-	float fTimeLeft = (-m_fVel + fFacing * (float) sqrt(m_fVel*m_fVel -
-			(4.0f * (fFacing  * m_fAcc * 0.5f) *
-			(m_fPos - m_fPosToGo))))/(fFacing  * m_fAcc);
-	float fNextTime = (fTimeLeft - fTime);
+	double timeLeft = (-m_vel + facing * (double) sqrt(m_vel*m_vel -
+			(4.0 * (facing  * m_acc * 0.5) *
+			(m_pos - m_posToGo))))/(facing  * m_acc);
+	double nextTime = (timeLeft - time);
 
-	if ( fNextTime < 0 )
+	if ( nextTime < 0 )
 	{
-			update(fTimeLeft);
+			update(timeLeft);
 
-			m_fPos = m_fPosToGo;
-			m_fVel = m_fVel*m_fVelLostPercent;
+			m_pos = m_posToGo;
+			m_vel = m_vel*m_velLostPercent;
 
-			if(fabs(m_fVel) < 0.001) m_fVel = 0;
+			if(fabs(m_vel) < 0.001) m_vel = 0;
 
-			update(float(fabs(fNextTime)));
+			update(double(fabs(nextTime)));
 	}
 	else {
-		m_fPos += (m_fVel*fTime)+(fTime*fTime*fFacing*m_fAcc/ 2);
-		m_fVel       =  m_fVel + fFacing*fTime*m_fAcc;
+		m_pos += (m_vel*time)+(time*time*facing*m_acc/ 2);
+		m_vel       =  m_vel + facing*time*m_acc;
 	}
 }
 
 //-TRANSITION-INERTIAL-------------------------------------------------------//
-void TransitionInertial::update(float fTime)
+void TransitionInertial::update(double time)
 {
-	float fAcc = 0;
-	     if (m_fPos < m_fPosToGo) fAcc = +1 * m_fAcc;
-	else if (m_fPos > m_fPosToGo) fAcc = -1 * m_fAcc;
+	double acc = 0;
+	     if (m_pos < m_posToGo) acc = +1 * m_acc;
+	else if (m_pos > m_posToGo) acc = -1 * m_acc;
 	else return;
 
-	register float TimeToStop = (float)fabs(m_fVel)/m_fAcc;
-	register float DistToStop =
-		((float) fabs(m_fVel)*TimeToStop) + (-m_fAcc*TimeToStop*TimeToStop/2);
-	register float DistLeft   = (float) fabs(m_fPos-m_fPosToGo);
+	register double TimeToStop = (double)fabs(m_vel)/m_acc;
+	register double DistToStop =
+		((double) fabs(m_vel)*TimeToStop) + (-m_acc*TimeToStop*TimeToStop/2);
+	register double distLeft   = (double) fabs(m_pos-m_posToGo);
 
-	if((m_fVel*fAcc) > 0 &&  DistLeft <= DistToStop) fAcc *= -1.0f;
+	if((m_vel*acc) > 0 &&  distLeft <= DistToStop) acc *= -1.0;
 
-	register float fVel = m_fVel + (fTime * fAcc);
-	if (fVel * m_fVel < 0) fVel = 0;
-	if (fVel >= m_fVelMax) fVel = (fVel/(float) fabs(fVel)) * m_fVelMax;
-	m_fVel = fVel;
+	register double vel = m_vel + (time * acc);
+	if (vel * m_vel < 0) vel = 0;
+	if (vel >= m_velMax) vel = (vel/(double) fabs(vel)) * m_velMax;
+	m_vel = vel;
 
-	m_fPos = m_fPos + (m_fVel*fTime) + (fTime*fTime*fAcc*0.5f);
-	if(fabs(m_fPos-m_fPosToGo) <= (m_fVel*fTime*0.5f)) {
-		m_fPos = m_fPosToGo; m_fVel = 0;
+	m_pos = m_pos + (m_vel*time) + (time*time*acc*0.5);
+	if(fabs(m_pos-m_posToGo) <= (m_vel*time*0.5)) {
+		m_pos = m_posToGo; m_vel = 0;
 	}
 }
 

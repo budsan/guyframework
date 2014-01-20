@@ -1,15 +1,15 @@
 #pragma once
 
+#include <functional>
+
 #include "environment.h"
 #include "deps/sdl/sdlinput.h"
 #include "deps/sdl/sdlscreen.h"
 
-#include <boost/function.hpp>
-
 #include "graphics/screen.h"
 #include "audio/emyl.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 
@@ -32,7 +32,7 @@ public:
 	virtual Input&            input();
 
 	void setFrameRate(unsigned short frames = 0,
-					   DeltaTimeType type = VariableDeltaTime);
+			  DeltaTimeType type = VariableDeltaTime);
 
 private:
 	SDLScreen*      m_screen; //graphics
@@ -52,7 +52,7 @@ private:
 	void loopStable();
 	void loopStableDrop();
 
-	boost::function<void()> m_gameLoop;
+	std::function<void()> m_gameLoop;
 
 	Uint32 m_before;
 	Uint32 m_accumTime;

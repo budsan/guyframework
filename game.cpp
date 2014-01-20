@@ -1,5 +1,5 @@
 #include "game.h"
-#include "log.h"
+#include "debug.h"
 
 namespace Guy {
 

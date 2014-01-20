@@ -1,10 +1,9 @@
 #include "deps/sdl/sdlinput.h"
 
 #include "environment.h"
-#include "log.h"
+#include "debug.h"
 
-#include <SDL/SDL.h>
-#include <cassert>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 
@@ -41,7 +40,7 @@ int SDLInput::keyboardCount()
 
 Keyboard& SDLInput::keyboard(int i)
 {
-	assert(i == 0);
+	GUY_ASSERT(i == 0);
 	return *m_keyboard;
 }
 
@@ -52,7 +51,7 @@ int SDLInput::gamePadCount()
 
 GamePad& SDLInput::gamePad(int i)
 {
-	assert(i >= 0);
+	GUY_ASSERT(i >= 0);
 	return *(GamePad*)0;
 }
 
@@ -92,55 +91,68 @@ void SDLInput::handleEvent(const SDL_Event &event)
 	case SDL_QUIT:
 		Environment::instance().exit();
 		break;
-	case SDL_ACTIVEEVENT:
+	case SDL_WINDOWEVENT:
 	{
-		if (event.active.gain) {
-			if (event.active.state & SDL_APPMOUSEFOCUS) {
-				m_focusState |= MouseFocusState;
-				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
-				for (;it != m_focusListeners.end(); ++it) {
-					(*it)->onGainMouseFocus();
-				}
+		switch(event.window.event)
+		{
+		case SDL_WINDOWEVENT_SHOWN:
+		{
+			m_focusState |= DrawFocusState;
+			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			for (;it != m_focusListeners.end(); ++it) {
+				(*it)->onGainDrawFocus();
 			}
-			if (event.active.state & SDL_APPINPUTFOCUS) {
-				m_focusState |= InputFocusState;
-				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
-				for (;it != m_focusListeners.end(); ++it) {
-					(*it)->onGainInputFocus();
-				}
-			}
-			if (event.active.state & SDL_APPACTIVE) {
-				m_focusState |= DrawFocusState;
-				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
-				for (;it != m_focusListeners.end(); ++it) {
-					(*it)->onGainDrawFocus();
-				}
-			}
+			break;
 		}
-		else {
-			if (event.active.state & SDL_APPMOUSEFOCUS) {
-				m_focusState &= ~MouseFocusState;
-				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
-				for (;it != m_focusListeners.end(); ++it) {
-					(*it)->onLoseMouseFocus();
-				}
+		case SDL_WINDOWEVENT_HIDDEN:
+		{
+			m_focusState &= ~DrawFocusState;
+			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			for (;it != m_focusListeners.end(); ++it) {
+				(*it)->onLoseDrawFocus();
 			}
-			if (event.active.state & SDL_APPINPUTFOCUS) {
-				m_focusState &= ~InputFocusState;
-				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
-				for (;it != m_focusListeners.end(); ++it) {
-					(*it)->onLoseInputFocus();
-				}
-			}
-			if (event.active.state & SDL_APPACTIVE) {
-				m_focusState &= ~DrawFocusState;
-				std::set<FocusListener*>::iterator it = m_focusListeners.begin();
-				for (;it != m_focusListeners.end(); ++it) {
-					(*it)->onLoseDrawFocus();
-				}
-			}
+			break;
 		}
-
+		case SDL_WINDOWEVENT_ENTER:
+		{
+			m_focusState |= MouseFocusState;
+			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			for (;it != m_focusListeners.end(); ++it) {
+				(*it)->onGainMouseFocus();
+			}
+			break;
+		}
+		case SDL_WINDOWEVENT_LEAVE:
+		{
+			m_focusState &= ~MouseFocusState;
+			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			for (;it != m_focusListeners.end(); ++it) {
+				(*it)->onLoseMouseFocus();
+			}
+			break;
+		}
+		case SDL_WINDOWEVENT_FOCUS_GAINED:
+		{
+			m_focusState |= InputFocusState;
+			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			for (;it != m_focusListeners.end(); ++it) {
+				(*it)->onGainInputFocus();
+			}
+			break;
+		}
+		case SDL_WINDOWEVENT_FOCUS_LOST:
+		{
+			m_focusState &= ~InputFocusState;
+			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			for (;it != m_focusListeners.end(); ++it) {
+				(*it)->onLoseInputFocus();
+			}
+			break;
+		}
+		case SDL_WINDOWEVENT_CLOSE:
+			Environment::instance().exit();
+			break;
+		}
 		break;
 	}
 	default:
@@ -148,9 +160,9 @@ void SDLInput::handleEvent(const SDL_Event &event)
 	}
 }
 
-void SDLInput::SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod)
+void SDLInput::SDLkeysymToGuyKey(SDL_Keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod)
 {
-	unicode = keysym.unicode;
+	unicode = keysym.scancode;
 	switch (keysym.sym)
 	{
 	case SDLK_LSHIFT :       key = Keyboard::Key_LShift; break;
@@ -159,8 +171,8 @@ void SDLInput::SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::
 	case SDLK_RCTRL :        key = Keyboard::Key_RControl; break;
 	case SDLK_LALT :         key = Keyboard::Key_LAlt; break;
 	case SDLK_RALT :         key = Keyboard::Key_RAlt; break;
-	case SDLK_LSUPER :       key = Keyboard::Key_LSystem; break;
-	case SDLK_RSUPER :       key = Keyboard::Key_RSystem; break;
+	case SDLK_LGUI :         key = Keyboard::Key_LSystem; break;
+	case SDLK_RGUI :         key = Keyboard::Key_RSystem; break;
 	case SDLK_MENU :         key = Keyboard::Key_Menu; break;
 	case SDLK_ESCAPE :       key = Keyboard::Key_Escape; break;
 	case SDLK_SEMICOLON :    key = Keyboard::Key_SemiColon; break;
@@ -208,16 +220,16 @@ void SDLInput::SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::
 	case SDLK_RIGHT :        key = Keyboard::Key_Right; break;
 	case SDLK_UP :           key = Keyboard::Key_Up; break;
 	case SDLK_DOWN :         key = Keyboard::Key_Down; break;
-	case SDLK_KP0 :          key = Keyboard::Key_Numpad0; break;
-	case SDLK_KP1 :          key = Keyboard::Key_Numpad1; break;
-	case SDLK_KP2 :          key = Keyboard::Key_Numpad2; break;
-	case SDLK_KP3 :          key = Keyboard::Key_Numpad3; break;
-	case SDLK_KP4 :          key = Keyboard::Key_Numpad4; break;
-	case SDLK_KP5 :          key = Keyboard::Key_Numpad5; break;
-	case SDLK_KP6 :          key = Keyboard::Key_Numpad6; break;
-	case SDLK_KP7 :          key = Keyboard::Key_Numpad7; break;
-	case SDLK_KP8 :          key = Keyboard::Key_Numpad8; break;
-	case SDLK_KP9 :          key = Keyboard::Key_Numpad9; break;
+	case SDLK_KP_0 :          key = Keyboard::Key_Numpad0; break;
+	case SDLK_KP_1 :          key = Keyboard::Key_Numpad1; break;
+	case SDLK_KP_2 :          key = Keyboard::Key_Numpad2; break;
+	case SDLK_KP_3 :          key = Keyboard::Key_Numpad3; break;
+	case SDLK_KP_4 :          key = Keyboard::Key_Numpad4; break;
+	case SDLK_KP_5 :          key = Keyboard::Key_Numpad5; break;
+	case SDLK_KP_6 :          key = Keyboard::Key_Numpad6; break;
+	case SDLK_KP_7 :          key = Keyboard::Key_Numpad7; break;
+	case SDLK_KP_8 :          key = Keyboard::Key_Numpad8; break;
+	case SDLK_KP_9 :          key = Keyboard::Key_Numpad9; break;
 	case SDLK_q :            key = Keyboard::Key_Q; break;
 	case SDLK_w :            key = Keyboard::Key_W; break;
 	case SDLK_e :            key = Keyboard::Key_E; break;

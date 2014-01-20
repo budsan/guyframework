@@ -81,7 +81,7 @@
  <connections>
   <connection>
    <sender>actionExit</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>ParticleEditor</receiver>
    <slot>close()</slot>
    <hints>

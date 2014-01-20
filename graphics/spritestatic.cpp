@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-#include "log.h"
+#include "debug.h"
 
 namespace Guy {
 
@@ -14,18 +14,18 @@ SpriteStatic::SpriteStatic() : Sprite(), m_data()
 	m_frameSelected  = 0;
 }
 
-SpriteStatic::SpriteStatic(boost::shared_ptr<SpriteLibrary> _data) : Sprite()
+SpriteStatic::SpriteStatic(std::shared_ptr<SpriteLibrary> _data) : Sprite()
 {
 	setLibrary(_data);
 }
 
-void SpriteStatic::update(float deltaTime)
+void SpriteStatic::update(double deltaTime)
 {
 
 }
 
 
-bool SpriteStatic::setLibrary(boost::shared_ptr<SpriteLibrary> _data)
+bool SpriteStatic::setLibrary(std::shared_ptr<SpriteLibrary> _data)
 {
 	if(_data == NULL)
 	{

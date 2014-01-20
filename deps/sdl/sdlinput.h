@@ -2,7 +2,7 @@
 
 #include "input/input.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 
@@ -24,7 +24,7 @@ public:
 	virtual int getFocusState();
 
 private:
-	static void SDLkeysymToGuyKey(SDL_keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod);
+	static void SDLkeysymToGuyKey(SDL_Keysym keysym, wchar_t &unicode, Keyboard::Key &key, Keyboard::Mod &mod);
 
 	void handleEvent(const SDL_Event &event);
 

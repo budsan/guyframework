@@ -1,5 +1,5 @@
 #include "renderstate.h"
-#include "log.h"
+#include "debug.h"
 #include "graphics.h"
 
 // Render state override bits

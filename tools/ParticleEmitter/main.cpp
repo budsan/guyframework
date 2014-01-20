@@ -1,5 +1,5 @@
-#include <QtGui/QApplication>
 #include "particleeditor.h"
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {

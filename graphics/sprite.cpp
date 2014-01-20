@@ -20,7 +20,7 @@ Sprite::Sprite()
 	m_rotate = 0.0f;
 }
 
-void Sprite::update(float deltaTime)
+void Sprite::update(double deltaTime)
 {
 
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <set>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include "sprite.h"
 
@@ -35,34 +35,34 @@ public:
 
 private:
 	bool readANIM (
-		std::string &currentAnimName,
-		SpriteAnimTrack *&currentAnimTrack,
-		std::string &line, int lineNum);
+			std::string &currentAnimName,
+			SpriteAnimTrack *&currentAnimTrack,
+			std::string &line, int lineNum);
 	bool readFRAME(
-		SpriteAnimTrack *&currentAnimTrack,
-		std::string &line, int lineNum);
+			SpriteAnimTrack *&currentAnimTrack,
+			std::string &line, int lineNum);
 };
 
 class SpriteAnim : public Sprite {
- public:
+public:
 	SpriteAnim();
-	SpriteAnim(boost::shared_ptr<SpriteAnimData> data);
+	SpriteAnim(std::shared_ptr<SpriteAnimData> data);
 
-	virtual void update(float deltaTime);
+	virtual void update(double deltaTime);
 
 	int getAnimID(std::string name);
 	int getLoopsLeft();
-	bool setAnimData(boost::shared_ptr<SpriteAnimData> data);
+	bool setAnimData(std::shared_ptr<SpriteAnimData> data);
 	bool SelectAnim(std::string name);
 	bool SelectAnim(int animID);
 
 	void getParamsToDraw(Sprite::drawParams &params);
- private:
-	boost::shared_ptr<SpriteAnimData> m_data;
+private:
+	std::shared_ptr<SpriteAnimData> m_data;
 	int m_animSelected;
 	int m_loopsLeft;
 	int m_frameSelected;
-	float m_frameTimeLeft;
+	double m_frameTimeLeft;
 
 	void nextFrame();
 };

@@ -3,12 +3,10 @@
 #include "deps/sdl/sdlenvironment.h"
 #include "deps/linux/linuxpersistencelayer.h"
 
-#include <boost/function.hpp>
-
 #include "graphics/screen.h"
 #include "audio/emyl.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 

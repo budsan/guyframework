@@ -6,13 +6,13 @@
 
 namespace Guy {
 
-Particle::Particle(const vec2f &_pos, const vec2f &_vel, float live):
+Particle::Particle(const vec2d& _pos, const vec2d& _vel, double live):
 	m_pos0(_pos), m_pos (_pos), m_vel0(_vel), m_live(live), m_time(0)
 {
 
 }
 
-bool Particle::update(float deltaTime, ParticleEmitter &parent)
+bool Particle::update(double deltaTime, ParticleEmitter &parent)
 {
 	if(m_live == m_time) return false;
 
@@ -20,16 +20,16 @@ bool Particle::update(float deltaTime, ParticleEmitter &parent)
 	if (m_live < m_time) m_time = m_live;
 
 	vec2f acc = parent.m_grav;
-	m_pos = m_pos0 + m_vel0*m_time + acc*m_time*m_time*0.5f;
+	m_pos = m_pos0 + m_vel0*m_time + acc*m_time*m_time*0.5;
 
 	return true;
 }
 
 void Particle::draw(ParticleEmitter &parent)
 {
-	float weight = (m_live-m_time)/m_live;
-	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
-	float size = ((parent.m_z0*weight) + (parent.m_z1*(1.0f-weight)))*0.5f;
+	double weight = (m_live-m_time)/m_live;
+	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, (float) weight);
+	double size = ((parent.m_z0*weight) + (parent.m_z1*(1.0-weight)))*0.5;
 
 	struct { float u, v; } texcoordsArray[4] ={
 		{ 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 }
@@ -60,9 +60,9 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	std::vector<rgba>  &vertcolor,
 	std::vector<unsigned int> &indices)
 {
-	float weight = (m_live-m_time)/m_live;
+	double weight = (m_live-m_time)/m_live;
 	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
-	float size = ((parent.m_z0*weight) + (parent.m_z1*(1.0f-weight)))*0.5f;
+	double size = ((parent.m_z0*weight) + (parent.m_z1*(1.0-weight)))*0.5;
 
 	unsigned int indBase = (unsigned int) vertcoords.size();
 
@@ -95,9 +95,9 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	rgba *vertcolor,
 	unsigned int *indices, unsigned int indBase)
 {
-	float weight = (m_live-m_time)/m_live;
+	double weight = (m_live-m_time)/m_live;
 	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
-	float size = ((parent.m_z0*weight) + (parent.m_z1*(1.0f-weight)))*0.5f;
+	double size = ((parent.m_z0*weight) + (parent.m_z1*(1.0-weight)))*0.5;
 
 	texcoords[0] = math::vec2f(0,0);
 	texcoords[1] = math::vec2f(1,0);

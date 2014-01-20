@@ -3,7 +3,7 @@
 
 namespace Guy {
 
-Effect::Effect(boost::shared_ptr<ShaderProgram> program) : m_program(program)
+Effect::Effect(std::shared_ptr<ShaderProgram> program) : m_program(program)
 {
 
 }

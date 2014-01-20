@@ -1,6 +1,8 @@
 #include "texthud.h"
 #include "graphics/graphics.h"
 
+#include <memory>
+
 namespace Guy {
 
 TextHUD::TextHUD() : m_font()
@@ -19,7 +21,7 @@ bool TextHUD::loadFont(const char *filename)
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	unsigned int h = viewport[3] - viewport[1];
 
-	m_font = boost::shared_ptr<Font>(new Font());
+    m_font = std::make_shared<Font>();
 	if (m_font->load(filename, h/32))
 	{
 		m_font->setAlignment(Font::LEFT);
@@ -35,7 +37,7 @@ bool TextHUD::loadFont(const char *filename, unsigned int h)
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
-	m_font = boost::shared_ptr<Font>(new Font());
+    m_font = std::make_shared<Font>();
 	if (m_font->load(filename, h))
 	{
 		m_font->setAlignment(Font::LEFT);
@@ -51,7 +53,7 @@ void TextHUD::setColor(const rgba &color)
 	m_color = color;
 }
 
-void TextHUD::update(float deltaTime)
+void TextHUD::update(double deltaTime)
 {
 
 }

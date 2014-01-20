@@ -28,7 +28,7 @@ class FrameBuffer
 		/// Destructor
 		~FrameBuffer();
 		/// Set FBO size when using default constructor
-		void setSize(int width, int height) { m_width = width; m_height = height; };
+		void setSize(int width, int height) { m_width = width; m_height = height; }
 		/// Attach a render target to the FBO
 		void attachRender(GLenum iformat) throw(std::domain_error, std::invalid_argument);
 		/// Attach a texture to the FBO

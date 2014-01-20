@@ -3,7 +3,7 @@
 #include "environment.h"
 #include "graphics.h"
 #include "screen.h"
-#include "log.h"
+#include "debug.h"
 
 #ifdef _WINDOWS
 #undef min

@@ -7,13 +7,14 @@
 namespace Guy {
 
 using math::vec2f;
+using math::vec2d;
 
 class ParticleEmitter;
 class Particle
 {
 public:
-	Particle(const vec2f &_pos, const vec2f &_vel, float m_live);
-	bool update(float deltaTime, ParticleEmitter &parent);
+	Particle(const vec2d &_pos, const vec2d &_vel, double m_live);
+	bool update(double deltaTime, ParticleEmitter &parent);
 	void draw(ParticleEmitter &parent);
 	void fillDrawArray(ParticleEmitter &parent,
 		std::vector<vec2f> &vertcoords,
@@ -27,10 +28,8 @@ public:
 		rgba *vertcolor,
 		unsigned int *indices, unsigned int indBase);
 protected:
-	vec2f m_pos0, m_pos, m_vel0;
-	float m_live, m_time;
-
-
+	vec2d m_pos0, m_pos, m_vel0;
+	double m_live, m_time;
 
 	friend class ParticleEmitter;
 };

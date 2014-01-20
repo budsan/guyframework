@@ -1,8 +1,7 @@
 #include "texture.h"
-#include "log.h"
+#include "debug.h"
 
 #include <string>
-#include <assert.h>
 
 #include "deps/stb_image/stb_image.h"
 
@@ -21,7 +20,7 @@ Texture::~Texture()
 // Assignment operator for copying instances is FORBIDDEN
 const Texture& Texture::operator=(const Texture& other)
 {
-	assert(other.m_id == 0);
+	GUY_ASSERT(other.m_id == 0);
 	return *this;
 }
 

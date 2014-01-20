@@ -96,7 +96,7 @@ bool EditorWidget::saveAs()
 		tr("Save Emitter"), "", tr("Emitter files (*.emp)"));
 	timer->start();
 
-	filename = std::string((const char*)fileName.toAscii());
+    filename = fileName.toStdString();
 	if (filename.empty()) return false;
 	save();
 
@@ -108,7 +108,7 @@ void EditorWidget::open()
 	timer->stop();
 	QString fileName = QFileDialog::getOpenFileName(this,
 		tr("Open Emitter"), "", tr("Emitter files (*.emp)"));
-	filename = std::string((const char*)fileName.toAscii());
+    filename = fileName.toStdString();
 	timer->start();
 
 	std::ifstream file(filename.c_str(),
@@ -125,7 +125,7 @@ void EditorWidget::open()
 void EditorWidget::update()
 {
 	int now = ticks->elapsed();
-	float deltaTime = float(now - before)/1000.f;
+    double deltaTime = double(now - before)/1000.0;
 	parameters->getEmitter().update(deltaTime);
 
 	updateGL();

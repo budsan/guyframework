@@ -1,14 +1,12 @@
 #pragma once
 
 #include "deps/sdl/sdlenvironment.h"
-#include "deps/win/winpersistenceLayer.h"
-
-#include <boost/function.hpp>
+#include "deps/win/winpersistencelayer.h"
 
 #include "graphics/screen.h"
 #include "audio/emyl.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 

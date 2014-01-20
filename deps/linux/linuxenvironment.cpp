@@ -1,11 +1,10 @@
 #include "deps/linux/linuxenvironment.h"
 #include "deps/linux/linuxpersistencelayer.h"
 
-#include "log.h"
+#include "debug.h"
 #include "game.h"
 
-#include <boost/bind.hpp>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 

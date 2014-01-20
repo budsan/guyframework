@@ -3,8 +3,7 @@
 #include "graphics.h"
 #include "shaderprogram.h"
 
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <vector>
 #include <string>
@@ -18,7 +17,7 @@ class Effect
 {
 public:
 
-	Effect(boost::shared_ptr<ShaderProgram> program);
+    Effect(std::shared_ptr<ShaderProgram> program);
 	~Effect();
 
 	ShaderProgram& getShaderProgram();
@@ -30,7 +29,7 @@ public:
 
 	void buildParameterLists();
 
-	boost::shared_ptr<ShaderProgram> m_program;
+    std::shared_ptr<ShaderProgram> m_program;
 	std::map<std::string, GLint> m_vertexAttributes;
 	std::map<std::string, Uniform*> m_uniforms;
 };

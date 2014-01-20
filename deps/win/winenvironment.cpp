@@ -1,11 +1,10 @@
 #include "deps/win/winenvironment.h"
 #include "deps/win/winpersistencelayer.h"
 
-#include "log.h"
+#include "debug.h"
 #include "game.h"
 
-#include <boost/bind.hpp>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 namespace Guy {
 

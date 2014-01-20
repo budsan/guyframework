@@ -7,8 +7,7 @@
 #include <iostream>
 #include <time.h>
 
-#include "boost/random.hpp"
-
+#include <random>
 #include <functional>
 
 #include "graphics/graphics.h"
@@ -78,7 +77,7 @@ void ParticleEmitter::unload()
 	}
 }
 
-void ParticleEmitter::update(float deltaTime)
+void ParticleEmitter::update(double deltaTime)
 {
 	std::list<Particle>::iterator it = m_particles.begin();
 	while(it != m_particles.end())
@@ -118,8 +117,8 @@ void ParticleEmitter::draw()
 	else glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	/*
-	std::vector<vec2f> vertcoords;
-	std::vector<vec2f> texcoords;
+	std::vector<vec2d> vertcoords;
+	std::vector<vec2d> texcoords;
 	std::vector<rgba>  vertcolor;
 	std::vector<unsigned int> indices;
 
@@ -138,9 +137,9 @@ void ParticleEmitter::draw()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
-	glVertexPointer  (2, GL_FLOAT, 0, &vertcoords[0]);
-	glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
-	glColorPointer(4,    GL_FLOAT, 0, &vertcolor[0]);
+	glVertexPointer  (2, GL_double, 0, &vertcoords[0]);
+	glTexCoordPointer(2, GL_double, 0, &texcoords[0]);
+	glColorPointer(4,    GL_double, 0, &vertcolor[0]);
 	glDrawElements(GL_TRIANGLES, m_particles.size()*6, GL_UNSIGNED_INT, &indices[0]);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -157,41 +156,37 @@ void ParticleEmitter::restart()
 
 void ParticleEmitter::newParticle()
 {
-	vec2f pos = m_pos, vel;
-	//std::uniform_real_distribution<float> dis(0, 1.0f);
+	vec2d pos = m_pos, vel;
+	std::uniform_real_distribution<> dis(0, 1.0);
 
-	//float weight0 = dis(random);
-	//float weight1 = dis(random);
-	//float weight2 = dis(random);
+	double weight0 = dis(m_random);
+	double weight1 = dis(m_random);
+	double weight2 = dis(m_random);
 
-	float weight0 = float(m_random()%(1000))/float(1000);
-	float weight1 = float(m_random()%(1000))/float(1000);
-	float weight2 = float(m_random()%(1000))/float(1000);
-
-	float live  = (m_l0*weight0) + (m_l1*(1-weight0));
-	float speed = (m_s0*weight1) + (m_s1*(1-weight1));
-	float angle = ((m_angle * weight2)-(m_angle/2))+m_dir;
-	vel.x = cosf(angle)*speed; vel.y = sinf(angle)*speed;
+	double live  = (m_l0*weight0) + (m_l1*(1-weight0));
+	double speed = (m_s0*weight1) + (m_s1*(1-weight1));
+	double angle = ((m_angle * weight2)-(m_angle/2))+m_dir;
+	vel.x = cos(angle)*speed; vel.y = sin(angle)*speed;
 
 	m_particles.push_back(Particle(pos, vel, live));
 }
 
-void ParticleEmitter::setPosition(const vec2f &pos)
+void ParticleEmitter::setPosition(const vec2d &pos)
 {
 	m_pos = pos;
 }
 
-void ParticleEmitter::setDirection(const vec2f &dir)
+void ParticleEmitter::setDirection(const vec2d &dir)
 {
-	m_dir = atan2f(dir.y, dir.x);
+	m_dir = atan2(dir.y, dir.x);
 }
 
-void ParticleEmitter::setDirection(float dir)
+void ParticleEmitter::setDirection(double dir)
 {
 	m_dir = dir;
 }
 
-void ParticleEmitter::setAngle(float angle)
+void ParticleEmitter::setAngle(double angle)
 {
 	m_angle = angle;
 }
@@ -201,22 +196,22 @@ void ParticleEmitter::setParticleNumber(int num)
 	m_num = m_num0 = num;
 }
 
-void ParticleEmitter::setFrequency(float freq)
+void ParticleEmitter::setFrequency(double freq)
 {
 	m_freq = freq;
 }
 
-void ParticleEmitter::setGravity(const vec2f &grav)
+void ParticleEmitter::setGravity(const vec2d &grav)
 {
 	m_grav = grav;
 }
 
-void ParticleEmitter::setParticleLive(float l)
+void ParticleEmitter::setParticleLive(double l)
 {
 	m_l0 = m_l1 = l;
 }
 
-void ParticleEmitter::setParticleLive(float l0, float l1)
+void ParticleEmitter::setParticleLive(double l0, double l1)
 {
 	if (l0 < l1)
 	{
@@ -240,12 +235,12 @@ void ParticleEmitter::setParticleColor(const rgba &c0, const rgba &c1)
 	m_c0 = c0; m_c1 = c1;
 }
 
-void ParticleEmitter::setParticleSpeed(float s)
+void ParticleEmitter::setParticleSpeed(double s)
 {
 	m_s0 = m_s1 = s;
 }
 
-void ParticleEmitter::setParticleSpeed(float s0, float s1)
+void ParticleEmitter::setParticleSpeed(double s0, double s1)
 {
 	if (s0 < s1)
 	{
@@ -259,12 +254,12 @@ void ParticleEmitter::setParticleSpeed(float s0, float s1)
 	}
 }
 
-void ParticleEmitter::setParticleSize(float z)
+void ParticleEmitter::setParticleSize(double z)
 {
 	m_z0 = m_z1 = z;
 }
 
-void ParticleEmitter::setParticleSize(float z0, float z1)
+void ParticleEmitter::setParticleSize(double z0, double z1)
 {
 	m_z0 = z0; m_z1 = z1;
 }
@@ -299,6 +294,7 @@ void ParticleEmitter::write(std::ofstream &file)
 	file.write((char*)&m_material[0], m_material.size());
 }
 
+
 void ParticleEmitter::read(std::ifstream &file)
 {
 	read(file, m_pos);
@@ -326,32 +322,60 @@ void ParticleEmitter::read(std::ifstream &file)
 	}
 }
 
-void ParticleEmitter::read(std::ifstream &file, vec2f &v)
+/*
+void ParticleEmitter::read(std::ifstream &file)
 {
-	file.read((char*)&v.x,sizeof(float));
-	file.read((char*)&v.y,sizeof(float));
-}
+	vec2f _pos;
+	float _dir;
+	float _angle;
 
-void ParticleEmitter::write(std::ofstream &file, const vec2f &v)
-{
-	file.write((char*)&v.x,sizeof(float));
-	file.write((char*)&v.y,sizeof(float));
+	float _freq;
+	vec2f _grav;
+
+	float _l0, _l1;
+	float _s0, _s1;
+	float _z0, _z1;
+
+	read(file, _pos); m_pos = _pos;
+	file.read((char*)&_dir, sizeof(_dir)); m_dir = _dir;
+	file.read((char*)&_angle, sizeof(_angle)); m_angle = _angle;
+	file.read((char*)&m_num0, sizeof(m_num0));
+	file.read((char*)&_freq, sizeof(_freq)); m_freq = _freq;
+	read(file, _grav); m_grav = _grav;
+	file.read((char*)&_l0, sizeof(_l0)); m_l0 = _l0;
+	file.read((char*)&_l1, sizeof(_l1)); m_l1 = _l1;
+	read(file, m_c0);
+	read(file, m_c1);
+	file.read((char*)&_s0, sizeof(_s0)); m_s0 = _s0;
+	file.read((char*)&_s1, sizeof(_s1)); m_s1 = _s1;
+	file.read((char*)&_z0, sizeof(_z0)); m_z0 = _z0;
+	file.read((char*)&_z1, sizeof(_z1)); m_z1 = _z1;
+	file.read((char*)&m_accumBlending, sizeof(m_accumBlending));
+
+	m_material.clear();
+	for(;;)
+	{
+		char c; file.read(&c ,sizeof(char));
+		if (file.eof()) break;
+		m_material.append(&c, 1);
+	}
 }
+*/
 
 void ParticleEmitter::read(std::ifstream &file, rgba &c)
 {
-	file.read((char*)&c.r,sizeof(float));
-	file.read((char*)&c.g,sizeof(float));
-	file.read((char*)&c.b,sizeof(float));
-	file.read((char*)&c.a,sizeof(float));
+    file.read((char*)&c.r,sizeof(c.r));
+    file.read((char*)&c.g,sizeof(c.g));
+    file.read((char*)&c.b,sizeof(c.b));
+    file.read((char*)&c.a,sizeof(c.a));
 }
 
 void ParticleEmitter::write(std::ofstream &file, const rgba &c)
 {
-	file.write((char*)&c.r,sizeof(float));
-	file.write((char*)&c.g,sizeof(float));
-	file.write((char*)&c.b,sizeof(float));
-	file.write((char*)&c.a,sizeof(float));
+    file.write((char*)&c.r,sizeof(c.r));
+    file.write((char*)&c.g,sizeof(c.g));
+    file.write((char*)&c.b,sizeof(c.b));
+    file.write((char*)&c.a,sizeof(c.a));
 }
 
 } // namespace Guy
