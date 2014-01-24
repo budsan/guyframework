@@ -2,7 +2,7 @@
 
 namespace Guy {
 
-Model::Model(Mesh& mesh) : m_mesh(mesh)
+Model::Model(Mesh& _mesh) : m_mesh(_mesh)
 {
 }
 

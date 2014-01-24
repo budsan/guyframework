@@ -59,7 +59,7 @@ bool SDLScreen::preinit()
 	//GET AVAILABLE VIDEO MODES
 	SDL_DisplayMode mode;
 	int modes = SDL_GetNumDisplayModes(0);
-	for (unsigned int i = 0; i < modes; ++i) {
+	for (int i = 0; i < modes; ++i) {
 		if (SDL_GetDisplayMode(0, i, &mode) == 0) {
 			m_videoModes.push_back(Mode(mode.w, mode.h));
 		}
@@ -187,7 +187,7 @@ bool SDLScreen::setMode(const Mode& mode, bool fullscreen)
 
 const std::vector<Screen::Mode> &SDLScreen::availableModes(unsigned int &size)
 {
-	if (m_videoModes.empty())
+	(void) size;
 	return m_videoModes;
 }
 //---------------------------------------------------------------------------//

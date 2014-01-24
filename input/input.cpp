@@ -30,7 +30,7 @@ void Input::removeGamePadPlugListener(GamePadPlugListener *listener)
 	m_gamepadListeners.insert(listener);
 }
 
-void Input::fireGamePadAdded(int id)
+void Input::fireGamePadAdded(std::size_t id)
 {
 	std::set<GamePadPlugListener*>::iterator it = m_gamepadListeners.begin();
 	for (;it != m_gamepadListeners.end(); ++it) {
@@ -38,7 +38,7 @@ void Input::fireGamePadAdded(int id)
 	}
 }
 
-void Input::fireGamePadRemoved(int id)
+void Input::fireGamePadRemoved(std::size_t  id)
 {
 	std::set<GamePadPlugListener*>::iterator it = m_gamepadListeners.begin();
 	for (;it != m_gamepadListeners.end(); ++it) {

@@ -11,7 +11,7 @@
 namespace Guy {
 
 SDLEnvironment::SDLEnvironment()
-	: m_exit(false), m_framesPerSecond(0), m_pause(false)
+	: m_exit(false), m_pause(false), m_framesPerSecond(0)
 {
 }
 
@@ -19,9 +19,9 @@ SDLEnvironment::~SDLEnvironment()
 {
 }
 
-bool SDLEnvironment::init(Game *game)
+bool SDLEnvironment::init(Game *_game)
 {
-	Environment::init(game);
+	Environment::init(_game);
 
 	openLogFile();
 	printLog("--------------------------------------------------------\n");

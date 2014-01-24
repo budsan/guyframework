@@ -10,63 +10,63 @@
 
 namespace Guy {
 
-float Sprite::s_globalUnitsPerPixel = 1.0f;
+double Sprite::s_globalUnitsPerPixel = 1.0;
 
 Sprite::Sprite()
 {
 	m_unitsPerPixel = s_globalUnitsPerPixel;
-	m_scale.x = 1.0f;
-	m_scale.y= 1.0f;
-	m_rotate = 0.0f;
+	m_scale.x = 1.0;
+	m_scale.y= 1.0;
+	m_rotate = 0.0;
 }
 
 void Sprite::update(double deltaTime)
 {
-
+	(void) deltaTime;
 }
 
-void Sprite::setGlobalPixelsPerUnit(float value)
+void Sprite::setGlobalPixelsPerUnit(double value)
 {
-	s_globalUnitsPerPixel = 1.0f/value;
+	s_globalUnitsPerPixel = 1.0/value;
 }
 
-void Sprite::setPixelsPerUnit(float value)
+void Sprite::setPixelsPerUnit(double value)
 {
-	m_unitsPerPixel = 1.0f/value;
+	m_unitsPerPixel = 1.0/value;
 }
 
-void Sprite::setScale(float value)
+void Sprite::setScale(double value)
 {
 	m_scale.x = value;
 	m_scale.y = value;
 }
 
-void Sprite::setScaleWidth(float value)
+void Sprite::setScaleWidth(double value)
 {
 	m_scale.x = value;
 }
 
-void Sprite::setScaleHeight(float value)
+void Sprite::setScaleHeight(double value)
 {
 	m_scale.y = value;
 }
 
-void Sprite::setRotation(float value)
+void Sprite::setRotation(double value)
 {
 	m_rotate = value;
 }
 
-float Sprite::getScaleWidth()
+double Sprite::getScaleWidth()
 {
 	return m_scale.x;
 }
 
-float Sprite::getScaleHeight()
+double Sprite::getScaleHeight()
 {
 	return m_scale.y;
 }
 
-float Sprite::getRotation()
+double Sprite::getRotation()
 {
 	return m_rotate;
 }
@@ -98,7 +98,8 @@ void Sprite::draw()
 		{ normCoords.x1, normCoords.y0 }
 	};
 
-	float h = abs(params.h), w = abs(params.w);
+	float h = static_cast<float>(abs(params.h));
+	float w = static_cast<float>(abs(params.w));
 	struct { float x, y; } vertcoordsArray[4] = {
 		{0, 0},{0,-h},{w,-h},{w, 0}
 	};
@@ -114,10 +115,13 @@ void Sprite::draw()
 
 	preDrawing();
 
-	glTranslatef(m_pos.x , m_pos.y, 0);
-	glScalef(m_unitsPerPixel*m_scale.x, m_unitsPerPixel*m_scale.y, 0);
-	glRotatef(m_rotate, 0, 0, 1);
-	glTranslatef((float)-params.cx, (float)+params.cy, 0);
+	math::mat4d model = math::mat4d::fromIdentity();
+	model.translate(m_pos.x, m_pos.y, 0.0);
+	model.scale(m_unitsPerPixel*m_scale.x, m_unitsPerPixel*m_scale.y, 0.0);
+	model.rotate(m_rotate, 0.0, 0.0, 1.0);
+	model.translate(static_cast<double>(-params.cx), static_cast<double>(-params.cy), 0);
+
+	glMultMatrixd(model.v);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);

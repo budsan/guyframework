@@ -23,8 +23,8 @@ public:
 	GamePadPlugListener() {}
 	virtual ~GamePadPlugListener() {}
 
-	virtual void onGamePadAdded(int id) = 0;
-	virtual void onGamePadRemoved(int id) = 0;
+	virtual void onGamePadAdded(std::size_t id) = 0;
+	virtual void onGamePadRemoved(std::size_t id) = 0;
 
 };
 

@@ -3,7 +3,7 @@
 
 namespace Guy {
 
-Effect::Effect(std::shared_ptr<ShaderProgram> program) : m_program(program)
+Effect::Effect(const std::shared_ptr<ShaderProgram>& _program) : m_program(_program)
 {
 
 }
@@ -15,7 +15,7 @@ Effect::~Effect()
 
 ShaderProgram& Effect::getShaderProgram()
 {
-
+	return * (ShaderProgram*) nullptr;
 }
 
 void Effect::bind()

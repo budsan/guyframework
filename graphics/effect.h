@@ -17,7 +17,7 @@ class Effect
 {
 public:
 
-    Effect(std::shared_ptr<ShaderProgram> program);
+	Effect(const std::shared_ptr<ShaderProgram>& _program);
 	~Effect();
 
 	ShaderProgram& getShaderProgram();
@@ -25,37 +25,39 @@ public:
 	void bind();
 	void unbind();
 
-    private:
+private:
 
 	void buildParameterLists();
 
-    std::shared_ptr<ShaderProgram> m_program;
+	std::shared_ptr<ShaderProgram> m_program;
 	std::map<std::string, GLint> m_vertexAttributes;
 	std::map<std::string, Uniform*> m_uniforms;
 };
 
 class Uniform
 {
-    friend class Effect;
+	friend class Effect;
 
 public:
 
-    const char* getName() const;
-    const GLenum getType() const;
-    Effect* getEffect() const;
+	const char* getName() const;
+	GLenum getType() const;
+	Effect* getEffect() const;
 
 private:
 
-    Uniform();
-    Uniform(const Uniform& copy);
-    ~Uniform();
-    Uniform& operator=(const Uniform&);
+	Uniform();
+	Uniform(const Uniform& copy);
 
-    std::string _name;
-    GLint _location;
-    GLenum _type;
-    unsigned int _index;
-    Effect* _effect;
+	~Uniform();
+
+	Uniform& operator=(const Uniform&);
+
+	std::string m_name;
+	GLint m_location;
+	GLenum m_type;
+	unsigned int m_index;
+	Effect* m_effect;
 };
 
 

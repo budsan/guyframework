@@ -11,7 +11,7 @@ public:
 	struct Mode
 	{
 		Mode();
-		Mode(unsigned int w, unsigned int h);
+		Mode(unsigned int _w, unsigned int _h);
 
 		float ratio() const;
 		void operator= (const Mode& other);

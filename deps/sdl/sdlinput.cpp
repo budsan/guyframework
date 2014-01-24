@@ -33,25 +33,25 @@ void SDLInput::waitEvent()
 	else GUY_WARN("Error waiting event\n");
 }
 
-int SDLInput::keyboardCount()
+std::size_t SDLInput::keyboardCount()
 {
 	return 1;
 }
 
-Keyboard& SDLInput::keyboard(int i)
+Keyboard& SDLInput::keyboard(std::size_t i)
 {
 	GUY_ASSERT(i == 0);
 	return *m_keyboard;
 }
 
-int SDLInput::gamePadCount()
+std::size_t SDLInput::gamePadCount()
 {
 	return 0;
 }
 
-GamePad& SDLInput::gamePad(int i)
+GamePad& SDLInput::gamePad(std::size_t i)
 {
-	GUY_ASSERT(i >= 0);
+	(void) i;
 	return *(GamePad*)0;
 }
 
@@ -98,7 +98,7 @@ void SDLInput::handleEvent(const SDL_Event &event)
 		case SDL_WINDOWEVENT_SHOWN:
 		{
 			m_focusState |= DrawFocusState;
-			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			auto it = m_focusListeners.begin();
 			for (;it != m_focusListeners.end(); ++it) {
 				(*it)->onGainDrawFocus();
 			}
@@ -107,7 +107,7 @@ void SDLInput::handleEvent(const SDL_Event &event)
 		case SDL_WINDOWEVENT_HIDDEN:
 		{
 			m_focusState &= ~DrawFocusState;
-			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			auto it = m_focusListeners.begin();
 			for (;it != m_focusListeners.end(); ++it) {
 				(*it)->onLoseDrawFocus();
 			}
@@ -116,7 +116,7 @@ void SDLInput::handleEvent(const SDL_Event &event)
 		case SDL_WINDOWEVENT_ENTER:
 		{
 			m_focusState |= MouseFocusState;
-			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			auto it = m_focusListeners.begin();
 			for (;it != m_focusListeners.end(); ++it) {
 				(*it)->onGainMouseFocus();
 			}
@@ -125,7 +125,7 @@ void SDLInput::handleEvent(const SDL_Event &event)
 		case SDL_WINDOWEVENT_LEAVE:
 		{
 			m_focusState &= ~MouseFocusState;
-			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			auto it = m_focusListeners.begin();
 			for (;it != m_focusListeners.end(); ++it) {
 				(*it)->onLoseMouseFocus();
 			}
@@ -134,7 +134,7 @@ void SDLInput::handleEvent(const SDL_Event &event)
 		case SDL_WINDOWEVENT_FOCUS_GAINED:
 		{
 			m_focusState |= InputFocusState;
-			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			auto it = m_focusListeners.begin();
 			for (;it != m_focusListeners.end(); ++it) {
 				(*it)->onGainInputFocus();
 			}
@@ -143,7 +143,7 @@ void SDLInput::handleEvent(const SDL_Event &event)
 		case SDL_WINDOWEVENT_FOCUS_LOST:
 		{
 			m_focusState &= ~InputFocusState;
-			std::set<FocusListener*>::iterator it = m_focusListeners.begin();
+			auto it = m_focusListeners.begin();
 			for (;it != m_focusListeners.end(); ++it) {
 				(*it)->onLoseInputFocus();
 			}

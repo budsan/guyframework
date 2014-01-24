@@ -16,12 +16,12 @@ LinuxEnvironment::~LinuxEnvironment()
 {
 }
 
-bool LinuxEnvironment::init(Game *game)
+bool LinuxEnvironment::init(Game *_game)
 {
 	m_persistenceLayer = new LinuxPersistenceLayer();
 	m_persistenceLayer->load("data/game.cfg");
 
-	return SDLEnvironment::init(game);
+	return SDLEnvironment::init(_game);
 }
 
 void LinuxEnvironment::destroy()

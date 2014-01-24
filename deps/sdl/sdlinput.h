@@ -15,11 +15,11 @@ public:
 	void pollEvents();
 	void waitEvent();
 
-	virtual int       keyboardCount();
-	virtual Keyboard& keyboard(int i = 0);
+	virtual std::size_t keyboardCount();
+	virtual Keyboard& keyboard(std::size_t i = 0);
 
-	virtual int      gamePadCount();
-	virtual GamePad& gamePad(int i = 0);
+	virtual std::size_t gamePadCount();
+	virtual GamePad& gamePad(std::size_t i = 0);
 
 	virtual int getFocusState();
 
@@ -30,7 +30,7 @@ private:
 
 	Keyboard *m_keyboard;
 
-	unsigned char m_focusState;
+	int  m_focusState;
 	bool m_waitUntilResumeIsCalled;
 };
 

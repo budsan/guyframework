@@ -7,7 +7,7 @@ namespace Guy {
 class Model
 {
 public:
-	Model(Mesh& mesh);
+	Model(Mesh& _mesh);
 
 	Mesh& mesh();
 	void draw();

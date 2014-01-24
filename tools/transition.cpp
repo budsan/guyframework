@@ -84,7 +84,7 @@ void TransitionSinus::update(double _deltaTime)
 {
 	if(m_sinPos < M_PI)
 	{
-		double percent = (cosf(m_sinPos)+1.0)/2.0;
+		double percent = (cos(m_sinPos)+1.0)/2.0;
 		m_pos =
 			m_initPos * (     percent) +
 			m_posToGo * (1.0-percent);
@@ -115,7 +115,7 @@ void TransitionSinusFadeIn::update(double _deltaTime)
 {
 	if(m_sinPos < M_PI_2F)
 	{
-		double percent = cosf(m_sinPos);
+		double percent = cos(m_sinPos);
 		m_pos =
 			m_initPos * (    percent) +
 			m_posToGo * (1.0-percent);
@@ -147,7 +147,7 @@ void TransitionSinusFadeOut::update(double _deltaTime)
 {
 	if(m_sinPos < M_PI_2F)
 	{
-		double percent = sinf(m_sinPos);
+		double percent = sin(m_sinPos);
 		m_pos =
 			m_initPos * (1.0-percent) +
 			m_posToGo * (     percent);

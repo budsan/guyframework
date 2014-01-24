@@ -8,8 +8,8 @@ Screen::Mode::Mode()
 
 }
 
-Screen::Mode::Mode(unsigned int w, unsigned int h)
-	: w(w), h(h)
+Screen::Mode::Mode(unsigned int _w, unsigned int _h)
+	: w(_w), h(_h)
 {
 
 }

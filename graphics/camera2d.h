@@ -21,7 +21,7 @@ public:
 	math::mat4f projectionMatrix();
 	void reset();
 
-	void  setPos(math::vec2f m_pos);
+	void  setPos(math::vec2f _pos);
 	math::vec2f pos() const { return m_pos;}
 
 	void  setZoom(float m_zoom);

@@ -107,6 +107,11 @@ struct vec2
 		y = other.y;
 		return *this;
 	}
+
+	template <typename U> operator vec2<U>()
+	{
+		return vec2<U>(x, y);
+	}
 };
 
 typedef vec2<char>           vec2c;
@@ -164,7 +169,7 @@ struct vec3
 		return x*x + y*y + z*z;
 	}
 
-	vec3<T> normalized() {
+	vec3<T> normalized() const {
 		double dist = module();
 		#ifndef MATH_ASSERT
 		if (dist == 0.0) return *this;
@@ -240,6 +245,11 @@ struct vec3
 		y = other.y;
 		z = other.z;
 		return *this;
+	}
+
+	template <typename U> operator vec3<U>()
+	{
+		return vec3<U>(x, y, z);
 	}
 };
 
@@ -385,6 +395,11 @@ struct vec4
 		w = other.w;
 		return *this;
 	}
+
+	template <typename U> operator vec4<U>()
+	{
+		return vec4<U>(x, y, z, w);
+	}
 };
 
 typedef vec4<char>           vec4c;
@@ -452,6 +467,10 @@ struct mat3
 	}
 
 	T &operator()(unsigned int x, unsigned int y) {
+		return v[3*x + y];
+	}
+
+	const T &operator()(unsigned int x, unsigned int y) const {
 		return v[3*x + y];
 	}
 
@@ -545,6 +564,10 @@ struct mat4
 	}
 
 	T &operator()(unsigned int x, unsigned int y) {
+		return v[4*x + y];
+	}
+
+	const T &operator()(unsigned int x, unsigned int y) const {
 		return v[4*x + y];
 	}
 

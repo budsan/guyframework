@@ -132,6 +132,12 @@ struct bbox
 		update(bb.min);
 		update(bb.max);
 	}
+
+	template <typename U>
+	operator bbox<U>()
+	{
+		return bbox<U>(min, max);
+	}
 };
 
 typedef bbox<vec2c>  bbox2c;

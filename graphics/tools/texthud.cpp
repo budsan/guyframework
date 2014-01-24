@@ -55,7 +55,7 @@ void TextHUD::setColor(const rgba &color)
 
 void TextHUD::update(double deltaTime)
 {
-
+	(void) deltaTime;
 }
 
 void TextHUD::draw()

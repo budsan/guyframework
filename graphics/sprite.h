@@ -12,25 +12,25 @@ public:
 	virtual void update(double deltaTime);
 	void draw();
 
-	static void setGlobalPixelsPerUnit(float value);
-	       void setPixelsPerUnit(float value);
+	static void setGlobalPixelsPerUnit(double value);
+	       void setPixelsPerUnit(double value);
 
-	void setScale(float value);
-	void setScaleWidth(float value);
-	void setScaleHeight(float value);
-	void setRotation(float value);
+	void setScale(double value);
+	void setScaleWidth(double value);
+	void setScaleHeight(double value);
+	void setRotation(double value);
 
-	float getScaleWidth();
-	float getScaleHeight();
-	float getRotation();
+	double getScaleWidth();
+	double getScaleHeight();
+	double getRotation();
 
-	math::vec2f &pos() { return m_pos;}
+	math::vec2d &pos() { return m_pos;}
 private:
-	static float s_globalUnitsPerPixel;
-	       float m_unitsPerPixel;
+	static double s_globalUnitsPerPixel;
+	       double m_unitsPerPixel;
 
-	math::vec2f m_scale;
-	float m_rotate;
+	math::vec2d m_scale;
+	double m_rotate;
 
 protected:
 	struct drawParams {
@@ -41,7 +41,7 @@ protected:
 	virtual void preDrawing();
 	virtual void postDrawing();
 
-	math::vec2f m_pos;
+	math::vec2d m_pos;
 };
 
 } // namespace Guy

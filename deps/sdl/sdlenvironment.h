@@ -19,7 +19,7 @@ public:
 	SDLEnvironment();
 	virtual ~SDLEnvironment();
 
-	virtual bool init(Game *game);
+	virtual bool init(Game *_game);
 	virtual void destroy();
 
 	virtual void run();

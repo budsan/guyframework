@@ -20,22 +20,22 @@ public:
 		POINTS = GL_POINTS
 	};
 
-	Mesh(const Vertex::Format& vertexFormat, unsigned int vertexCount, bool dynamic = false);
+	Mesh(const Vertex::Format& _vertexFormat, std::size_t _vertexCount, bool _dynamic = false);
 
 	const Vertex::Format& vertexFormat() const;
-	unsigned int vertexCount() const;
-	unsigned int vertexSize() const;
+	std::size_t vertexCount() const;
+	std::size_t vertexSize() const;
 	bool isDynamic() const;
 	GLuint vertexBuffer() const;
 
 	PrimitiveType primitiveType() const;
-	void setPrimitiveType(Mesh::PrimitiveType type);
-	void setVertexData(float* vertexData, unsigned int vertexStart, unsigned int vertexCount);
+	void setPrimitiveType(Mesh::PrimitiveType _type);
+	void setVertexData(float* _vertexData, std::size_t _vertexStart, std::size_t _vertexCount);
 
 protected:
 
 	const Vertex::Format m_vertexFormat;
-	unsigned int m_vertexCount;
+	std::size_t m_vertexCount;
 	GLuint m_vertexBuffer;
 	PrimitiveType m_primitiveType;
 	bool m_dynamic;

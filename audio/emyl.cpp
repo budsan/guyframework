@@ -22,7 +22,7 @@
 
 namespace emyl {
 
-void default_error_callback (const std::string &s) {}
+void default_error_callback (const std::string &s) { (void) s;}
 error_callback _error_callback = default_error_callback;
 void setErrorCallback(error_callback cb) {_error_callback = cb;}
 

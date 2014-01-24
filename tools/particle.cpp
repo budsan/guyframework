@@ -19,7 +19,7 @@ bool Particle::update(double deltaTime, ParticleEmitter &parent)
 	m_time += deltaTime;
 	if (m_live < m_time) m_time = m_live;
 
-	vec2f acc = parent.m_grav;
+	vec2d acc = parent.m_grav;
 	m_pos = m_pos0 + m_vel0*m_time + acc*m_time*m_time*0.5;
 
 	return true;
@@ -28,7 +28,7 @@ bool Particle::update(double deltaTime, ParticleEmitter &parent)
 void Particle::draw(ParticleEmitter &parent)
 {
 	double weight = (m_live-m_time)/m_live;
-	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, (float) weight);
+	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, static_cast<float>(weight));
 	double size = ((parent.m_z0*weight) + (parent.m_z1*(1.0-weight)))*0.5;
 
 	struct { float u, v; } texcoordsArray[4] ={
@@ -36,10 +36,10 @@ void Particle::draw(ParticleEmitter &parent)
 	};
 
 	struct { float x, y; } vertcoordsArray[4] = {
-		{m_pos.x-size, m_pos.y-size},
-		{m_pos.x+size, m_pos.y-size},
-		{m_pos.x+size, m_pos.y+size},
-		{m_pos.x-size, m_pos.y+size}
+		{static_cast<float>(m_pos.x-size), static_cast<float>(m_pos.y-size)},
+		{static_cast<float>(m_pos.x+size), static_cast<float>(m_pos.y-size)},
+		{static_cast<float>(m_pos.x+size), static_cast<float>(m_pos.y+size)},
+		{static_cast<float>(m_pos.x-size), static_cast<float>(m_pos.y+size)}
 	};
 
 	unsigned short indices[] = { 3, 0, 1, 1, 2, 3 };
@@ -61,7 +61,7 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	std::vector<unsigned int> &indices)
 {
 	double weight = (m_live-m_time)/m_live;
-	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
+	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, static_cast<float>(weight));
 	double size = ((parent.m_z0*weight) + (parent.m_z1*(1.0-weight)))*0.5;
 
 	unsigned int indBase = (unsigned int) vertcoords.size();
@@ -71,10 +71,10 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	texcoords.push_back(math::vec2f(1,1));
 	texcoords.push_back(math::vec2f(0,1));
 
-	vertcoords.push_back(math::vec2f(m_pos.x-size, m_pos.y-size));
-	vertcoords.push_back(math::vec2f(m_pos.x+size, m_pos.y-size));
-	vertcoords.push_back(math::vec2f(m_pos.x+size, m_pos.y+size));
-	vertcoords.push_back(math::vec2f(m_pos.x-size, m_pos.y+size));
+	vertcoords.push_back(math::vec2f(static_cast<float>(m_pos.x-size), static_cast<float>(m_pos.y-size)));
+	vertcoords.push_back(math::vec2f(static_cast<float>(m_pos.x+size), static_cast<float>(m_pos.y-size)));
+	vertcoords.push_back(math::vec2f(static_cast<float>(m_pos.x+size), static_cast<float>(m_pos.y+size)));
+	vertcoords.push_back(math::vec2f(static_cast<float>(m_pos.x-size), static_cast<float>(m_pos.y+size)));
 
 	vertcolor.push_back(current);
 	vertcolor.push_back(current);
@@ -96,7 +96,7 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	unsigned int *indices, unsigned int indBase)
 {
 	double weight = (m_live-m_time)/m_live;
-	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, weight);
+	rgba current = rgba::interpolate(parent.m_c0, parent.m_c1, static_cast<float>(weight));
 	double size = ((parent.m_z0*weight) + (parent.m_z1*(1.0-weight)))*0.5;
 
 	texcoords[0] = math::vec2f(0,0);
@@ -104,10 +104,10 @@ void Particle::fillDrawArray(ParticleEmitter &parent,
 	texcoords[2] = math::vec2f(1,1);
 	texcoords[3] = math::vec2f(0,1);
 
-	vertcoords[0] = math::vec2f(m_pos.x-size, m_pos.y-size);
-	vertcoords[1] = math::vec2f(m_pos.x+size, m_pos.y-size);
-	vertcoords[2] = math::vec2f(m_pos.x+size, m_pos.y+size);
-	vertcoords[3] = math::vec2f(m_pos.x-size, m_pos.y+size);
+	vertcoords[0] = math::vec2f(static_cast<float>(m_pos.x-size), static_cast<float>(m_pos.y-size));
+	vertcoords[1] = math::vec2f(static_cast<float>(m_pos.x+size), static_cast<float>(m_pos.y-size));
+	vertcoords[2] = math::vec2f(static_cast<float>(m_pos.x+size), static_cast<float>(m_pos.y+size));
+	vertcoords[3] = math::vec2f(static_cast<float>(m_pos.x-size), static_cast<float>(m_pos.y+size));
 
 	vertcolor[0] = current;
 	vertcolor[1] = current;

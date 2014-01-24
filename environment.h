@@ -14,7 +14,7 @@ public:
 	static Environment& instance();
 	static Environment* ptrInstance();
 
-	virtual bool init(Game *game);
+	virtual bool init(Game *_game);
 	virtual void destroy();
 
 	virtual void run() = 0;

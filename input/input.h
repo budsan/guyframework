@@ -13,11 +13,11 @@ class Input
 {
 public:
 
-	virtual int       keyboardCount()     = 0;
-	virtual Keyboard& keyboard(int i = 0) = 0;
+	virtual std::size_t keyboardCount()             = 0;
+	virtual Keyboard&   keyboard(std::size_t i = 0) = 0;
 
-	virtual int      gamePadCount()     = 0;
-	virtual GamePad& gamePad(int i = 0) = 0;
+	virtual std::size_t gamePadCount()             = 0;
+	virtual GamePad&    gamePad(std::size_t i = 0) = 0;
 
 	//Must be added FocusListeners manually in Game->init.
 	virtual void addFocusListener(FocusListener *listener);
@@ -45,8 +45,8 @@ protected:
 	friend class Keyboard;
 	friend class GamePad;
 
-	virtual void fireGamePadAdded(int id);
-	virtual void fireGamePadRemoved(int id);
+	virtual void fireGamePadAdded(std::size_t id);
+	virtual void fireGamePadRemoved(std::size_t id);
 };
 
 } // namespace Guy

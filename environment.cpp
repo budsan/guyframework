@@ -44,9 +44,9 @@ Environment* Environment::ptrInstance()
 	return s_instance;
 }
 
-bool Environment::init(Game *game)
+bool Environment::init(Game *_game)
 {
-	m_game = game;
+	m_game = _game;
 	return true;
 }
 

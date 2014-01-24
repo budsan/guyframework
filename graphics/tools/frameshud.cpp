@@ -47,8 +47,8 @@ void FramesHUD::update(double deltaTime)
 	m_timeCount += deltaTime;
 	if(m_timeCount > m_displayTime)
 	{
-		float currentFramesToDisplay  = (float) m_framesCount * m_displayTimeInv;
-		float timesHappenedDisplayTime = floorf(m_timeCount * m_displayTimeInv);
+		double currentFramesToDisplay   =     m_framesCount * m_displayTimeInv;
+		double timesHappenedDisplayTime = floor(m_timeCount * m_displayTimeInv);
 		currentFramesToDisplay /= timesHappenedDisplayTime;
 		m_framesToDisplay = currentFramesToDisplay*0.8 + m_framesToDisplay*0.2;
 

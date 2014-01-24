@@ -76,45 +76,45 @@ void Attribute::init()
     s_attrsInit = true;
 }
 
-Attribute::Attribute(int id) : m_id(id)
+Attribute::Attribute(std::size_t  _id) : m_id(_id)
 {
 
 }
 
-Attribute& Attribute::get(int id)
+Attribute& Attribute::get(std::size_t _id)
 {
     if (!s_attrsInit) init();
-    GUY_ASSERT(id >= 0 && id < s_attrs.size());
-    return *s_attrs[id];
+    GUY_ASSERT(_id < s_attrs.size());
+    return *s_attrs[_id];
 }
 
-Attribute& Attribute::get(const std::string &name)
+Attribute& Attribute::get(const std::string &_name)
 {
     if (!s_attrsInit) init();
-    std::map<std::string, Attribute*>::iterator it = s_names.find(name);
+    std::map<std::string, Attribute*>::iterator it = s_names.find(_name);
     if (it == s_names.end()) {
         s_attrs.push_back(new Attribute(s_attrs.size()));
-        it = s_names.insert(std::pair<std::string, Attribute*>(name,s_attrs.back())).first;
+	it = s_names.insert(std::pair<std::string, Attribute*>(_name,s_attrs.back())).first;
     }
 
     return *(it->second);
 }
 
-bool Attribute::operator == (const Attribute& a) const
+bool Attribute::operator == (const Attribute& _a) const
 {
-    return m_id == a.m_id;
+    return m_id == _a.m_id;
 }
 
-bool Attribute::operator != (const Attribute& a) const
+bool Attribute::operator != (const Attribute& _a) const
 {
-    return m_id != a.m_id;
+    return m_id != _a.m_id;
 }
 
-Attribute& Attribute::addName(const std::string &name)
+Attribute& Attribute::addName(const std::string &_name)
 {
     std::pair<std::map<std::string, Attribute*>::iterator, bool>
-            result = s_names.insert(std::pair<std::string, Attribute*>(name, this));
-    if (result.second) m_names.insert(name);
+	    result = s_names.insert(std::pair<std::string, Attribute*>(_name, this));
+    if (result.second) m_names.insert(_name);
 
     return *this;
 }
@@ -123,7 +123,7 @@ Element::Element() : attr(Attribute::get(Attribute::Position)), size(0)
 {
 }
 
-Element::Element(Attribute &attr, unsigned int size) : attr(attr), size(size)
+Element::Element(Attribute &_attr, unsigned int _size) : attr(_attr), size(_size)
 {
 }
 
@@ -140,7 +140,7 @@ bool Element::operator != (const Element& e) const
 Format::Format(const std::vector<Element> &elements)
 	: m_elements(elements), m_vertexSize(0)
 {
-	for (unsigned int i = 0, count = m_elements.size(); i < count; ++i)
+	for (std::size_t i = 0, count = m_elements.size(); i < count; ++i)
 	{
 		m_vertexSize += m_elements[i].size * sizeof(float);
 	}
@@ -150,17 +150,17 @@ Format::~Format()
 {
 }
 
-const Element& Format::element(unsigned int index) const
+const Element& Format::element(std::size_t index) const
 {
 	return m_elements[index];
 }
 
-unsigned int Format::elementCount() const
+std::size_t Format::elementCount() const
 {
 	return m_elements.size();
 }
 
-unsigned int Format::vertexSize() const
+std::size_t Format::vertexSize() const
 {
 	return m_vertexSize;
 }
@@ -169,7 +169,7 @@ bool Format::operator == (const Format& f) const
 	if (m_elements.size() != f.m_elements.size())
 	    return false;
 
-	for (unsigned int i = 0, count = m_elements.size(); i < count; ++i)
+	for (std::size_t i = 0, count = m_elements.size(); i < count; ++i)
 	{
 	    if (m_elements[i] != f.m_elements[i])
 		return false;

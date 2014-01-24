@@ -27,7 +27,7 @@ void SpriteAnim::update(double deltaTime)
 {
 	if (m_data == NULL) return;
 
-	float time = deltaTime*1000;
+	double time = deltaTime*1000;
 	while(time != 0)
 	{
 		if (time <= m_frameTimeLeft) {

@@ -21,7 +21,7 @@ SpriteStatic::SpriteStatic(std::shared_ptr<SpriteLibrary> _data) : Sprite()
 
 void SpriteStatic::update(double deltaTime)
 {
-
+	(void) deltaTime;
 }
 
 

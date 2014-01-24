@@ -3,12 +3,15 @@
 
 int main(int argc, char *argv[])
 {
-    Guy::Game* game = Guy::Game::ptrInstance();
-    Guy::Environment &env = Guy::Environment::instance();
+	(void) argc;
+	(void) argv;
 
-    if (env.init(game)) env.run();
-    env.destroy();
+	Guy::Game* game = Guy::Game::ptrInstance();
+	Guy::Environment &env = Guy::Environment::instance();
 
-    return 0;
+	if (env.init(game)) env.run();
+	env.destroy();
+
+	return 0;
 }
 

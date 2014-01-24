@@ -16,7 +16,7 @@ public:
 	LinuxEnvironment();
 	virtual ~LinuxEnvironment();
 
-	virtual bool init(Game *game);
+	virtual bool init(Game *_game);
 	virtual void destroy();
 
 	virtual PersistenceLayer& persitenceLayer();
