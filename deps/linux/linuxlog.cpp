@@ -13,7 +13,7 @@ void openLogFile()
 {
 	FILE* fLog;
 	fLog = fopen(LOG_FILE, "wb");
-	if(fLog != NULL) sLogFile = fLog;
+	if (fLog != NULL) sLogFile = fLog;
 }
 
 void printLog(const char *fmt, ...)

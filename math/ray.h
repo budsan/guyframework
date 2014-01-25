@@ -84,9 +84,9 @@ public:
 		}
 
 		Real tcurr = 0;
-		while(!abort && tcurr < tmax)
+		while (!abort && tcurr < tmax)
 		{
-			if(tmaxc.x < tmaxc.y)
+			if (tmaxc.x < tmaxc.y)
 			{
 				tcurr = tmaxc.x;
 				tmaxc.x = tmaxc.x + tdelta.x;

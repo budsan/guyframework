@@ -28,7 +28,7 @@ void SpriteAnim::update(double deltaTime)
 	if (m_data == NULL) return;
 
 	double time = deltaTime*1000;
-	while(time != 0)
+	while (time != 0)
 	{
 		if (time <= m_frameTimeLeft) {
 			m_frameTimeLeft -= time;
@@ -142,7 +142,7 @@ bool SpriteAnimData::load(const char* filename)
 	std::string line;
 	int lineNum = 0;
 	
-	while( getline(in, line) )
+	while ( getline(in, line) )
 	{
 		//Ignore comments
 		size_t comment_pos = line.find('#', 0);
@@ -169,7 +169,7 @@ bool SpriteAnimData::load(const char* filename)
 	}
 	
 	std::vector<SpriteAnimTrack>::iterator it = animations.begin();
-	while(it != animations.end()) {
+	while (it != animations.end()) {
 		if (it->frames.size() == 0) {
 			printLog("Warning: Animation with no frames. Deleting.\n");
 			animations.erase(it);
@@ -192,7 +192,7 @@ bool SpriteAnimData::save(const char* filename)
 
 	std::vector<std::string> aux(animations.size());
 	std::map<std::string, int>::iterator it = animNames.begin();
-	for(;it != animNames.end(); it++) {
+	for (;it != animNames.end(); it++) {
 		aux[it->second] = it->first;
 	}
 
@@ -298,7 +298,7 @@ bool SpriteAnimData::readFRAME(SpriteAnimTrack *&currentAnimTrack, std::string &
 			}
 		}
 
-		if(frame.time < 1)
+		if (frame.time < 1)
 		{
 			printLog("Error %d: time isn't bigger than 0, setting time to 1.\n", lineNum);
 			frame.time = 1;
@@ -311,7 +311,7 @@ std::set<std::string> SpriteAnimData::getContentFilename()
 {
 	std::set<std::string> contentFilename;
 	std::vector<SpriteAnimTrack>::iterator it = animations.begin();
-	for(;it != animations.end(); ++it) {
+	for (;it != animations.end(); ++it) {
 		contentFilename.insert(it->spritesheetFilename);
 	}
 	return contentFilename;
@@ -319,7 +319,7 @@ std::set<std::string> SpriteAnimData::getContentFilename()
 void SpriteAnimData::getContentFilename(std::set<std::string> &contentFilename)
 {
 	std::vector<SpriteAnimTrack>::iterator it = animations.begin();
-	for(;it != animations.end(); ++it) {
+	for (;it != animations.end(); ++it) {
 		contentFilename.insert(it->spritesheetFilename);
 	}
 }

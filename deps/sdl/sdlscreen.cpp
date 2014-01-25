@@ -72,7 +72,7 @@ bool SDLScreen::preinit()
 bool SDLScreen::init()
 {
 	if (m_window == NULL) {
-		if(!setMode(Mode(), true)) return false;
+		if (!setMode(Mode(), true)) return false;
 	}
 
 	SDL_ShowCursor(0);
@@ -166,7 +166,7 @@ bool SDLScreen::setMode(const Mode& mode, bool fullscreen)
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0)
 		);
 
-	if( m_window == NULL )
+	if ( m_window == NULL )
 	{
 		return false;
 	}

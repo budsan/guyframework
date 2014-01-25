@@ -4,11 +4,8 @@ LIBS += -lvorbisfile -lvorbis -logg -lfreetype
 
 win32 {
     DEFINES += GUY_USE_WINDOWS
-    LIBS += -static -L$$PWD/extlibs/libs-mingw/ -lmingw32 -lSDL.dll -mwindows -lopengl32 -lglu32 -lopenal32
+    LIBS += -L$$PWD/extlibs/libs-mingw/ -lmingw32 -lSDL2.dll -lSDL2main -mwindows -lopengl32 -lglu32 -lopenal32
     INCLUDEPATH += $$PWD/extlibs/include
-
-    SOURCES += \
-        $$PWD/deps/win/main.cpp
 }
 
 unix {
@@ -116,6 +113,7 @@ HEADERS += \
     $$PWD/math/seg.h \
     $$PWD/math/tri.h \
     $$PWD/math/algebra3.h \
+    $$PWD/math/mathdefines.h \
     $$PWD/audio/emyl.h \
     $$PWD/graphics/tools/frameshud.h \
     $$PWD/graphics/tools/texthud.h \

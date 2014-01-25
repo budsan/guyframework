@@ -19,7 +19,7 @@ bool PersistenceLayer::load(const char *filename)
 {
 	FILE* fSettingsFile;
 	fSettingsFile = fopen(filename, "rb");
-	if(fSettingsFile != NULL)
+	if (fSettingsFile != NULL)
 	{
 		fread((void*)m_pInstance,1,sizeof(Settings),fSettingsFile);
 		fclose(fSettingsFile);
@@ -33,7 +33,7 @@ bool PersistenceLayer::Save(const char *filename)
 {
 	FILE* fSettingsFile;
 	fSettingsFile = fopen(filename, "wb");
-	if(fSettingsFile != NULL)
+	if (fSettingsFile != NULL)
 	{
 		fwrite((void*)m_pInstance,1,sizeof(Settings),fSettingsFile);
 		fclose(fSettingsFile);
@@ -61,9 +61,9 @@ bool WinPersistenceLayer::load(const char *filename)
 	{
 		std::string name;
 		char c[2] = { '\0', '\0'};
-		while(file.read(c, sizeof(char)))
+		while (file.read(c, sizeof(char)))
 		{
-			if( c != '\0') name.append(c);
+			if ( c != '\0') name.append(c);
 			else break;
 		}
 
@@ -73,7 +73,7 @@ bool WinPersistenceLayer::load(const char *filename)
 			this->add(name, var);
 		}
 	}
-	while(file);
+	while (file);
 
 	m_filepath = std::string(filename);
 	return true;
@@ -87,7 +87,7 @@ bool WinPersistenceLayer::save()
 	file.open(m_filepath.c_str(), std::fstream::out | std::fstream::binary | std::fstream::trunc);
 
 	std::map<std::string, Variable>::iterator it = m_vars.begin();
-	for(;it != m_vars.end(); ++it)
+	for (;it != m_vars.end(); ++it)
 	{
 		const std::string &s = it->first;
 		file.write(s.c_str(),s.length()+1);

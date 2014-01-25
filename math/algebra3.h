@@ -1,13 +1,16 @@
 #ifndef _MATH_ALGEBRA3_DEFINED_
 #define _MATH_ALGEBRA3_DEFINED_
 
-#define _TSE_MATH_DEFINES
+#define _USE_MATH_DEFINES
 #include <cmath>
+
+#ifndef M_PI
+#include "math/mathdefines.h"
+#endif
 
 // User must define MATH_ASSERT before including for enable asserts
 // Like: #define MATH_ASSERT(expression) assert(expression)
 
-#include <math.h>
 #include <string.h>
 
 namespace math {
@@ -277,7 +280,7 @@ bool operator != (const vec3<T> &a, const vec3<U> &b) {
 template <typename T, typename U>
 bool operator < (const vec3<T> &a, const vec3<U> &b) {
 	if ( a.x == b.x) {
-		if( a.y == b.y) return a.z < b.z;
+		if ( a.y == b.y) return a.z < b.z;
 		return a.y < b.y;
 	}
 	return a.x < b.x;
@@ -287,7 +290,7 @@ template <typename T, typename U>
 bool operator > (const vec3<T> &a, const vec3<T> &b) {
 	if ( a.x == b.x)
 	{
-		if( a.y == b.y) return a.z > b.z;
+		if ( a.y == b.y) return a.z > b.z;
 		return a.y > b.y;
 	}
 	return a.x > b.x;
@@ -427,7 +430,7 @@ bool operator != (const vec4<T> &a, const vec4<U> &b) {
 template <typename T, typename U>
 bool operator < (const vec4<T> &a, const vec4<U> &b) {
 	if ( a.x == b.x) {
-		if( a.y == b.y) {
+		if ( a.y == b.y) {
 			if (a.z == b.z) return a.w < b.w;
 			return a.z < b.z;
 		}
@@ -439,7 +442,7 @@ bool operator < (const vec4<T> &a, const vec4<U> &b) {
 template <typename T, typename U>
 bool operator > (const vec4<T> &a, const vec4<T> &b) {
 	if ( a.x == b.x) {
-		if( a.y == b.y) {
+		if ( a.y == b.y) {
 			if (a.z == b.z) return a.w > b.w;
 			return a.z > b.z;
 		}
@@ -525,7 +528,7 @@ struct mat3
 	mat3<T> transposed() {
 		mat3<T> mat;
 
-		for(int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			mat[0][i] = (*this)[i][0];
 			mat[1][i] = (*this)[i][1];
@@ -640,7 +643,7 @@ struct mat4
 	}
 
 	static mat4<T> fromRotate(T angle, const vec3<T> &axis) {
-		return fromRotateRad(angle * (M_PI/180), axis);
+        return fromRotateRad(angle * (M_PI/180), axis);
 	}
 
 	static mat4<T> fromRotate(T angle, T x, T y, T z) {
@@ -751,7 +754,7 @@ struct mat4
 		mat4<T> res;
 		T determinant = this->det();
 
-		if(determinant == 0) { // Singular matrix
+		if (determinant == 0) { // Singular matrix
 			if (invertible) *invertible = false;
 			else
 			{
@@ -879,7 +882,7 @@ struct mat4
 	mat4<T> transposed() {
 		mat4<T> mat;
 
-		for(int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			mat[0][i] = (*this)[i][0];
 			mat[1][i] = (*this)[i][1];

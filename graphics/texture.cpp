@@ -112,7 +112,7 @@ bool Texture::load(const unsigned char* rgba8Raw, int width, int height)
 	const unsigned char* pixels = rgba8Raw;
 	GL_ASSERT(glBindTexture(GL_TEXTURE_2D, m_id));
 	int line = height;
-	while(line--) {
+	while (line--) {
 		GL_ASSERT(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, line, width, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels));
 		pixels += 4 * width;
 	}

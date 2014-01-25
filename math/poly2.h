@@ -72,7 +72,7 @@ struct poly2
 	//fuerza el orden counter-clock-wise
 	void force_ccw()
 	{
-		if(!ccw) reverse();
+		if (!ccw) reverse();
 	}
 };
 

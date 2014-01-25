@@ -17,7 +17,7 @@ bool Font::load(const char* path, int point_size, int dpi)
 		return NULL;
 	}
 
-	if(FT_Init_FreeType(&library)) {
+	if (FT_Init_FreeType(&library)) {
 		fprintf(stderr, "Error loading Freetype library\n");
 		return NULL;
 	}
@@ -26,7 +26,7 @@ bool Font::load(const char* path, int point_size, int dpi)
 		return NULL;
 	}
 
-	if(FT_Set_Char_Size ( face, point_size * 64, point_size * 64, dpi, dpi)) {
+	if (FT_Set_Char_Size ( face, point_size * 64, point_size * 64, dpi, dpi)) {
 		fprintf(stderr, "Error initializing character parameters\n");
 		return NULL;
 	}
@@ -45,8 +45,8 @@ bool Font::load(const char* path, int point_size, int dpi)
 	int glyph_width, glyph_height;
 
 	//First calculate the max width and height of a character in a passed font
-	for(c = 0; c < 128; c++) {
-		if(FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+	for (c = 0; c < 128; c++) {
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
 			fprintf(stderr, "FT_Load_Char failed\n");
 			free(this);
 			return NULL;
@@ -80,8 +80,8 @@ bool Font::load(const char* path, int point_size, int dpi)
 	}
 
 	// Fill font texture bitmap with individual bmp data and record appropriate size, texture coordinates and offsets for every glyph
-	for(c = 0; c < 128; c++) {
-		if(FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+	for (c = 0; c < 128; c++) {
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
 			fprintf(stderr, "FT_Load_Char failed\n");
 			return false;
 		}
@@ -144,13 +144,13 @@ math::vec2f Font::measure(const char* msg)
 	const unsigned int msg_len = (unsigned int) strlen(msg);
 
 	//Width of a text rectangle is a sum advances for every glyph in a string
-	for(unsigned int i = 0; i < msg_len; ++i) {
+	for (unsigned int i = 0; i < msg_len; ++i) {
 		int c = msg[i];
 		result.x += this->advance[c];
 	}
 
 	//Height of a text rectangle is a high of a tallest glyph in a string
-	for(unsigned int i = 0; i < msg_len; ++i) {
+	for (unsigned int i = 0; i < msg_len; ++i) {
 		int c = msg[i];
 
 		if (result.y < this->height[c]) {
@@ -209,7 +209,7 @@ void Font::draw(const char* msg, float x, float y, float r, float g, float b, fl
 
 	indices = (GLshort*) malloc(sizeof(GLfloat) * 6 * msg_len);
 
-	for(i = 0; i < (int) msg_len; ++i) {
+	for (i = 0; i < (int) msg_len; ++i) {
 		c = msg[i];
 
 		vertices[8 * i + 0] = x + pen_x + this->offset_x[c];
@@ -383,7 +383,7 @@ void Font::draw(const char* msg, float x, float y, float r, float g, float b, fl
 	eglQuerySurface(egl_disp, egl_surf, EGL_WIDTH, &surface_width);
 	eglQuerySurface(egl_disp, egl_surf, EGL_HEIGHT, &surface_height);
 
-	for(i = 0; i < 4 * msg_len; ++i) {
+	for (i = 0; i < 4 * msg_len; ++i) {
 		vertices[2 * i + 0] = 2 * vertices[2 * i + 0] / surface_width - 1.0f;
 		vertices[2 * i + 1] = 2 * vertices[2 * i + 1] / surface_height - 1.0f;
 	}

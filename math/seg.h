@@ -110,19 +110,19 @@ int hit(const seg<vec2<T> >& s, const seg<vec2<T> >& t)
 	T TS = DetTSB * DetTSE;
 
 	if ( ST > 0 || TS > 0) hitcase = 0;
-	else if( ST  < 0 && TS  < 0) hitcase = 1;
-	else if((ST == 0 && TS  < 0) || (ST < 0 && TS == 0)) hitcase = 3;
-	else if( ST == 0 && TS == 0 && (DetSTB != 0 || DetSTE != 0)) hitcase = 2;
+	else if ( ST  < 0 && TS  < 0) hitcase = 1;
+	else if ((ST == 0 && TS  < 0) || (ST < 0 && TS == 0)) hitcase = 3;
+	else if ( ST == 0 && TS == 0 && (DetSTB != 0 || DetSTE != 0)) hitcase = 2;
 	else {
 		seg<vec2<T> > min = s, max = t;
 		sort(min, max);
 
 		if (min.b == max.b) hitcase = 5;
-		else if(max.b < min.e) {
-			if(max.e > min.e)hitcase = 4;
+		else if (max.b < min.e) {
+			if (max.e > min.e)hitcase = 4;
 			else hitcase = 5;
 		}
-		else if(max.b == min.e) hitcase = 2;
+		else if (max.b == min.e) hitcase = 2;
 		else hitcase = 0;
 	}
 

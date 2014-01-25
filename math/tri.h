@@ -138,7 +138,7 @@ std::vector<tri1ui> triangulate(const poly2<T> &p)
 	std::list<unsigned int>::iterator itprev = poly.end(); itprev--;
 	std::list<unsigned int>::iterator itcurr = poly.begin();
 	std::list<unsigned int>::iterator itnext = poly.begin(); itnext++;
-	while(poly.size() > 3)
+	while (poly.size() > 3)
 	{
 		tri1ui tId = tri1ui(*itprev, *itcurr, *itnext);
 		tri<vec2<T> > t(p.p[*itprev], p.p[*itcurr], p.p[*itnext]);
@@ -157,7 +157,7 @@ std::vector<tri1ui> triangulate(const poly2<T> &p)
 				case 1: ear = false; break;
 				default:
 					for (unsigned int i = 0; i < 3; i++) {
-						if((tId.v[i]+1)%size == tId.v[(i+1)%3] && sides[0]) break;
+						if ((tId.v[i]+1)%size == tId.v[(i+1)%3] && sides[0]) break;
 						if (i == 2) ear = false;
 					}
 					break;

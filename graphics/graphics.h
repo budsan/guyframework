@@ -20,7 +20,7 @@
 	gl_code; \
 	__gl_error_code = glGetError(); \
 	GUY_ASSERT(__gl_error_code == GL_NO_ERROR); \
-    } while(0)
+    } while (0)
 #endif
 
 #define GL_CHECK( gl_code ) do \
@@ -32,7 +32,7 @@
 	{ \
 	    GUY_ERROR(#gl_code ": %d", (int)__gl_error_code); \
 	} \
-    } while(0)
+    } while (0)
 
 /** Global variable to hold GL errors
  * @script{ignore} */

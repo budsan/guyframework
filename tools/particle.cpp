@@ -14,7 +14,7 @@ Particle::Particle(const vec2d& _pos, const vec2d& _vel, double live):
 
 bool Particle::update(double deltaTime, ParticleEmitter &parent)
 {
-	if(m_live == m_time) return false;
+	if (m_live == m_time) return false;
 
 	m_time += deltaTime;
 	if (m_live < m_time) m_time = m_live;

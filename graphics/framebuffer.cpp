@@ -32,7 +32,7 @@ FrameBuffer::~FrameBuffer()
 	GLuint tex_id;
 
 	std::vector<GLuint>::const_iterator cii;
-	for(cii = m_texId.begin(); cii != m_texId.end(); cii++) {
+	for (cii = m_texId.begin(); cii != m_texId.end(); cii++) {
 		tex_id = *cii;
 		GL_ASSERT(glDeleteTextures(1, &tex_id));
 	}

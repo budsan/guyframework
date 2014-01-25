@@ -69,13 +69,13 @@ const Texture& TextureManager::getTexture(std::string _filename)
 	std::map<std::string,Texture>::iterator iter = m_textures.find(_filename);
 
 	// La textura ya está cargada, así que la devolvemos
-	if(iter != m_textures.end()) return iter->second;
+	if (iter != m_textures.end()) return iter->second;
 
 	// Probaremos las rutas posibles para cargar la textura, y ver si alguna
 	// opcion nos da una textura valida.
 	std::vector<std::string> paths = getPosibleDataPath(_filename);
 	int valid = -1;
-	for(int i = 0; i < (int)paths.size(); i++)
+	for (int i = 0; i < (int)paths.size(); i++)
 	{
 		std::string &path = paths[i];
 		if (path.empty()) return m_textures[NULL_TEXTURE];
@@ -106,7 +106,7 @@ const Texture& TextureManager::getTexture(std::string _filename)
 
 void TextureManager::deleteTexture(std::string filename)
 {
-	if(m_textures.find(filename) != m_textures.end())
+	if (m_textures.find(filename) != m_textures.end())
 	{
 		m_textures.erase(filename);
 	}

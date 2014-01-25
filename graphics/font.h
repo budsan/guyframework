@@ -53,7 +53,7 @@ private:
 	inline int nextPowerOfTwo ( int a )
 	{
 		int rval=1;
-		while(rval<a) rval<<=1;
+		while (rval<a) rval<<=1;
 		return rval;
 	}
 

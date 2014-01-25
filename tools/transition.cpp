@@ -1,8 +1,11 @@
 #include "transition.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <cmath>
 #include <iostream>
+
+#ifndef M_PI
+#include "math/mathdefines.h"
+#endif
 
 #define M_PI_2F ( (double) M_PI_2 )
 
@@ -52,7 +55,7 @@ void TransitionLinear::goPos(double _pos)
 
 void TransitionLinear::update(double _deltaTime)
 {
-	if(m_percent < 1.0)
+	if (m_percent < 1.0)
 	{
 		m_percent += _deltaTime/m_time;
 		if (m_percent >= 1.0)
@@ -82,7 +85,7 @@ void TransitionSinus::goPos(double _pos)
 
 void TransitionSinus::update(double _deltaTime)
 {
-	if(m_sinPos < M_PI)
+	if (m_sinPos < M_PI)
 	{
 		double percent = (cos(m_sinPos)+1.0)/2.0;
 		m_pos =
@@ -113,7 +116,7 @@ void TransitionSinusFadeIn::goPos(double _pos)
 
 void TransitionSinusFadeIn::update(double _deltaTime)
 {
-	if(m_sinPos < M_PI_2F)
+	if (m_sinPos < M_PI_2F)
 	{
 		double percent = cos(m_sinPos);
 		m_pos =
@@ -121,7 +124,7 @@ void TransitionSinusFadeIn::update(double _deltaTime)
 			m_posToGo * (1.0-percent);
 		m_sinPos += M_PI_2F/m_vel*_deltaTime;
 
-		if(m_sinPos > M_PI_2F) {
+		if (m_sinPos > M_PI_2F) {
 			m_sinPos = M_PI_2F;
 			m_pos = m_posToGo;
 		}
@@ -145,7 +148,7 @@ void TransitionSinusFadeOut::goPos(double _pos)
 
 void TransitionSinusFadeOut::update(double _deltaTime)
 {
-	if(m_sinPos < M_PI_2F)
+	if (m_sinPos < M_PI_2F)
 	{
 		double percent = sin(m_sinPos);
 		m_pos =
@@ -153,7 +156,7 @@ void TransitionSinusFadeOut::update(double _deltaTime)
 			m_posToGo * (     percent);
 		m_sinPos += M_PI_2F/m_vel*_deltaTime;
 
-		if(m_sinPos >  M_PI_2F) {
+		if (m_sinPos >  M_PI_2F) {
 			m_sinPos = M_PI_2F;
 			m_pos = m_posToGo;
 		}
@@ -186,7 +189,7 @@ void TransitionBounce::update(double time)
 			m_pos = m_posToGo;
 			m_vel = m_vel*m_velLostPercent;
 
-			if(fabs(m_vel) < 0.001) m_vel = 0;
+			if (fabs(m_vel) < 0.001) m_vel = 0;
 
 			update(double(fabs(nextTime)));
 	}
@@ -209,7 +212,7 @@ void TransitionInertial::update(double time)
 		((double) fabs(m_vel)*TimeToStop) + (-m_acc*TimeToStop*TimeToStop/2);
 	register double distLeft   = (double) fabs(m_pos-m_posToGo);
 
-	if((m_vel*acc) > 0 &&  distLeft <= DistToStop) acc *= -1.0;
+	if ((m_vel*acc) > 0 &&  distLeft <= DistToStop) acc *= -1.0;
 
 	register double vel = m_vel + (time * acc);
 	if (vel * m_vel < 0) vel = 0;
@@ -217,7 +220,7 @@ void TransitionInertial::update(double time)
 	m_vel = vel;
 
 	m_pos = m_pos + (m_vel*time) + (time*time*acc*0.5);
-	if(fabs(m_pos-m_posToGo) <= (m_vel*time*0.5)) {
+	if (fabs(m_pos-m_posToGo) <= (m_vel*time*0.5)) {
 		m_pos = m_posToGo; m_vel = 0;
 	}
 }

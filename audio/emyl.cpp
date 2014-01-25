@@ -31,7 +31,7 @@ void setErrorCallback(error_callback cb) {_error_callback = cb;}
 /*---------------------------------------------------------------------------*/
 
 static int _fseek64_wrap(FILE *f, ogg_int64_t off, int whence){
-	if(f==NULL)return(-1);
+	if (f==NULL)return(-1);
 	return fseek(f,off,whence);
 }
 
@@ -78,7 +78,7 @@ file_mem *fopen_mem (const char* filename)
 
 	size_t remain = (size_t) size;
 	unsigned char *curr = data;
-	while(remain)
+	while (remain)
 	{
 		size_t c = fread ( (void *) curr, 1, remain, f);
 		if (c != remain && ferror(f))
@@ -107,7 +107,7 @@ size_t fread_mem ( void * ptr, size_t size, size_t count, file_mem * stream )
 	size_t total = size * count;
 	size_t bytes = 0;
 	unsigned char *ptr8 = (unsigned char*) ptr;
-	while(bytes < total && stream->curr != stream->end)
+	while (bytes < total && stream->curr != stream->end)
 	{
 		*ptr8++ = *stream->curr++;
 		bytes++;
@@ -152,7 +152,7 @@ long int ftell_mem ( file_mem * stream )
 }
 
 static int _fseek64_wrap_ram(file_mem *f, ogg_int64_t off, int whence){
-	if(f==NULL) return(-1);
+	if (f==NULL) return(-1);
 	return fseek_mem(f,off,whence);
 }
 
@@ -191,7 +191,7 @@ manager::~manager()
 	alDeleteSources(NUM_SOURCES,m_vSources);
 	
 	// ELIMINA BUFFERS CREADOS.
-	while(!m_mSounds.empty())
+	while (!m_mSounds.empty())
 	{
 		ALuint buffer = m_mSounds.begin()->second;
 		alDeleteBuffers(1, &buffer);
@@ -212,7 +212,7 @@ manager::~manager()
 
 manager* manager::get_instance()
 {
-	if(s_pInstance == NULL)
+	if (s_pInstance == NULL)
 	{
 		s_pInstance = new manager();
 	}
@@ -253,13 +253,13 @@ bool manager::init()
 
 	alGetError();
 	alGenSources(NUM_SOURCES, m_vSources);
-	if(alGetError() != AL_NO_ERROR)
+	if (alGetError() != AL_NO_ERROR)
 	{
 		SetError("OpenAL error: Sources can't be created.\n");
 		return false;
 	}
 
-	for(int i = 0; i < NUM_SOURCES; i++) {
+	for (int i = 0; i < NUM_SOURCES; i++) {
 		m_vSourcesReserved[i] = false;
 		m_vSourcesSleeped[i] = false;
 	}
@@ -279,7 +279,7 @@ inline char *manager::get_error() {return m_sLastError;}
 
 void manager::delete_buffer(std::string _filename)
 {
-	if(m_mSounds.find(_filename) != m_mSounds.end())
+	if (m_mSounds.find(_filename) != m_mSounds.end())
 	{
 		ALuint buffer = m_mSounds[_filename];
 		alDeleteBuffers(1, &buffer);
@@ -292,7 +292,7 @@ void manager::delete_buffer(std::string _filename)
 ALuint manager::get_buffer(std::string _filename)
 {
 	std::map<std::string,ALuint>::iterator iter = m_mSounds.find(_filename);
-	if(iter != m_mSounds.end()) return iter->second;
+	if (iter != m_mSounds.end()) return iter->second;
 
 	const char *filename = _filename.c_str();
 
@@ -312,12 +312,12 @@ ALuint manager::get_buffer(std::string _filename)
 	vorbis_info *vi = ov_info(&vf, -1);
 
 	//LOS SONIDOS NO PUEDEN DURAR MAS DE 10 SEGS NI SER STEREO
-	if((int)ov_pcm_total(&vf, -1) > (10*vi->rate) || vi->channels > 1) {
+	if ((int)ov_pcm_total(&vf, -1) > (10*vi->rate) || vi->channels > 1) {
 		fclose(sndfile);
 		SetError("OGG Error: OGG File is too long to be a simple sound.\n");
 		return -1;
 	}
-	if(vi->channels > 1) {
+	if (vi->channels > 1) {
 		fclose(sndfile);
 		SetError("OGG Error: OGG File is not MONO.\n");
 		return -1;
@@ -331,14 +331,14 @@ ALuint manager::get_buffer(std::string _filename)
 	char *stream = (char*)data;
 	int bytes = samples * channels * (int) sizeof(signed short);
 	int current_section;
-	while(bytes > 0) {
+	while (bytes > 0) {
 		long read_bytes = ov_read(&vf,stream,bytes,0,2,1,&current_section);
 
 		if (!read_bytes) break; //EOF
 		else if (read_bytes < 0) {
 //				if (read_bytes == OV_HOLE)
 //					LOG << "Error: OV_HOLE"     << std::endl;
-//				else if(read_bytes == OV_EBADLINK)
+//				else if (read_bytes == OV_EBADLINK)
 //					LOG << "Error: OV_EBADLINK" << std::endl;
 		}
 		else {
@@ -352,7 +352,7 @@ ALuint manager::get_buffer(std::string _filename)
 	ALuint newbuffer;
 	alGetError();
 	alGenBuffers(1, &newbuffer);
-	if(alGetError() != AL_NO_ERROR)
+	if (alGetError() != AL_NO_ERROR)
 	{
 		SetError("OpenAL Error: Buffer could not be generated.\n");
 		delete[] data;
@@ -364,7 +364,7 @@ ALuint manager::get_buffer(std::string _filename)
 
 	delete[] data;
 
-	if(alGetError() != AL_NO_ERROR)
+	if (alGetError() != AL_NO_ERROR)
 	{
 		alDeleteBuffers(1, &newbuffer);
 		SetError("OpenAL Error: Buffer could not be filled.\n");
@@ -383,9 +383,9 @@ ALuint manager::source_reserve()
 {
 	int i;
 
-	for(i = 0; i < NUM_SOURCES; i++)
+	for (i = 0; i < NUM_SOURCES; i++)
 	{
-		if(!m_vSourcesReserved[i])
+		if (!m_vSourcesReserved[i])
 		{
 			m_vSourcesReserved[i] = true;
 			return m_vSources[i];
@@ -401,9 +401,9 @@ void manager::source_unreserve(ALuint _srcID)
 {
 	int i;
 
-	for(i = 0; i < NUM_SOURCES; i++)
+	for (i = 0; i < NUM_SOURCES; i++)
 	{
-		if(m_vSources[i] == _srcID)
+		if (m_vSources[i] == _srcID)
 		{
 			m_vSourcesReserved[i] = false;
 			alSourcei(_srcID, AL_BUFFER, 0);
@@ -416,7 +416,7 @@ void manager::source_unreserve(ALuint _srcID)
 
 void manager::set_volume(ALfloat _volume)
 {
-	if(_volume > 1.0f && _volume < 0.0f) return;	
+	if (_volume > 1.0f && _volume < 0.0f) return;	
 	alListenerf(AL_GAIN,_volume);
 }
 /*---------------------------------------------------------------------------*/
@@ -511,11 +511,11 @@ stream::stream()
 
 stream::~stream()
 {
-	if(m_uiSource)
+	if (m_uiSource)
 		free_source();
-	if(m_uiFlags & STREAM_OGG_LOADED)
+	if (m_uiFlags & STREAM_OGG_LOADED)
 		ov_clear(&m_ogg);
-	if(m_uiFlags & STREAM_OGG_INIT)
+	if (m_uiFlags & STREAM_OGG_INIT)
 		alDeleteBuffers(NUM_BUFFERS, m_vbuffers);
 }
 
@@ -532,7 +532,7 @@ bool stream::load(const std::string &_filename)
 	}
 
     bool success = load_generic((void *) sndfile, &callbacks);
-	if(!success) fclose(sndfile);
+	if (!success) fclose(sndfile);
 	return success;
 }
 
@@ -547,17 +547,17 @@ bool stream::load_mem(const std::string &_filename)
 	}
 
 	bool success = load_generic((void *) sndfile, &callbacks_mem);
-	if(!success) fclose_mem(sndfile);
+	if (!success) fclose_mem(sndfile);
 	return success;
 }
 
 bool stream::load_generic(void *sndfile, ov_callbacks *ptr_callbacks)
 {
-	if(!(m_uiFlags & STREAM_OGG_INIT))
+	if (!(m_uiFlags & STREAM_OGG_INIT))
 	{
 		alGetError();
 		alGenBuffers(NUM_BUFFERS, m_vbuffers);
-		if(alGetError() != AL_NO_ERROR)
+		if (alGetError() != AL_NO_ERROR)
 		{
 			SetError("OpenAL Error: Buffer could not be generated.\n");
 			return false;
@@ -565,7 +565,7 @@ bool stream::load_generic(void *sndfile, ov_callbacks *ptr_callbacks)
 		m_uiFlags |= STREAM_OGG_INIT;
 	}
 
-	if(!(m_uiFlags & STREAM_OGG_INIT) ||
+	if (!(m_uiFlags & STREAM_OGG_INIT) ||
 	     m_uiFlags & STREAM_OGG_PLAYING)
 	{
 		SetError("Error: Can't load while playing.\n");
@@ -580,12 +580,12 @@ bool stream::load_generic(void *sndfile, ov_callbacks *ptr_callbacks)
 
 	vorbis_info *vi = ov_info(&vf, -1);
 
-	if(vi->channels == 1) m_eformat = AL_FORMAT_MONO16;
+	if (vi->channels == 1) m_eformat = AL_FORMAT_MONO16;
 	else                  m_eformat = AL_FORMAT_STEREO16;
 
 	m_ifreq = (ALsizei) vi->rate;
 
-	if(m_uiFlags & STREAM_OGG_LOADED) ov_clear(&m_ogg);
+	if (m_uiFlags & STREAM_OGG_LOADED) ov_clear(&m_ogg);
 	memcpy(&m_ogg, &vf, sizeof(OggVorbis_File));
 	m_uiFlags |= STREAM_OGG_LOADED;
 
@@ -607,7 +607,7 @@ bool stream::set_source()
 
 bool stream::set_source(ALuint _source)
 {
-	if(alIsSource(_source) == AL_FALSE)
+	if (alIsSource(_source) == AL_FALSE)
 	{
 		SetError("OpenAL Error: Source isn't valid.\n");
 		return false;
@@ -646,7 +646,7 @@ void stream::play()
 {
 	if (!m_uiSource) return;	
 	
-	if((m_uiFlags & STREAM_OGG_PLAYING) ||
+	if ((m_uiFlags & STREAM_OGG_PLAYING) ||
 	  !(m_uiFlags & STREAM_OGG_LOADED))
 	{
 		m_uiFlags &= ~STREAM_OGG_PAUSE;
@@ -659,14 +659,14 @@ void stream::play()
 	
 	ALint queued; ALuint buffer;
 	alGetSourcei(m_uiSource, AL_BUFFERS_QUEUED, &queued);
-	while(queued--) alSourceUnqueueBuffers(m_uiSource, 1, &buffer);
+	while (queued--) alSourceUnqueueBuffers(m_uiSource, 1, &buffer);
 	
 	//PLAY SOURCE AS SOON AS POSSIBLE.
 	bStream(m_vbuffers[0]);
 	alSourceQueueBuffers (m_uiSource, 1, m_vbuffers);
 	alSourcePlay (m_uiSource);
 
-	for( int i = 1; i < NUM_BUFFERS; i++)
+	for ( int i = 1; i < NUM_BUFFERS; i++)
 	{
 		bStream(m_vbuffers[i]);
 		alSourceQueueBuffers (m_uiSource, 1, m_vbuffers+i);
@@ -680,7 +680,7 @@ void stream::play()
 /*---------------------------------------------------------------------------*/
 void stream::stop()
 {
-	if(m_uiFlags&STREAM_OGG_PLAYING)
+	if (m_uiFlags&STREAM_OGG_PLAYING)
 	{
 		m_uiFlags &= ~(STREAM_OGG_PLAYING|STREAM_OGG_PAUSE);
 		s_instances.erase(this);
@@ -692,19 +692,19 @@ void stream::stop()
 
 void stream::update()
 {
-	if(!(m_uiFlags & STREAM_OGG_PLAYING)) return;
+	if (!(m_uiFlags & STREAM_OGG_PLAYING)) return;
 
 	ALint processed;
 	alGetSourcei(m_uiSource, AL_BUFFERS_PROCESSED, &processed);
 
-//	if(processed) LOG << processed << std::endl;
+//	if (processed) LOG << processed << std::endl;
 
-	while(processed--)
+	while (processed--)
 	{
 		ALuint buffer;
 		alSourceUnqueueBuffers(m_uiSource, 1, &buffer);
 
-		if(bStream(buffer))
+		if (bStream(buffer))
 		{
 			alSourceQueueBuffers(m_uiSource, 1, &buffer);
 		}
@@ -718,13 +718,13 @@ void stream::update()
 	ALint state;
 	alGetSourcei(m_uiSource, AL_SOURCE_STATE, &state);
 
-	if(m_uiFlags & STREAM_OGG_PAUSE)
+	if (m_uiFlags & STREAM_OGG_PAUSE)
 	{
-	     if(state != AL_PAUSED) alSourcePause(m_uiSource);
+	     if (state != AL_PAUSED) alSourcePause(m_uiSource);
 	}
 	else
 	{
-		if(state != AL_PLAYING) alSourcePlay (m_uiSource);
+		if (state != AL_PLAYING) alSourcePlay (m_uiSource);
 	}
 	
 }
@@ -734,7 +734,7 @@ void stream::update()
 void stream::updateAll()
 {
 	std::set<stream*>::iterator iter = s_instances.begin();
-	for(iter = s_instances.begin(); iter != s_instances.end(); iter++)
+	for (iter = s_instances.begin(); iter != s_instances.end(); iter++)
 		(*iter)->update();
 }
 
@@ -742,7 +742,7 @@ void stream::updateAll()
 
 void stream::set_loop(bool _loop)
 {
-	if(_loop) m_uiFlags |=  STREAM_OGG_LOOP;
+	if (_loop) m_uiFlags |=  STREAM_OGG_LOOP;
 	else      m_uiFlags &= ~STREAM_OGG_LOOP;
 }
 
@@ -752,7 +752,7 @@ void stream::seek(double _secs)
 {
 	ALint state;
 	alGetSourcei(m_uiSource, AL_SOURCE_STATE, &state);
-	if(state != AL_PLAYING && state != AL_PAUSED)
+	if (state != AL_PLAYING && state != AL_PAUSED)
 	{
 #ifdef _DEBUG
 		int result = ov_time_seek(&m_ogg,_secs);
@@ -796,7 +796,7 @@ bool stream::playing()
 
 void stream::set_volume(ALfloat _volume)
 {
-	if(_volume > 1.0f && _volume < 0.0f) return;
+	if (_volume > 1.0f && _volume < 0.0f) return;
 	alSourcef(m_uiSource,AL_GAIN,_volume);
 }
 
@@ -811,18 +811,18 @@ bool stream::bStream(ALuint _buff)
 	int  current_section;
 	int  read_bytes;
 	
-	while(bytes < BUFFER_SIZE)
+	while (bytes < BUFFER_SIZE)
 	{
 		read_bytes = (int) ov_read(&m_ogg, data + bytes, BUFFER_SIZE - bytes, 0, 2, 1, &current_section);
 		
-		if(read_bytes > 0) bytes += read_bytes;
+		if (read_bytes > 0) bytes += read_bytes;
 		else
 		{
-			if(read_bytes < 0)
+			if (read_bytes < 0)
 			{
 //				if (read_bytes == OV_HOLE)
 //					LOG << "Error: OV_HOLE"     << std::endl;
-//				else if(read_bytes == OV_EBADLINK)
+//				else if (read_bytes == OV_EBADLINK)
 //					LOG << "Error: OV_EBADLINK" << std::endl;
 			}
 			else //EOF
@@ -834,10 +834,10 @@ bool stream::bStream(ALuint _buff)
 		}
 	}
     
-	if(bytes == 0) return false;
+	if (bytes == 0) return false;
 
 /*	//DEBUG	
-	for(int i = 0; i < BUFFER_SIZE; i++)
+	for (int i = 0; i < BUFFER_SIZE; i++)
 		data[i] = rand() & 0xFFFF;
 	
 	bytes = BUFFER_SIZE;
@@ -884,7 +884,7 @@ sound::sound()
 
 sound::~sound()
 {
-	if(m_uiSource) free_source();
+	if (m_uiSource) free_source();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -894,7 +894,7 @@ bool sound::set_buffer(ALuint _buffer)
 	if (! alIsBuffer(_buffer)) return false;
 
 	m_vbuffer = _buffer;
-	if(m_uiSource) alSourcei(m_uiSource, AL_BUFFER, m_vbuffer);
+	if (m_uiSource) alSourcei(m_uiSource, AL_BUFFER, m_vbuffer);
 
 	return true;
 }
@@ -916,7 +916,7 @@ bool sound::set_source()
 
 bool sound::set_source(ALuint _source)
 {
-	if(alIsSource(_source) == AL_FALSE)
+	if (alIsSource(_source) == AL_FALSE)
 	{
 		SetError("OpenAL Error: Source isn't valid.\n");
 		return false;
@@ -931,7 +931,7 @@ bool sound::set_source(ALuint _source)
 	alSourcef (m_uiSource, AL_PITCH,                     1.0); 
 	alSourcei (m_uiSource, AL_SOURCE_RELATIVE, AL_FALSE     );
 
-	if(m_vbuffer) alSourcei(m_uiSource, AL_BUFFER, m_vbuffer);
+	if (m_vbuffer) alSourcei(m_uiSource, AL_BUFFER, m_vbuffer);
 
 	return true;
 }
@@ -1026,7 +1026,7 @@ void sound::set_volume(ALfloat _volume)
 {
 	if (!m_uiSource) return;	
 	
-	if(_volume > 1.0f && _volume < 0.0f) return;
+	if (_volume > 1.0f && _volume < 0.0f) return;
 	alSourcef(m_uiSource,AL_GAIN,_volume);
 }
 

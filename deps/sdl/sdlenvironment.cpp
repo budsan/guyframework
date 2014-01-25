@@ -125,7 +125,7 @@ void SDLEnvironment::run()
 		m_input->pollEvents();
 
 		//EXIT CASE
-		if(m_exit) continue;
+		if (m_exit) continue;
 
 		//UPDATES AND DRAWS
 		m_gameLoop();
@@ -197,7 +197,7 @@ void SDLEnvironment::loopVariable()
 
 void SDLEnvironment::loopStable()
 {
-	for(;;)
+	for (;;)
 	{
 		Uint32 now = SDL_GetTicks();
 		Uint32 uiDeltaTime = now - m_before;
@@ -219,7 +219,7 @@ void SDLEnvironment::loopStable()
 
 void SDLEnvironment::loopStableDrop()
 {
-	for(;;)
+	for (;;)
 	{
 		Uint32 now = SDL_GetTicks();
 		Uint32 uiDeltaTime = now - m_before;
@@ -235,7 +235,7 @@ void SDLEnvironment::loopStableDrop()
 		}
 	}
 
-	while(m_accumTime >= m_ticksPerFrame)
+	while (m_accumTime >= m_ticksPerFrame)
 	{
 		m_game->update(m_ticksPerFrame/1000.0);
 		m_accumTime -= m_ticksPerFrame;

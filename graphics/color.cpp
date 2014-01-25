@@ -37,7 +37,7 @@ bool rgb::operator<(const rgb &other) const
 {
 	if ( r == other.r)
 	{
-		if( g == other.g)
+		if ( g == other.g)
 		{
 			return b < other.b;
 		}
@@ -50,7 +50,7 @@ bool rgb::operator>(const rgb &other) const
 {
 	if ( r == other.r)
 	{
-		if( g == other.g)
+		if ( g == other.g)
 		{
 			return b > other.b;
 		}
@@ -120,31 +120,31 @@ void rgb::setFromHSL(float h, float s, float l)
 	else
 	{
 		//Calculamos los valores temporales
-		if(l < 0.5f) temp2 = l * (1 + s);
+		if (l < 0.5f) temp2 = l * (1 + s);
 		else temp2 = (l + s) - (l * s);
 		temp1 = 2 * l - temp2;
 		tempr = h + 1.0f / 3.0f;
-		if(tempr > 1) tempr--;
+		if (tempr > 1) tempr--;
 		tempg = h;
 		tempb = h - 1.0f / 3.0f;
-		if(tempb < 0) tempb++;
+		if (tempb < 0) tempb++;
 
 		//R (Rojo)
-		if(tempr < 1.0f / 6.0f) r = temp1 + (temp2 - temp1) * 6.0f * tempr;
-		else if(tempr < 0.5f) r = temp2;
-		else if(tempr < 2.0f / 3.0f) r = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempr) * 6.0f;
+		if (tempr < 1.0f / 6.0f) r = temp1 + (temp2 - temp1) * 6.0f * tempr;
+		else if (tempr < 0.5f) r = temp2;
+		else if (tempr < 2.0f / 3.0f) r = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempr) * 6.0f;
 		else r = temp1;
 
 		//G (Verde)
-		if(tempg < 1.0f / 6.0f) g = temp1 + (temp2 - temp1) * 6.0f * tempg;
-		else if(tempg < 0.5f) g = temp2;
-		else if(tempg < 2.0f / 3.0f) g = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempg) * 6.0f;
+		if (tempg < 1.0f / 6.0f) g = temp1 + (temp2 - temp1) * 6.0f * tempg;
+		else if (tempg < 0.5f) g = temp2;
+		else if (tempg < 2.0f / 3.0f) g = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempg) * 6.0f;
 		else g = temp1;
 
 		//B (Azul)
-		if(tempb < 1.0f / 6.0f) b = temp1 + (temp2 - temp1) * 6.0f * tempb;
-		else if(tempb < 0.5f) b = temp2;
-		else if(tempb < 2.0f / 3.0f) b = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempb) * 6.0f;
+		if (tempb < 1.0f / 6.0f) b = temp1 + (temp2 - temp1) * 6.0f * tempb;
+		else if (tempb < 0.5f) b = temp2;
+		else if (tempb < 2.0f / 3.0f) b = temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - tempb) * 6.0f;
 		else b = temp1;
 	}
 }
@@ -224,9 +224,9 @@ bool rgba::operator<(const rgba &other) const
 {
 	if ( r == other.r)
 	{
-		if( g == other.g)
+		if ( g == other.g)
 		{
-			if( b == other.b)
+			if ( b == other.b)
 			{
 				return a < other.a;
 			}
@@ -241,9 +241,9 @@ bool rgba::operator>(const rgba &other) const
 {
 	if ( r == other.r)
 	{
-		if( g == other.g)
+		if ( g == other.g)
 		{
-			if( b == other.b)
+			if ( b == other.b)
 			{
 				return a > other.a;
 			}

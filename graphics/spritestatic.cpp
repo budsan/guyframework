@@ -27,7 +27,7 @@ void SpriteStatic::update(double deltaTime)
 
 bool SpriteStatic::setLibrary(std::shared_ptr<SpriteLibrary> _data)
 {
-	if(_data == NULL)
+	if (_data == NULL)
 	{
 		m_data.reset();
 		return true;
@@ -93,7 +93,7 @@ bool SpriteLibrary::load(const char* filename)
 	std::string line;
 	int lineNum = 0;
 	
-	while( getline(in, line) )
+	while ( getline(in, line) )
 	{
 		//Ignore comments
 		size_t comment_pos = line.find('#', 0);

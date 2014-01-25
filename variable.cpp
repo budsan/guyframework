@@ -308,7 +308,7 @@ std::ostream &operator <<(std::ostream &out, const Variable &var)
 {
 	Variable::Type type = var.type();
 	out.write((const char *)&type, sizeof(Variable::Type));
-	if(var.type() == Variable::Null) return out;
+	if (var.type() == Variable::Null) return out;
 
 	switch (var.type())
 	{
@@ -342,8 +342,8 @@ std::string variableReadString(std::istream &in)
 {
 	std::string result;
 	char c[2] = { '\0', '\0'};
-	while(in.read(c, sizeof(char))) {
-		if( c != '\0') result.append(c);
+	while (in.read(c, sizeof(char))) {
+		if ( c != '\0') result.append(c);
 		else break;
 	}
 
@@ -355,7 +355,7 @@ std::istream &operator >>(std::istream &in, Variable &var)
 	Variable::Type type = Variable::Null;
 	in.read((char *)&type, sizeof(Variable::Type));
 
-	if(type == Variable::Null)
+	if (type == Variable::Null)
 	{
 		var = Variable();
 		return in;

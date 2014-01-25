@@ -2,7 +2,8 @@
 #include "graphics/graphics.h"
 
 #include <sstream>
-#include <math.h>
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 namespace Guy {
 
@@ -45,7 +46,7 @@ void FramesHUD::setDisplayTime(double time)
 void FramesHUD::update(double deltaTime)
 {
 	m_timeCount += deltaTime;
-	if(m_timeCount > m_displayTime)
+	if (m_timeCount > m_displayTime)
 	{
 		double currentFramesToDisplay   =     m_framesCount * m_displayTimeInv;
 		double timesHappenedDisplayTime = floor(m_timeCount * m_displayTimeInv);
