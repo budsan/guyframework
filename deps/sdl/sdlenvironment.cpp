@@ -223,25 +223,26 @@ void SDLEnvironment::loopStableDrop()
 	{
 		Uint32 now = SDL_GetTicks();
 		Uint32 uiDeltaTime = now - m_before;
-		Uint32 currAccumTime = m_accumTime + uiDeltaTime;
 
-		if (currAccumTime < m_ticksPerFrame) {
-			SDL_Delay(m_ticksPerFrame - currAccumTime);
+		m_before     = now;
+		m_accumTime += uiDeltaTime;
+
+		if (m_accumTime < m_ticksPerFrame)
+		{
+			SDL_Delay(m_ticksPerFrame - m_accumTime);
 		}
-		else {
-			m_before = now;
-			m_accumTime = currAccumTime - m_ticksPerFrame;
+		else
+		{
+			while (m_accumTime >= m_ticksPerFrame)
+			{
+				m_game->update(m_ticksPerFrame/1000.0);
+				m_accumTime -= m_ticksPerFrame;
+			}
+
+			m_game->draw();
 			break;
 		}
 	}
-
-	while (m_accumTime >= m_ticksPerFrame)
-	{
-		m_game->update(m_ticksPerFrame/1000.0);
-		m_accumTime -= m_ticksPerFrame;
-	}
-
-	m_game->draw();
 }
 
 } // namespace Guy
