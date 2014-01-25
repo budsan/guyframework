@@ -29,8 +29,6 @@ SOURCES += \
     $$PWD/variable.cpp \
     $$PWD/graphics/screen.cpp \
     $$PWD/graphics/texture.cpp \
-    $$PWD/graphics/sprite.cpp \
-    $$PWD/graphics/spriteanim.cpp \
     $$PWD/graphics/texturemanager.cpp \
     $$PWD/graphics/shaderprogram.cpp \
     $$PWD/graphics/shader.cpp \
@@ -56,7 +54,6 @@ SOURCES += \
     $$PWD/graphics/font.cpp \
     $$PWD/tools/particleemitter.cpp \
     $$PWD/tools/particle.cpp \
-    $$PWD/graphics/spritestatic.cpp \
     $$PWD/deps/sdl/sdlscreen.cpp \
     $$PWD/deps/sdl/sdlinput.cpp \
     $$PWD/deps/sdl/sdlenvironment.cpp
@@ -84,8 +81,6 @@ HEADERS += \
     $$PWD/graphics/graphics.h \
     $$PWD/graphics/screen.h \
     $$PWD/graphics/texture.h \
-    $$PWD/graphics/sprite.h \
-    $$PWD/graphics/spriteanim.h \
     $$PWD/graphics/color.h \
     $$PWD/graphics/texturemanager.h \
     $$PWD/graphics/shaderprogram.h \
@@ -120,7 +115,6 @@ HEADERS += \
     $$PWD/graphics/font.h \
     $$PWD/tools/particleemitter.h \
     $$PWD/tools/particle.h \
-    $$PWD/graphics/spritestatic.h \
     $$PWD/variable.h \
     $$PWD/deps/sdl/sdlscreen.h \
     $$PWD/deps/sdl/sdlinput.h \

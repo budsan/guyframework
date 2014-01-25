@@ -54,6 +54,8 @@ USAGE:
 #ifndef INCLUDE_STB_IMAGE_WRITE_H
 #define INCLUDE_STB_IMAGE_WRITE_H
 
+#pragma GCC system_header
+
 #ifdef __cplusplus
 extern "C" {
 #endif

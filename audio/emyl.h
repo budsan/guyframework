@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma GCC system_header
+
 #include <vector>
 #include <list>
 #include <map>
