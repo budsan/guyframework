@@ -66,11 +66,14 @@ void SDLInput::handleEvent(const SDL_Event &event)
 	{
 	case SDL_KEYDOWN:	
 	{
-		wchar_t unicode;
-		Keyboard::Key key;
-		Keyboard::Mod mod;
-		SDLkeysymToGuyKey(event.key.keysym, unicode, key, mod);
-		m_keyboard->fireKeyDownEvent(unicode, key, mod);
+		if (!event.key.repeat)
+		{
+			wchar_t unicode;
+			Keyboard::Key key;
+			Keyboard::Mod mod;
+			SDLkeysymToGuyKey(event.key.keysym, unicode, key, mod);
+			m_keyboard->fireKeyDownEvent(unicode, key, mod);
+		}
 
 		// ALT-F4 exit method :D
 		if ( event.key.keysym.sym == SDLK_F4 &&
@@ -81,11 +84,14 @@ void SDLInput::handleEvent(const SDL_Event &event)
 		break;
 	case SDL_KEYUP:
 	{
-		wchar_t unicode;
-		Keyboard::Key key;
-		Keyboard::Mod mod;
-		SDLkeysymToGuyKey(event.key.keysym, unicode, key, mod);
-		m_keyboard->fireKeyUpEvent(unicode, key, mod);
+		if (!event.key.repeat)
+		{
+			wchar_t unicode;
+			Keyboard::Key key;
+			Keyboard::Mod mod;
+			SDLkeysymToGuyKey(event.key.keysym, unicode, key, mod);
+			m_keyboard->fireKeyUpEvent(unicode, key, mod);
+		}
 	}
 		break;
 	case SDL_QUIT:

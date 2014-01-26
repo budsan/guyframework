@@ -21,7 +21,7 @@ bool TextHUD::loadFont(const char *filename)
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	unsigned int h = viewport[3] - viewport[1];
 
-    m_font = std::make_shared<Font>();
+	m_font = std::make_shared<Font>();
 	if (m_font->load(filename, h/32))
 	{
 		m_font->setAlignment(Font::LEFT);
@@ -37,7 +37,7 @@ bool TextHUD::loadFont(const char *filename, unsigned int h)
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
-    m_font = std::make_shared<Font>();
+	m_font = std::make_shared<Font>();
 	if (m_font->load(filename, h))
 	{
 		m_font->setAlignment(Font::LEFT);
@@ -60,7 +60,7 @@ void TextHUD::update(double deltaTime)
 
 void TextHUD::draw()
 {
-    if (m_font != NULL)
+	if (m_font != NULL)
 	{
 		GLint viewport[4];
 		glGetIntegerv(GL_VIEWPORT, viewport);
